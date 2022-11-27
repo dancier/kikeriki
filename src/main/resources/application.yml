@@ -1,1 +1,42 @@
-
+dancier:
+  kikriki:
+    topic: test
+management:
+  endpoint:
+    shutdown:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  info:
+    env:
+      enabled: true
+    java:
+      enabled: true
+info:
+  kafka:
+    bootstrap-server: ${spring.kafka.bootstrap-servers}
+    client-id: ${spring.kafka.client-id}
+    group-id: ${spring.kafka.consumer.group-id}
+    topic: ${kikeriki.consumer.topic}
+    auto-offset-reset: ${spring.kafka.consumer.auto-offset-reset}
+spring:
+  kafka:
+    bootstrap-servers: :9092
+    client-id: DEV
+    consumer:
+      group-id: kikeriki
+      auto-offset-reset: earliest
+      auto-commit-interval: 5s
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        partition.assignment.strategy: org.apache.kafka.clients.consumer.StickyAssignor
+        spring.json.type.mapping: >
+          FOO:net.dancier.kikeriki.MessageFoo,
+          BAR:net.dancier.kikeriki.MessageBar
+logging:
+  level:
+    root: INFO
+    net.dancier: DEBUG
