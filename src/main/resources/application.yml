@@ -1,7 +1,9 @@
 dancier:
-  kikriki:
+  kikeriki:
     topic: test
 management:
+  server:
+    port: 8081
   endpoint:
     shutdown:
       enabled: true
