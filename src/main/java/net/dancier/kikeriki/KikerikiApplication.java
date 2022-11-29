@@ -39,7 +39,6 @@ public class KikerikiApplication implements ApplicationRunner
   public void run(ApplicationArguments args)
   {
     log.info("Starting KikerikiConsumer");
-    MDC.put("commit", gitProperties.getShortCommitId());
     consumerJob = taskExecutor.submitListenable(kikerikiConsumer);
     consumerJob.addCallback(
       exitStatus ->
