@@ -3,11 +3,13 @@ package net.dancier.kikeriki;
 import jakarta.annotation.PreDestroy;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.Consumer;
+import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.info.GitProperties;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.util.concurrent.ListenableFuture;
@@ -28,12 +30,16 @@ public class KikerikiApplication implements ApplicationRunner
   @Autowired
   ConfigurableApplicationContext context;
 
+  @Autowired
+  GitProperties gitProperties;
+
   ListenableFuture<Integer> consumerJob;
 
   @Override
   public void run(ApplicationArguments args)
   {
     log.info("Starting KikerikiConsumer");
+    MDC.put("commit", gitProperties.getShortCommitId());
     consumerJob = taskExecutor.submitListenable(kikerikiConsumer);
     consumerJob.addCallback(
       exitStatus ->
