@@ -20,4 +20,4 @@ jobs:
     - name: Build the Docker image
       run:  docker build -t dancier/kikeriki:$(git rev-parse --short "$GITHUB_SHA") .
     - name: Publish the Docker image on hub.docker.com
-      run:  docker push dancier/kikeriki:1.0
+      run:  docker push dancier/kikeriki:$(git rev-parse --short "$GITHUB_SHA")
