@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 
+import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 
@@ -34,19 +35,47 @@ public class MessageTest
 
 
   @Test
-  @DisplayName("Deserialize a MessageFoo message")
-  public void testDeserializeMessageFoo()
+  @DisplayName("Deserialize a MessageFoo message works for valid messages")
+  public void testDeserializeValidMessageFooWorks()
   {
     assertDoesNotThrow(() -> mapper.readValue(read(fooMessage), MessageFoo.class));
     assertDoesNotThrow(() -> mapper.readValue(read(fooMessageWithUnknownField), MessageFoo.class));
   }
 
   @Test
-  @DisplayName("Deserialize a MessageBar message")
-  public void testDeserializeMessageBar()
+  @DisplayName("Deserialize a MessageFoo message yields expected results")
+  public void testDeserializeValidMessageFooYieldsExpectedResults() throws IOException
+  {
+    MessageFoo result = mapper.readValue(read(fooMessage), MessageFoo.class);
+
+    assertThat(result.getType())
+      .describedAs("Unexpected type for message")
+      .isEqualTo(Message.Type.FOO);
+    assertThat(result.getFoo())
+      .describedAs("Unexpected value for field \"foo\"")
+      .isEqualTo("42");
+  }
+
+  @Test
+  @DisplayName("Deserialize a MessageBar message works for valid messages")
+  public void testDeserializeValidMessageBarWorks()
   {
     assertDoesNotThrow(() -> mapper.readValue(read(barMessage), MessageBar.class));
     assertDoesNotThrow(() -> mapper.readValue(read(barMessageWithUnknownField), MessageBar.class));
+  }
+
+  @Test
+  @DisplayName("Deserialize a MessageBar message yields expected results")
+  public void testDeserializeValidMessageBarYieldsExpectedResults() throws IOException
+  {
+    MessageBar result = mapper.readValue(read(barMessage), MessageBar.class);
+
+    assertThat(result.getType())
+      .describedAs("Unexpected type for message")
+      .isEqualTo(Message.Type.BAR);
+    assertThat(result.getBar())
+      .describedAs("Unexpected value for field \"bar\"")
+      .isEqualTo("42");
   }
 
 
