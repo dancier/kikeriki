@@ -14,6 +14,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
@@ -32,6 +33,10 @@ public class MessageTest
   Resource barMessage;
   @Value("classpath:messages/bar-with-unknown-field.json")
   Resource barMessageWithUnknownField;
+  @Value("classpath:messages/chat.json")
+  Resource chatMessage;
+  @Value("classpath:messages/chat-with-unknown-field.json")
+  Resource chatMessageWithUnknownField;
 
 
   @Test
@@ -51,6 +56,9 @@ public class MessageTest
     assertThat(result.getType())
       .describedAs("Unexpected type for message")
       .isEqualTo(Message.Type.FOO);
+    assertThat(result.getDancerId())
+      .describedAs("Unexpected value for field \"dancerId\"")
+      .isEqualTo(UUID.fromString("e58ed763-928c-4155-bee9-fdbaaadc15f3"));
     assertThat(result.getFoo())
       .describedAs("Unexpected value for field \"foo\"")
       .isEqualTo("42");
@@ -73,9 +81,49 @@ public class MessageTest
     assertThat(result.getType())
       .describedAs("Unexpected type for message")
       .isEqualTo(Message.Type.BAR);
+    assertThat(result.getDancerId())
+      .describedAs("Unexpected value for field \"dancerId\"")
+      .isEqualTo(UUID.fromString("e58ed763-928c-4155-bee9-fdbaaadc15f3"));
     assertThat(result.getBar())
       .describedAs("Unexpected value for field \"bar\"")
       .isEqualTo("42");
+  }
+
+  @Test
+  @DisplayName("Deserialize a MessageChat message works for valid messages")
+  public void testDeserializeValidMessageChatWorks()
+  {
+    assertThatNoException().isThrownBy(() -> mapper.readValue(read(chatMessage), MessageChat.class));
+    assertThatNoException().isThrownBy(() -> mapper.readValue(read(chatMessageWithUnknownField), MessageChat.class));
+  }
+
+  @Test
+  @DisplayName("Deserializing MessageChat messages yields expected results")
+  public void testDeserializeValidMessageChatYieldsExpectedResults() throws IOException
+  {
+    MessageChat result;
+
+    result = mapper.readValue(read(chatMessage), MessageChat.class);
+    assertThat(result.getType())
+      .describedAs("Unexpected type for message")
+      .isEqualTo(Message.Type.CHAT);
+    assertThat(result.getDancerId())
+      .describedAs("Unexpected value for field \"dancerId\"")
+      .isEqualTo(UUID.fromString("e58ed763-928c-4155-bee9-fdbaaadc15f3"));
+    assertThat(result.getStatus())
+      .describedAs("Unexpected value for field \"status\"")
+      .isEqualTo(MessageChat.ChatMessageStatus.NEW);
+
+    result = mapper.readValue(read(chatMessageWithUnknownField), MessageChat.class);
+    assertThat(result.getType())
+      .describedAs("Unexpected type for message")
+      .isEqualTo(Message.Type.CHAT);
+    assertThat(result.getDancerId())
+      .describedAs("Unexpected value for field \"dancerId\"")
+      .isEqualTo(UUID.fromString("e58ed763-928c-4155-bee9-fdbaaadc15f3"));
+    assertThat(result.getStatus())
+      .describedAs("Unexpected value for field \"status\"")
+      .isEqualTo(MessageChat.ChatMessageStatus.READ);
   }
 
 

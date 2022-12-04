@@ -5,18 +5,23 @@ import lombok.Data;
 
 import java.util.UUID;
 
-
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class MessageFoo extends Message
+public class MessageChat extends Message
 {
   UUID dancerId;
-  private String foo;
+  ChatMessageStatus status;
+
+
+  public static enum ChatMessageStatus {
+    NEW,
+    READ
+  }
 
 
   @Override
   public Type getType()
   {
-    return Type.FOO;
+    return Type.CHAT;
   }
 }
