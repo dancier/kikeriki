@@ -3,25 +3,19 @@ package net.dancier.kikeriki.state;
 import net.dancier.kikeriki.state.appevent.SendMail;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.context.ApplicationEventPublisher;
 
 import java.time.Instant;
+import java.util.Optional;
 import java.util.UUID;
 
-import static org.mockito.Mockito.times;
+import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
-@ExtendWith(MockitoExtension.class)
 class DancerStateMachineTest {
 
   DancerStateMachine dancerStateMachine;
   DancerStateChatMessagesRepository dancerStateChatMessagesRepository = new DancerStateChatMessagesRepository();
   DancerStateMailMessageRepository dancerStateMailMessageRepository = new DancerStateMailMessageRepository();
-  @Mock
-  ApplicationEventPublisher applicationEventPublisher;
+
   /**
    * Sending mails to the customer should happen exactly when:
    *
@@ -33,8 +27,7 @@ class DancerStateMachineTest {
   public void init() {
     dancerStateMachine = new DancerStateMachine(
       dancerStateChatMessagesRepository,
-      dancerStateMailMessageRepository,
-      applicationEventPublisher);
+      dancerStateMailMessageRepository);
   }
 
   @Test
@@ -48,9 +41,11 @@ class DancerStateMachineTest {
     dancerStateChatMessagesRepository.setLastUnreadMessageAt(dancerId, lastUnreadMessage);
     dancerStateMailMessageRepository.setLastMailSendAt(dancerId, lastMailMessageSend);
 
-    dancerStateMachine.check(dancerId);
+    Optional<SendMail> result = dancerStateMachine.check(dancerId);
 
-    Mockito.verify(applicationEventPublisher, times(1)).publishEvent(new SendMail());
+    assertThat(result.isPresent())
+      .describedAs("A SendMail event should be present")
+      .isTrue();
   }
 
 }
