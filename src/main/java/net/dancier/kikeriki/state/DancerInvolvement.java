@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
 import java.time.Instant;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -17,9 +18,9 @@ public class DancerInvolvement
   private final UUID dancerId;
   private final Set<UUID> unreadMessages = new HashSet<>();
 
-  private ZonedDateTime lastMailSent = ZonedDateTime.from(Instant.EPOCH);
-  private ZonedDateTime lastLogin = ZonedDateTime.from(Instant.EPOCH);
-  private ZonedDateTime lastMessageRead = ZonedDateTime.from(Instant.EPOCH);
+  private ZonedDateTime lastMailSent = ZonedDateTime.ofInstant(Instant.EPOCH, ZoneId.of("Europe/Berlin"));
+  private ZonedDateTime lastLogin = ZonedDateTime.ofInstant(Instant.EPOCH, ZoneId.of("Europe/Berlin"));
+  private ZonedDateTime lastMessageRead = ZonedDateTime.ofInstant(Instant.EPOCH, ZoneId.of("Europe/Berlin"));
 
   public boolean addUnreadMessage(UUID id)
   {
