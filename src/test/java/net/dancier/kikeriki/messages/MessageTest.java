@@ -1,6 +1,8 @@
 package net.dancier.kikeriki.messages;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,6 +16,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
+import java.time.ZonedDateTime;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThatNoException;
@@ -23,7 +26,7 @@ import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 @ExtendWith(SpringExtension.class)
 public class MessageTest
 {
-  ObjectMapper mapper = new ObjectMapper();
+  ObjectMapper mapper;
 
   @Value("classpath:messages/foo.json")
   Resource fooMessage;
@@ -37,6 +40,18 @@ public class MessageTest
   Resource chatMessage;
   @Value("classpath:messages/chat-with-unknown-field.json")
   Resource chatMessageWithUnknownField;
+  @Value("classpath:messages/login.json")
+  Resource loginMessage;
+  @Value("classpath:messages/login-with-unknown-field.json")
+  Resource loginMessageWithUnknownField;
+
+
+  @BeforeEach
+  public void setUp()
+  {
+    mapper = new ObjectMapper();
+    mapper.registerModule(new JavaTimeModule());
+  }
 
 
   @Test
@@ -110,6 +125,9 @@ public class MessageTest
     assertThat(result.getDancerId())
       .describedAs("Unexpected value for field \"dancerId\"")
       .isEqualTo(UUID.fromString("e58ed763-928c-4155-bee9-fdbaaadc15f3"));
+    assertThat(result.getTime())
+      .describedAs("Unexpected value for field \"time\"")
+      .isEqualTo(ZonedDateTime.parse("2021-12-31T23:00:00Z[UTC]"));
     assertThat(result.getStatus())
       .describedAs("Unexpected value for field \"status\"")
       .isEqualTo(MessageChat.ChatMessageStatus.NEW);
@@ -121,11 +139,50 @@ public class MessageTest
     assertThat(result.getDancerId())
       .describedAs("Unexpected value for field \"dancerId\"")
       .isEqualTo(UUID.fromString("e58ed763-928c-4155-bee9-fdbaaadc15f3"));
+    assertThat(result.getTime())
+      .describedAs("Unexpected value for field \"time\"")
+      .isEqualTo(ZonedDateTime.parse("2022-01-02T23:00:00Z[UTC]"));
     assertThat(result.getStatus())
       .describedAs("Unexpected value for field \"status\"")
       .isEqualTo(MessageChat.ChatMessageStatus.READ);
   }
 
+  @Test
+  @DisplayName("Deserialize a MessageLogin message works for valid messages")
+  public void testDeserializeValidMessageLoginWorks()
+  {
+    assertThatNoException().isThrownBy(() -> mapper.readValue(read(loginMessage), MessageLogin.class));
+    assertThatNoException().isThrownBy(() -> mapper.readValue(read(loginMessageWithUnknownField), MessageLogin.class));
+  }
+
+  @Test
+  @DisplayName("Deserializing MessageLogin messages yields expected results")
+  public void testDeserializeValidMessageLoginYieldsExpectedResults() throws IOException
+  {
+    MessageLogin result;
+
+    result = mapper.readValue(read(loginMessage), MessageLogin.class);
+    assertThat(result.getType())
+      .describedAs("Unexpected type for message")
+      .isEqualTo(Message.Type.LOGIN);
+    assertThat(result.getDancerId())
+      .describedAs("Unexpected value for field \"dancerId\"")
+      .isEqualTo(UUID.fromString("e58ed763-928c-4155-bee9-fdbaaadc15f3"));
+    assertThat(result.getTime())
+      .describedAs("Unexpected value for field \"time\"")
+      .isEqualTo(ZonedDateTime.parse("2021-12-30T23:00:00Z[UTC]"));
+
+    result = mapper.readValue(read(loginMessageWithUnknownField), MessageLogin.class);
+    assertThat(result.getType())
+      .describedAs("Unexpected type for message")
+      .isEqualTo(Message.Type.LOGIN);
+    assertThat(result.getDancerId())
+      .describedAs("Unexpected value for field \"dancerId\"")
+      .isEqualTo(UUID.fromString("e58ed763-928c-4155-bee9-fdbaaadc15f3"));
+    assertThat(result.getTime())
+      .describedAs("Unexpected value for field \"time\"")
+      .isEqualTo(ZonedDateTime.parse("2021-12-30T23:00:00Z[UTC]"));
+  }
 
   static InputStream read(Resource resource)
   {
