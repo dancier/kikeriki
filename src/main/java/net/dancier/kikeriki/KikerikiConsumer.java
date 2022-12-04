@@ -78,25 +78,6 @@ public class KikerikiConsumer implements Callable<Integer>
   {
     consumed++;
     log.debug("{} - {}: {}/{} - {}={}", id, offset, topic, partition, key, message);
-    switch (message.getType())
-    {
-      case FOO:
-        messageHandler.handle(key, (MessageFoo)message);
-        return;
-      case BAR:
-        messageHandler.handle(key, (MessageBar)message);
-        return;
-      case LOGIN:
-        messageHandler.handle(key, (MessageLogin)message);
-        return;
-      case CHAT:
-        messageHandler.handle(key, (MessageChat)message);
-        return;
-      case MAIL_SENT:
-        messageHandler.handle(key, (MessageMailSent)message);
-        return;
-      default:
-        throw new RuntimeException("Received message of unknown type: " + message);
-    }
+    messageHandler.handle(key, message);
   }
 }

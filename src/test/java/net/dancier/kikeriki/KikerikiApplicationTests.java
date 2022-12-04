@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Primary;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.test.context.EmbeddedKafka;
 
@@ -24,7 +25,9 @@ import static org.awaitility.Awaitility.await;
     webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
     properties = {
         "spring.kafka.bootstrap-servers=${spring.embedded.kafka.brokers}",
-        "dancier.kikeriki.topic=" + TOPIC })
+        "dancier.kikeriki.topic=" + TOPIC,
+        "dancier.kikeriki.involve-dancer-after=1s",
+        "dancier.kikeriki.involvement-check-interval=10s" })
 @EmbeddedKafka(topics = TOPIC)
 public class KikerikiApplicationTests
 {
@@ -115,8 +118,31 @@ public class KikerikiApplicationTests
     Map<String, List<MessageChat>> receivedChatMessages = new HashMap<>();
     Map<String, List<MessageMailSent>> receivedMailSentMessages = new HashMap<>();
 
-
     @Override
+    public void handle(String key, Message message)
+    {
+      switch (message.getType())
+      {
+        case FOO:
+          handle(key, (MessageFoo)message);
+          break;
+        case BAR:
+          handle(key, (MessageBar)message);
+          break;
+        case LOGIN:
+          handle(key, (MessageLogin)message);
+          break;
+        case CHAT:
+          handle(key, (MessageChat)message);
+          break;
+        case MAIL_SENT:
+          handle(key, (MessageMailSent)message);
+          break;
+        default:
+          throw new RuntimeException("Received message of unknown type: " + message);
+      }
+    }
+
     public void handle(String key, MessageFoo foo)
     {
       List<MessageFoo> messagesForKey = receivedFooMessages.get(key);
@@ -128,7 +154,6 @@ public class KikerikiApplicationTests
       messagesForKey.add(foo);
     }
 
-    @Override
     public void handle(String key, MessageBar bar)
     {
       List<MessageBar> messagesForKey = receivedBarMessages.get(key);
@@ -140,7 +165,6 @@ public class KikerikiApplicationTests
       messagesForKey.add(bar);
     }
 
-    @Override
     public void handle(String key, MessageLogin login)
     {
       List<MessageLogin> messagesForKey = receivedLoginMessages.get(key);
@@ -152,7 +176,6 @@ public class KikerikiApplicationTests
       messagesForKey.add(login);
     }
 
-    @Override
     public void handle(String key, MessageChat chat)
     {
       List<MessageChat> messagesForKey = receivedChatMessages.get(key);
@@ -164,7 +187,6 @@ public class KikerikiApplicationTests
       messagesForKey.add(chat);
     }
 
-    @Override
     public void handle(String key, MessageMailSent mailSent)
     {
       List<MessageMailSent> messagesForKey = receivedMailSentMessages.get(key);
@@ -182,7 +204,8 @@ public class KikerikiApplicationTests
   static class Configuration
   {
     @Bean
-    public MessageHandler messageHandler()
+    @Primary
+    public MessageHandler testMessageHandler()
     {
       return new TestMessageHandler();
     }

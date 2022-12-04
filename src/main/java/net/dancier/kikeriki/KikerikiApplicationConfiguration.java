@@ -1,6 +1,7 @@
 package net.dancier.kikeriki;
 
 import net.dancier.kikeriki.messages.Message;
+import net.dancier.kikeriki.state.KikerikiState;
 import org.apache.kafka.clients.consumer.Consumer;
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -13,6 +14,17 @@ import org.springframework.kafka.core.ConsumerFactory;
 @EnableConfigurationProperties({ KafkaProperties.class, KikerikiApplicationProperties.class })
 public class KikerikiApplicationConfiguration
 {
+  @Bean
+  public MessageHandler messageHandler(
+    KikerikiState kikerikiState,
+    KikerikiApplicationProperties properties)
+  {
+    return new InvolveDancersMessageHandler(
+      kikerikiState,
+      properties.getInvolveDancerAfter(),
+      properties.getInvolvementCheckInterval());
+  }
+
   @Bean
   public KikerikiConsumer kikerikiConsumer(
       Consumer<String, Message> kafkaConsumer,

@@ -9,6 +9,8 @@ import org.springframework.stereotype.Component;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Stream;
+
 
 @Component
 @RequiredArgsConstructor
@@ -28,14 +30,15 @@ public class KikerikiState
     return involvement;
   }
 
-  public void handle(MessageLogin message)
+  public DancerInvolvement handle(MessageLogin message)
   {
     UUID dancerId = message.getDancerId();
     DancerInvolvement dancerInvolvement = getDancerInvolvement(dancerId);
     dancerInvolvement.setLastLogin(message.getTime());
+    return dancerInvolvement;
   }
 
-  public void handle(MessageChat message)
+  public DancerInvolvement handle(MessageChat message)
   {
     UUID dancerId = message.getDancerId();
     DancerInvolvement dancerInvolvement = getDancerInvolvement(dancerId);
@@ -49,12 +52,19 @@ public class KikerikiState
         dancerInvolvement.markMessageAsRead(message.getMessageId());
         break;
     }
+    return dancerInvolvement;
   }
 
-  public void handle(MessageMailSent message)
+  public DancerInvolvement handle(MessageMailSent message)
   {
     UUID dancerId = message.getDancerId();
     DancerInvolvement dancerInvolvement = getDancerInvolvement(dancerId);
     dancerInvolvement.setLastMailSent(message.getTime());
+    return dancerInvolvement;
+  }
+
+  public Stream<DancerInvolvement> getDancerInvolvements()
+  {
+    return state.values().stream();
   }
 }

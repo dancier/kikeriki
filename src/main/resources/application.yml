@@ -1,6 +1,8 @@
 dancier:
   kikeriki:
     topic: test
+    involve-dancer-after: 7d
+    involvement-check-interval: 1d
 management:
   server:
     port: 8081

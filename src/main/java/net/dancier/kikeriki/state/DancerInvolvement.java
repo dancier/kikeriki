@@ -31,4 +31,9 @@ public class DancerInvolvement
   {
     return unreadMessages.remove(id);
   }
+
+  public ZonedDateTime getLastInvolvement()
+  {
+    return lastLogin.isAfter(lastMessageRead) ? lastLogin : lastMessageRead;
+  }
 }
