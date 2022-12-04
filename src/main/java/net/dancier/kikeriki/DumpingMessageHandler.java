@@ -1,6 +1,8 @@
 package net.dancier.kikeriki;
 
 import lombok.extern.slf4j.Slf4j;
+import net.dancier.kikeriki.messages.MessageBar;
+import net.dancier.kikeriki.messages.MessageFoo;
 import org.springframework.stereotype.Component;
 
 @Slf4j

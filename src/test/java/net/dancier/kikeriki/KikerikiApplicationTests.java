@@ -1,5 +1,7 @@
 package net.dancier.kikeriki;
 
+import net.dancier.kikeriki.messages.MessageBar;
+import net.dancier.kikeriki.messages.MessageFoo;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;

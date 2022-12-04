@@ -1,4 +1,4 @@
-package net.dancier.kikeriki;
+package net.dancier.kikeriki.messages;
 
 
 public abstract class Message

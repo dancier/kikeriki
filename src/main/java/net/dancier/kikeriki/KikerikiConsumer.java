@@ -2,6 +2,9 @@ package net.dancier.kikeriki;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.dancier.kikeriki.messages.Message;
+import net.dancier.kikeriki.messages.MessageBar;
+import net.dancier.kikeriki.messages.MessageFoo;
 import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;

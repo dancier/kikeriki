@@ -1,4 +1,4 @@
-package net.dancier.kikeriki;
+package net.dancier.kikeriki.messages;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;

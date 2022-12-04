@@ -1,7 +1,8 @@
-package net.dancier.kikeriki;
+package net.dancier.kikeriki.messages;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import net.dancier.kikeriki.messages.MessageBar;
+import net.dancier.kikeriki.messages.MessageFoo;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
