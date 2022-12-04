@@ -25,4 +25,7 @@ public class KikerikiApplicationProperties
 
   @NotNull
   private Duration involvementCheckInterval;
+
+  @NotNull
+  private Duration reinvolvementInterval;
 }

@@ -27,7 +27,8 @@ import static org.awaitility.Awaitility.await;
         "spring.kafka.bootstrap-servers=${spring.embedded.kafka.brokers}",
         "dancier.kikeriki.topic=" + TOPIC,
         "dancier.kikeriki.involve-dancer-after=1s",
-        "dancier.kikeriki.involvement-check-interval=10s" })
+        "dancier.kikeriki.involvement-check-interval=10s",
+        "dancier.kikeriki.reinvolvement-interval=60s" })
 @EmbeddedKafka(topics = TOPIC)
 public class KikerikiApplicationTests
 {

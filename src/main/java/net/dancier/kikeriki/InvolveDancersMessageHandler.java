@@ -21,6 +21,7 @@ public class InvolveDancersMessageHandler implements MessageHandler
   private final KikerikiState state;
   private final Duration involveDancerAfter;
   private final Duration involvementCheckInterval;
+  private final Duration reinvolvementInterval;
 
   private ZonedDateTime lastGeneralInvolvement = ZonedDateTime.ofInstant(Instant.EPOCH, ZoneId.of("Europe/Berlin"));
 
@@ -123,6 +124,11 @@ public class InvolveDancersMessageHandler implements MessageHandler
 
   void sendMail(DancerInvolvement involvement, ZonedDateTime now)
   {
+    if (involvement.getLastMailSent().plus(reinvolvementInterval).isAfter(now))
+      // Do not send involvement-mails more frequent than defined in reinvolvementInterval,
+      // if the user does not react to it
+      return;
+
     // TODO: Send a Mail and emmit a message of type MessageMailSent
   }
 }

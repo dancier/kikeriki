@@ -36,4 +36,9 @@ public class DancerInvolvement
   {
     return lastLogin.isAfter(lastMessageRead) ? lastLogin : lastMessageRead;
   }
+
+  public void clearLastMailSent()
+  {
+    lastMailSent = ZonedDateTime.ofInstant(Instant.EPOCH, ZoneId.of("Europe/Berlin"));
+  }
 }

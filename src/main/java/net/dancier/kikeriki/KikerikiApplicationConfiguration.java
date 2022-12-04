@@ -22,7 +22,8 @@ public class KikerikiApplicationConfiguration
     return new InvolveDancersMessageHandler(
       kikerikiState,
       properties.getInvolveDancerAfter(),
-      properties.getInvolvementCheckInterval());
+      properties.getInvolvementCheckInterval(),
+      properties.getReinvolvementInterval());
   }
 
   @Bean

@@ -35,6 +35,7 @@ public class KikerikiState
     UUID dancerId = message.getDancerId();
     DancerInvolvement dancerInvolvement = getDancerInvolvement(dancerId);
     dancerInvolvement.setLastLogin(message.getTime());
+    dancerInvolvement.clearLastMailSent();
     return dancerInvolvement;
   }
 
@@ -50,6 +51,7 @@ public class KikerikiState
       case READ:
         dancerInvolvement.setLastMessageRead(message.getTime());
         dancerInvolvement.markMessageAsRead(message.getMessageId());
+        dancerInvolvement.clearLastMailSent();
         break;
     }
     return dancerInvolvement;
