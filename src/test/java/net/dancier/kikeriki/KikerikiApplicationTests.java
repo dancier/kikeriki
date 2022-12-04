@@ -1,7 +1,6 @@
 package net.dancier.kikeriki;
 
-import net.dancier.kikeriki.messages.MessageBar;
-import net.dancier.kikeriki.messages.MessageFoo;
+import net.dancier.kikeriki.messages.*;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -112,10 +111,13 @@ public class KikerikiApplicationTests
   {
     Map<String, List<MessageFoo>> receivedFooMessages = new HashMap<>();
     Map<String, List<MessageBar>> receivedBarMessages = new HashMap<>();
+    Map<String, List<MessageLogin>> receivedLoginMessages = new HashMap<>();
+    Map<String, List<MessageChat>> receivedChatMessages = new HashMap<>();
+    Map<String, List<MessageMailSent>> receivedMailSentMessages = new HashMap<>();
 
 
     @Override
-    public void handleFoo(String key, MessageFoo foo)
+    public void handle(String key, MessageFoo foo)
     {
       List<MessageFoo> messagesForKey = receivedFooMessages.get(key);
       if (messagesForKey == null)
@@ -127,7 +129,7 @@ public class KikerikiApplicationTests
     }
 
     @Override
-    public void handleBar(String key, MessageBar bar)
+    public void handle(String key, MessageBar bar)
     {
       List<MessageBar> messagesForKey = receivedBarMessages.get(key);
       if (messagesForKey == null)
@@ -136,6 +138,42 @@ public class KikerikiApplicationTests
         receivedBarMessages.put(key, messagesForKey);
       }
       messagesForKey.add(bar);
+    }
+
+    @Override
+    public void handle(String key, MessageLogin login)
+    {
+      List<MessageLogin> messagesForKey = receivedLoginMessages.get(key);
+      if (messagesForKey == null)
+      {
+        messagesForKey = new LinkedList<>();
+        receivedLoginMessages.put(key, messagesForKey);
+      }
+      messagesForKey.add(login);
+    }
+
+    @Override
+    public void handle(String key, MessageChat chat)
+    {
+      List<MessageChat> messagesForKey = receivedChatMessages.get(key);
+      if (messagesForKey == null)
+      {
+        messagesForKey = new LinkedList<>();
+        receivedChatMessages.put(key, messagesForKey);
+      }
+      messagesForKey.add(chat);
+    }
+
+    @Override
+    public void handle(String key, MessageMailSent mailSent)
+    {
+      List<MessageMailSent> messagesForKey = receivedMailSentMessages.get(key);
+      if (messagesForKey == null)
+      {
+        messagesForKey = new LinkedList<>();
+        receivedMailSentMessages.put(key, messagesForKey);
+      }
+      messagesForKey.add(mailSent);
     }
   }
 

@@ -6,25 +6,18 @@ import lombok.Data;
 import java.time.ZonedDateTime;
 import java.util.UUID;
 
+
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class MessageChat extends Message
+public class MessageMailSent extends Message
 {
   UUID dancerId;
   ZonedDateTime time;
-  UUID messageId;
-  ChatMessageStatus status;
-
-
-  public static enum ChatMessageStatus {
-    NEW,
-    READ
-  }
 
 
   @Override
-  public Type getType()
+  public Message.Type getType()
   {
-    return Type.CHAT;
+    return Message.Type.MAIL_SENT;
   }
 }

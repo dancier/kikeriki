@@ -128,6 +128,9 @@ public class MessageTest
     assertThat(result.getTime())
       .describedAs("Unexpected value for field \"time\"")
       .isEqualTo(ZonedDateTime.parse("2021-12-31T23:00:00Z[UTC]"));
+    assertThat(result.getMessageId())
+      .describedAs("Unexpected value for field \"messageId\"")
+      .isEqualTo(UUID.fromString("a58ed763-728c-9355-b339-3db21adc15a3"));
     assertThat(result.getStatus())
       .describedAs("Unexpected value for field \"status\"")
       .isEqualTo(MessageChat.ChatMessageStatus.NEW);
@@ -142,6 +145,9 @@ public class MessageTest
     assertThat(result.getTime())
       .describedAs("Unexpected value for field \"time\"")
       .isEqualTo(ZonedDateTime.parse("2022-01-02T23:00:00Z[UTC]"));
+    assertThat(result.getMessageId())
+      .describedAs("Unexpected value for field \"messageId\"")
+      .isEqualTo(UUID.fromString("a58ed763-728c-9355-b339-3db21adc15a3"));
     assertThat(result.getStatus())
       .describedAs("Unexpected value for field \"status\"")
       .isEqualTo(MessageChat.ChatMessageStatus.READ);

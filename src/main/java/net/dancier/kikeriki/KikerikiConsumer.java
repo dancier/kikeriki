@@ -2,9 +2,7 @@ package net.dancier.kikeriki;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.dancier.kikeriki.messages.Message;
-import net.dancier.kikeriki.messages.MessageBar;
-import net.dancier.kikeriki.messages.MessageFoo;
+import net.dancier.kikeriki.messages.*;
 import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
@@ -83,10 +81,19 @@ public class KikerikiConsumer implements Callable<Integer>
     switch (message.getType())
     {
       case FOO:
-        messageHandler.handleFoo(key, (MessageFoo)message);
+        messageHandler.handle(key, (MessageFoo)message);
         return;
       case BAR:
-        messageHandler.handleBar(key, (MessageBar)message);
+        messageHandler.handle(key, (MessageBar)message);
+        return;
+      case LOGIN:
+        messageHandler.handle(key, (MessageLogin)message);
+        return;
+      case CHAT:
+        messageHandler.handle(key, (MessageChat)message);
+        return;
+      case MAIL_SENT:
+        messageHandler.handle(key, (MessageMailSent)message);
         return;
       default:
         throw new RuntimeException("Received message of unknown type: " + message);
