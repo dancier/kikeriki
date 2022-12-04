@@ -15,8 +15,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 
+import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 
 @ExtendWith(SpringExtension.class)
@@ -38,8 +38,8 @@ public class MessageTest
   @DisplayName("Deserialize a MessageFoo message works for valid messages")
   public void testDeserializeValidMessageFooWorks()
   {
-    assertDoesNotThrow(() -> mapper.readValue(read(fooMessage), MessageFoo.class));
-    assertDoesNotThrow(() -> mapper.readValue(read(fooMessageWithUnknownField), MessageFoo.class));
+    assertThatNoException().isThrownBy(() -> mapper.readValue(read(fooMessage), MessageFoo.class));
+    assertThatNoException().isThrownBy(() -> mapper.readValue(read(fooMessageWithUnknownField), MessageFoo.class));
   }
 
   @Test
@@ -60,8 +60,8 @@ public class MessageTest
   @DisplayName("Deserialize a MessageBar message works for valid messages")
   public void testDeserializeValidMessageBarWorks()
   {
-    assertDoesNotThrow(() -> mapper.readValue(read(barMessage), MessageBar.class));
-    assertDoesNotThrow(() -> mapper.readValue(read(barMessageWithUnknownField), MessageBar.class));
+    assertThatNoException().isThrownBy(() -> mapper.readValue(read(barMessage), MessageBar.class));
+    assertThatNoException().isThrownBy(() -> mapper.readValue(read(barMessageWithUnknownField), MessageBar.class));
   }
 
   @Test
