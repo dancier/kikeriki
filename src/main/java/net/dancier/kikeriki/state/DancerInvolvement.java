@@ -15,12 +15,15 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class DancerInvolvement
 {
+  public final static ZonedDateTime NEVER = ZonedDateTime.ofInstant(Instant.EPOCH, ZoneId.of("Europe/Berlin"));
+
+
   private final UUID dancerId;
   private final Set<UUID> unreadMessages = new HashSet<>();
 
-  private ZonedDateTime lastMailSent = ZonedDateTime.ofInstant(Instant.EPOCH, ZoneId.of("Europe/Berlin"));
-  private ZonedDateTime lastLogin = ZonedDateTime.ofInstant(Instant.EPOCH, ZoneId.of("Europe/Berlin"));
-  private ZonedDateTime lastMessageRead = ZonedDateTime.ofInstant(Instant.EPOCH, ZoneId.of("Europe/Berlin"));
+  private ZonedDateTime lastMailSent = NEVER;
+  private ZonedDateTime lastLogin = NEVER;
+  private ZonedDateTime lastMessageRead = NEVER;
 
   public boolean addUnreadMessage(UUID id)
   {
@@ -39,6 +42,6 @@ public class DancerInvolvement
 
   public void clearLastMailSent()
   {
-    lastMailSent = ZonedDateTime.ofInstant(Instant.EPOCH, ZoneId.of("Europe/Berlin"));
+    lastMailSent = NEVER;
   }
 }

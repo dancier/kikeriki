@@ -9,8 +9,6 @@ import net.dancier.kikeriki.state.DancerInvolvement;
 import net.dancier.kikeriki.state.KikerikiState;
 
 import java.time.Duration;
-import java.time.Instant;
-import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
 
@@ -23,7 +21,7 @@ public class InvolveDancersMessageHandler implements MessageHandler
   private final Duration involvementCheckInterval;
   private final Duration reinvolvementInterval;
 
-  private ZonedDateTime lastGeneralInvolvement = ZonedDateTime.ofInstant(Instant.EPOCH, ZoneId.of("Europe/Berlin"));
+  private ZonedDateTime lastGeneralInvolvement = DancerInvolvement.NEVER;
 
   @Getter
   @Setter
