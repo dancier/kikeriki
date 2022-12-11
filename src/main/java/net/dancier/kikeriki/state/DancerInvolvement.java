@@ -36,6 +36,7 @@ public class DancerInvolvement
   {
     lastInvolvement = timestamp;
     unseenMessages.clear();
+    lastMailSent = NEVER;
   }
 
   public void addUnreadChatMessage(UUID id)
@@ -47,6 +48,7 @@ public class DancerInvolvement
   {
     lastInvolvement = timestamp;
     unseenMessages.clear();
+    lastMailSent = NEVER;
   }
 
   public void setLastMailSent(ZonedDateTime timestamp)
