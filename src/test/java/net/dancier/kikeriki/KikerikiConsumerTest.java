@@ -37,6 +37,7 @@ import static org.awaitility.Awaitility.await;
 public class KikerikiConsumerTest
 {
   public static final String TOPIC = "FOO";
+  public static final String TYPE_ID_HEADER = "__TypeId__";
 
   @LocalServerPort
   private int port;
@@ -79,22 +80,22 @@ public class KikerikiConsumerTest
     // on the sending side, if configured correctly
 
     record = new ProducerRecord<>(TOPIC, "peter", read(loginMessage));
-    record.headers().add("__TypeId__", "LOGIN".getBytes());
+    record.headers().add(TYPE_ID_HEADER, Message.Type.LOGIN.name().getBytes());
     kafkaTemplate.send(record);
     record = new ProducerRecord<>(TOPIC, "klaus", read(loginMessageWithUnknownField));
-    record.headers().add("__TypeId__", "LOGIN".getBytes());
+    record.headers().add(TYPE_ID_HEADER, Message.Type.LOGIN.name().getBytes());
     kafkaTemplate.send(record);
     record = new ProducerRecord<>(TOPIC, "peter", read(chatMessage));
-    record.headers().add("__TypeId__", "CHAT".getBytes());
+    record.headers().add(TYPE_ID_HEADER, Message.Type.CHAT.name().getBytes());
     kafkaTemplate.send(record);
     record = new ProducerRecord<>(TOPIC, "klaus", read(chatMessageWithUnknownField));
-    record.headers().add("__TypeId__", "CHAT".getBytes());
+    record.headers().add(TYPE_ID_HEADER, Message.Type.CHAT.name().getBytes());
     kafkaTemplate.send(record);
     record = new ProducerRecord<>(TOPIC, "peter", read(mailSentMessage));
-    record.headers().add("__TypeId__", "MAIL_SENT".getBytes());
+    record.headers().add(TYPE_ID_HEADER, Message.Type.MAIL_SENT.name().getBytes());
     kafkaTemplate.send(record);
     record = new ProducerRecord<>(TOPIC, "klaus", read(mailSentMessageWithUnknownField));
-    record.headers().add("__TypeId__", "MAIL_SENT".getBytes());
+    record.headers().add(TYPE_ID_HEADER, Message.Type.MAIL_SENT.name().getBytes());
     kafkaTemplate.send(record);
 
     await("Send messages were received")
