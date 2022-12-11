@@ -32,12 +32,6 @@ public class InvolveDancersMessageHandler implements MessageHandler
   {
     switch (message.getType())
     {
-      case FOO:
-        handle(key, (MessageFoo)message);
-        break;
-      case BAR:
-        handle(key, (MessageBar)message);
-        break;
       case LOGIN:
         handle(key, (MessageLogin)message);
         break;
@@ -50,16 +44,6 @@ public class InvolveDancersMessageHandler implements MessageHandler
       default:
         throw new RuntimeException("Received message of unknown type: " + message);
     }
-  }
-
-  void handle(String key, MessageFoo foo)
-  {
-    log.info("handling foo -> key: %s, message: %s", key, foo);
-  }
-
-  void handle(String key, MessageBar bar)
-  {
-    log.info("handling bar -> key: %s, message: %s", key, bar);
   }
 
   void handle(String key, MessageLogin message)

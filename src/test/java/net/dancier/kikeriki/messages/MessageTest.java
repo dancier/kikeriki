@@ -28,14 +28,6 @@ public class MessageTest
 {
   ObjectMapper mapper;
 
-  @Value("classpath:messages/foo.json")
-  Resource fooMessage;
-  @Value("classpath:messages/foo-with-unknown-field.json")
-  Resource fooMessageWithUnknownField;
-  @Value("classpath:messages/bar.json")
-  Resource barMessage;
-  @Value("classpath:messages/bar-with-unknown-field.json")
-  Resource barMessageWithUnknownField;
   @Value("classpath:messages/chat.json")
   Resource chatMessage;
   @Value("classpath:messages/chat-with-unknown-field.json")
@@ -57,56 +49,6 @@ public class MessageTest
     mapper.registerModule(new JavaTimeModule());
   }
 
-
-  @Test
-  @DisplayName("Deserialize a MessageFoo message works for valid messages")
-  public void testDeserializeValidMessageFooWorks()
-  {
-    assertThatNoException().isThrownBy(() -> mapper.readValue(read(fooMessage), MessageFoo.class));
-    assertThatNoException().isThrownBy(() -> mapper.readValue(read(fooMessageWithUnknownField), MessageFoo.class));
-  }
-
-  @Test
-  @DisplayName("Deserialize a MessageFoo message yields expected results")
-  public void testDeserializeValidMessageFooYieldsExpectedResults() throws IOException
-  {
-    MessageFoo result = mapper.readValue(read(fooMessage), MessageFoo.class);
-
-    assertThat(result.getType())
-      .describedAs("Unexpected type for message")
-      .isEqualTo(Message.Type.FOO);
-    assertThat(result.getDancerId())
-      .describedAs("Unexpected value for field \"dancerId\"")
-      .isEqualTo(UUID.fromString("e58ed763-928c-4155-bee9-fdbaaadc15f3"));
-    assertThat(result.getFoo())
-      .describedAs("Unexpected value for field \"foo\"")
-      .isEqualTo("42");
-  }
-
-  @Test
-  @DisplayName("Deserialize a MessageBar message works for valid messages")
-  public void testDeserializeValidMessageBarWorks()
-  {
-    assertThatNoException().isThrownBy(() -> mapper.readValue(read(barMessage), MessageBar.class));
-    assertThatNoException().isThrownBy(() -> mapper.readValue(read(barMessageWithUnknownField), MessageBar.class));
-  }
-
-  @Test
-  @DisplayName("Deserialize a MessageBar message yields expected results")
-  public void testDeserializeValidMessageBarYieldsExpectedResults() throws IOException
-  {
-    MessageBar result = mapper.readValue(read(barMessage), MessageBar.class);
-
-    assertThat(result.getType())
-      .describedAs("Unexpected type for message")
-      .isEqualTo(Message.Type.BAR);
-    assertThat(result.getDancerId())
-      .describedAs("Unexpected value for field \"dancerId\"")
-      .isEqualTo(UUID.fromString("e58ed763-928c-4155-bee9-fdbaaadc15f3"));
-    assertThat(result.getBar())
-      .describedAs("Unexpected value for field \"bar\"")
-      .isEqualTo("42");
-  }
 
   @Test
   @DisplayName("Deserialize a MessageChat message works for valid messages")
