@@ -35,7 +35,6 @@ public class KikerikiState
     UUID dancerId = message.getDancerId();
     DancerInvolvement dancerInvolvement = getDancerInvolvement(dancerId);
     dancerInvolvement.setLastLogin(message.getTime());
-    dancerInvolvement.clearLastMailSent();
     return dancerInvolvement;
   }
 
@@ -46,12 +45,10 @@ public class KikerikiState
     switch (message.getStatus())
     {
       case NEW:
-        dancerInvolvement.addUnreadMessage(message.getMessageId());
+        dancerInvolvement.addUnreadChatMessage(message.getMessageId());
         break;
       case READ:
-        dancerInvolvement.setLastMessageRead(message.getTime());
-        dancerInvolvement.markMessageAsRead(message.getMessageId());
-        dancerInvolvement.clearLastMailSent();
+        dancerInvolvement.markChatMessagesAsSeen(message.getTime());
         break;
     }
     return dancerInvolvement;

@@ -1,47 +1,61 @@
 package net.dancier.kikeriki.state;
 
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
 
-@Data
 @RequiredArgsConstructor
+@EqualsAndHashCode(of = "dancerId")
+@ToString
 public class DancerInvolvement
 {
   public final static ZonedDateTime NEVER = ZonedDateTime.ofInstant(Instant.EPOCH, ZoneId.of("Europe/Berlin"));
 
 
+  @Getter
   private final UUID dancerId;
-  private final Set<UUID> unreadMessages = new HashSet<>();
+  private final Set<UUID> unseenMessages = new HashSet<>();
 
+  @Getter
   private ZonedDateTime lastMailSent = NEVER;
-  private ZonedDateTime lastLogin = NEVER;
-  private ZonedDateTime lastMessageRead = NEVER;
+  @Getter
+  private ZonedDateTime lastInvolvement = NEVER;
 
-  public boolean addUnreadMessage(UUID id)
+
+  public void setLastLogin(ZonedDateTime timestamp)
   {
-    return unreadMessages.add(id);
+    lastInvolvement = timestamp;
+    unseenMessages.clear();
   }
 
-  public boolean markMessageAsRead(UUID id)
+  public void addUnreadChatMessage(UUID id)
   {
-    return unreadMessages.remove(id);
+    unseenMessages.add(id);
   }
 
-  public ZonedDateTime getLastInvolvement()
+  public void markChatMessagesAsSeen(ZonedDateTime timestamp)
   {
-    return lastLogin.isAfter(lastMessageRead) ? lastLogin : lastMessageRead;
+    lastInvolvement = timestamp;
+    unseenMessages.clear();
   }
 
-  public void clearLastMailSent()
+  public void setLastMailSent(ZonedDateTime timestamp)
   {
-    lastMailSent = NEVER;
+    lastMailSent = timestamp;
+  }
+
+  public Set<UUID> getUnseenMessages()
+  {
+    return Collections.unmodifiableSet(unseenMessages);
   }
 }

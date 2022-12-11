@@ -122,7 +122,7 @@ public class KikerikiApplicationIT
             .filter(involvement -> involvement.getDancerId().toString().equals(UUID_DANCER))
             .findFirst()
             .get()
-            .getUnreadMessages())
+            .getUnseenMessages())
           .describedAs("Unexpected unseen chat-messages")
           .containsExactlyInAnyOrder(UUID.fromString(UUID_MESSAGE));
       });
@@ -165,7 +165,7 @@ public class KikerikiApplicationIT
             .filter(involvement -> involvement.getDancerId().toString().equals(UUID_DANCER))
             .findFirst()
             .get()
-            .getUnreadMessages())
+            .getUnseenMessages())
           .describedAs("Unexpected unseen chat-messages")
           .isEmpty();
       });
@@ -208,7 +208,7 @@ public class KikerikiApplicationIT
             .filter(involvement -> involvement.getDancerId().toString().equals(UUID_DANCER))
             .findFirst()
             .get()
-            .getUnreadMessages())
+            .getUnseenMessages())
           .describedAs("Unexpected unseen chat-messages")
           .isEmpty();
       });
