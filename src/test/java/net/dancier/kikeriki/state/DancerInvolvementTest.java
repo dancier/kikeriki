@@ -127,6 +127,26 @@ public class DancerInvolvementTest
   }
 
   @Test
+  @DisplayName("If a timestamp for the last login is set, the timestamp for the last mail sent is reset to the unix-epoch")
+  public void testSetLastLoginResetsLastMailSent()
+  {
+    // Given
+    DancerInvolvement involvement = new DancerInvolvement(UUID.randomUUID());
+    ZonedDateTime before = involvement.getLastInvolvement();
+    ZonedDateTime timestampLastMailSent = before.plusHours(1);
+    involvement.setLastMailSent(timestampLastMailSent);
+    ZonedDateTime timestampLastLogin = before.plusHours(3);
+
+    // When
+    involvement.setLastLogin(timestampLastLogin);
+
+    // Then
+    assertThat(involvement.getLastMailSent())
+      .describedAs("The timestamp for the last mail sent should equal the unix-epoch")
+      .isEqualTo(DancerInvolvement.NEVER);
+  }
+
+  @Test
   @DisplayName("If the chat-messages are marked as seen, the according timestamp is remembered as last involvement")
   public void testMarkChatMessagesAsSeenShouldBeRememberedAsLastInvolvement()
   {
@@ -162,6 +182,26 @@ public class DancerInvolvementTest
     assertThat(involvement.getUnseenMessages())
       .describedAs("The remembered unseen messages should be cleard")
       .isEmpty();
+  }
+
+  @Test
+  @DisplayName("If the chat-messages are marked as seen, the timestamp for the last mail sent is reset to the unix-epoch")
+  public void testMarkChatMessagesAsSeenResetsLastMailSent()
+  {
+    // Given
+    DancerInvolvement involvement = new DancerInvolvement(UUID.randomUUID());
+    ZonedDateTime before = involvement.getLastInvolvement();
+    ZonedDateTime timestampLastMailSent = before.plusHours(1);
+    involvement.setLastMailSent(timestampLastMailSent);
+    ZonedDateTime timestampMessageRead = before.plusHours(3);
+
+    // When
+    involvement.markChatMessagesAsSeen(timestampMessageRead);
+
+    // Then
+    assertThat(involvement.getLastMailSent())
+      .describedAs("The timestamp for the last mail sent should equal the unix-epoch")
+      .isEqualTo(DancerInvolvement.NEVER);
   }
 
   @Test
