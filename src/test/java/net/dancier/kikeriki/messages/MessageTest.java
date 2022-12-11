@@ -231,7 +231,7 @@ public class MessageTest
       .isEqualTo(ZonedDateTime.parse("2021-12-30T23:00:00Z[UTC]"));
   }
 
-  static InputStream read(Resource resource)
+  public static InputStream read(Resource resource)
   {
     try
     {
