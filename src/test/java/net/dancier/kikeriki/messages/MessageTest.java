@@ -217,7 +217,7 @@ public class MessageTest
       .isEqualTo(UUID.fromString("e58ed763-928c-4155-bee9-fdbaaadc15f3"));
     assertThat(result.getTime())
       .describedAs("Unexpected value for field \"time\"")
-      .isEqualTo(ZonedDateTime.parse("2021-12-30T23:00:00Z[UTC]"));
+      .isEqualTo(ZonedDateTime.parse("2022-01-03T23:00:00Z[UTC]"));
 
     result = mapper.readValue(read(mailSentMessageWithUnknownField), MessageMailSent.class);
     assertThat(result.getType())
