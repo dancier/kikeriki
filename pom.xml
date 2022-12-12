@@ -89,6 +89,9 @@
 		<finalName>kikeriki</finalName>
 		<plugins>
 			<plugin>
+				<artifactId>maven-failsafe-plugin</artifactId>
+			</plugin>
+			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
