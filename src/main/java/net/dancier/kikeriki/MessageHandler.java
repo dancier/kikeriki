@@ -1,7 +1,9 @@
 package net.dancier.kikeriki;
 
+import net.dancier.kikeriki.messages.*;
+
+
 public interface MessageHandler
 {
-  void handleFoo(String key, MessageFoo foo);
-  void handleBar(String key, MessageBar bar);
+  void handle(String key, Message message);
 }
