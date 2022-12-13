@@ -20,7 +20,7 @@ public class InvolveDancersMessageHandler implements MessageHandler
 
   @Getter
   @Setter
-  private boolean involvementEnabled = true;
+  private boolean involvementEnabled = false;
 
   @Override
   public void handle(String key, Message message)
