@@ -15,15 +15,23 @@ import org.springframework.kafka.core.ConsumerFactory;
 public class KikerikiApplicationConfiguration
 {
   @Bean
-  public MessageHandler messageHandler(
+  public DancerInvolver involver(
     KikerikiState kikerikiState,
     KikerikiApplicationProperties properties)
   {
-    return new InvolveDancersMessageHandler(
+    return new DancerInvolver(
       kikerikiState,
       properties.getInvolveDancerAfter(),
       properties.getInvolvementCheckInterval(),
       properties.getReinvolvementInterval());
+  }
+
+  @Bean
+  public MessageHandler messageHandler(
+    KikerikiState kikerikiState,
+    DancerInvolver involver)
+  {
+    return new InvolveDancersMessageHandler(kikerikiState, involver);
   }
 
   @Bean

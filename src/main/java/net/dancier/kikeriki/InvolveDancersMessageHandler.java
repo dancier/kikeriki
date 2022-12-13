@@ -8,7 +8,6 @@ import net.dancier.kikeriki.messages.*;
 import net.dancier.kikeriki.state.DancerInvolvement;
 import net.dancier.kikeriki.state.KikerikiState;
 
-import java.time.Duration;
 import java.time.ZonedDateTime;
 
 
@@ -17,11 +16,7 @@ import java.time.ZonedDateTime;
 public class InvolveDancersMessageHandler implements MessageHandler
 {
   private final KikerikiState state;
-  private final Duration involveDancerAfter;
-  private final Duration involvementCheckInterval;
-  private final Duration reinvolvementInterval;
-
-  private ZonedDateTime lastGeneralInvolvement = DancerInvolvement.NEVER;
+  private final DancerInvolver involver;
 
   @Getter
   @Setter
@@ -51,8 +46,11 @@ public class InvolveDancersMessageHandler implements MessageHandler
     log.info("handling key=%s, message=%s", key, message);
     DancerInvolvement dancerInvolvement = state.handle(message);
     ZonedDateTime lastInvolvement = dancerInvolvement.getLastInvolvement();
-    involveDancer(dancerInvolvement, lastInvolvement, message.getTime());
-    involveOtherDancers(message.getTime());
+    if (involvementEnabled)
+    {
+      involver.involveDancer(dancerInvolvement, lastInvolvement, message.getTime());
+      involver.involveOtherDancers(message.getTime());
+    }
   }
 
   void handle(String key, MessageChat message)
@@ -60,57 +58,20 @@ public class InvolveDancersMessageHandler implements MessageHandler
     log.info("handling key=%s, message=%s", key, message);
     DancerInvolvement dancerInvolvement = state.handle(message);
     ZonedDateTime lastInvolvement = dancerInvolvement.getLastInvolvement();
-    involveDancer(dancerInvolvement, lastInvolvement, message.getTime());
-    involveOtherDancers(message.getTime());
+    if (involvementEnabled)
+    {
+      involver.involveDancer(dancerInvolvement, lastInvolvement, message.getTime());
+      involver.involveOtherDancers(message.getTime());
+    }
   }
 
   void handle(String key, MessageMailSent message)
   {
     log.info("handling key=%s, message=%s", key, message);
     state.handle(message);
-    involveOtherDancers(message.getTime());
-  }
-
-  void involveDancer(
-    DancerInvolvement dancerInvolvement,
-    ZonedDateTime lastInvolvement,
-    ZonedDateTime now)
-  {
-    if (!involvementEnabled)
-      return;
-
-    if (lastInvolvement.plus(involveDancerAfter).isBefore(now))
+    if (involvementEnabled)
     {
-      log.info(
-        "involving dancer %s (last involvement={}, now={})",
-        dancerInvolvement.getDancerId(),
-        lastInvolvement,
-        now);
+      involver.involveOtherDancers(message.getTime());
     }
-  }
-
-  void involveOtherDancers(ZonedDateTime now)
-  {
-    if (!involvementEnabled)
-      return;
-
-    if (lastGeneralInvolvement.plus(involvementCheckInterval).isAfter(now))
-      return;
-
-    lastGeneralInvolvement = now;
-    state
-      .getDancerInvolvements()
-      .filter(dancerInvolvement -> dancerInvolvement.getLastInvolvement().plus(involveDancerAfter).isBefore(now))
-      .forEach(dancerInvolvement -> sendMail(dancerInvolvement, now));
-  }
-
-  void sendMail(DancerInvolvement involvement, ZonedDateTime now)
-  {
-    if (involvement.getLastMailSent().plus(reinvolvementInterval).isAfter(now))
-      // Do not send involvement-mails more frequent than defined in reinvolvementInterval,
-      // if the user does not react to it
-      return;
-
-    // TODO: Send a Mail and emmit a message of type MessageMailSent
   }
 }
