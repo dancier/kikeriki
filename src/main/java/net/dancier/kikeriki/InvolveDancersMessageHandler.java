@@ -25,6 +25,7 @@ public class InvolveDancersMessageHandler implements MessageHandler
   @Override
   public void handle(String key, Message message)
   {
+    log.info("handling key={}, message={}", key, message);
     switch (message.getType())
     {
       case LOGIN:
@@ -43,7 +44,6 @@ public class InvolveDancersMessageHandler implements MessageHandler
 
   void handle(String key, MessageLogin message)
   {
-    log.info("handling key=%s, message=%s", key, message);
     DancerInvolvement dancerInvolvement = state.handle(message);
     ZonedDateTime lastInvolvement = dancerInvolvement.getLastInvolvement();
     if (involvementEnabled)
@@ -55,7 +55,6 @@ public class InvolveDancersMessageHandler implements MessageHandler
 
   void handle(String key, MessageChat message)
   {
-    log.info("handling key=%s, message=%s", key, message);
     DancerInvolvement dancerInvolvement = state.handle(message);
     ZonedDateTime lastInvolvement = dancerInvolvement.getLastInvolvement();
     if (involvementEnabled)
@@ -67,7 +66,6 @@ public class InvolveDancersMessageHandler implements MessageHandler
 
   void handle(String key, MessageMailSent message)
   {
-    log.info("handling key=%s, message=%s", key, message);
     state.handle(message);
     if (involvementEnabled)
     {
