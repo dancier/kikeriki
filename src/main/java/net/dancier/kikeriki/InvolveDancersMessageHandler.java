@@ -45,10 +45,9 @@ public class InvolveDancersMessageHandler implements MessageHandler
   void handle(String key, MessageLogin message)
   {
     DancerInvolvement dancerInvolvement = state.handle(message);
-    ZonedDateTime lastInvolvement = dancerInvolvement.getLastInvolvement();
     if (involvementEnabled)
     {
-      involver.involveDancer(dancerInvolvement, lastInvolvement, message.getTime());
+      involver.involveDancer(dancerInvolvement, message.getTime());
       involver.involveOtherDancers(message.getTime());
     }
   }
@@ -56,10 +55,9 @@ public class InvolveDancersMessageHandler implements MessageHandler
   void handle(String key, MessageChat message)
   {
     DancerInvolvement dancerInvolvement = state.handle(message);
-    ZonedDateTime lastInvolvement = dancerInvolvement.getLastInvolvement();
     if (involvementEnabled)
     {
-      involver.involveDancer(dancerInvolvement, lastInvolvement, message.getTime());
+      involver.involveDancer(dancerInvolvement, message.getTime());
       involver.involveOtherDancers(message.getTime());
     }
   }

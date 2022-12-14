@@ -23,15 +23,14 @@ public class DancerInvolver
 
   public void involveDancer(
     DancerInvolvement dancerInvolvement,
-    ZonedDateTime lastInvolvement,
     ZonedDateTime now)
   {
-    if (lastInvolvement.plus(involveDancerAfter).isBefore(now))
+    if (dancerInvolvement.getLastInvolvement().plus(involveDancerAfter).isBefore(now))
     {
       log.info(
         "involving dancer %s (last involvement={}, now={})",
         dancerInvolvement.getDancerId(),
-        lastInvolvement,
+        dancerInvolvement.getLastInvolvement(),
         now);
     }
   }
