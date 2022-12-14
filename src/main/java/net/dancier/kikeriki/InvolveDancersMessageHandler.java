@@ -8,8 +8,6 @@ import net.dancier.kikeriki.messages.*;
 import net.dancier.kikeriki.state.DancerInvolvement;
 import net.dancier.kikeriki.state.KikerikiState;
 
-import java.time.ZonedDateTime;
-
 
 @Slf4j
 @RequiredArgsConstructor
@@ -45,10 +43,9 @@ public class InvolveDancersMessageHandler implements MessageHandler
   void handle(String key, MessageLogin message)
   {
     DancerInvolvement dancerInvolvement = state.handle(message);
-    ZonedDateTime lastInvolvement = dancerInvolvement.getLastInvolvement();
     if (involvementEnabled)
     {
-      involver.involveDancer(dancerInvolvement, lastInvolvement, message.getTime());
+      involver.involveDancer(dancerInvolvement, message.getTime());
       involver.involveOtherDancers(message.getTime());
     }
   }
@@ -56,10 +53,9 @@ public class InvolveDancersMessageHandler implements MessageHandler
   void handle(String key, MessageChat message)
   {
     DancerInvolvement dancerInvolvement = state.handle(message);
-    ZonedDateTime lastInvolvement = dancerInvolvement.getLastInvolvement();
     if (involvementEnabled)
     {
-      involver.involveDancer(dancerInvolvement, lastInvolvement, message.getTime());
+      involver.involveDancer(dancerInvolvement, message.getTime());
       involver.involveOtherDancers(message.getTime());
     }
   }
