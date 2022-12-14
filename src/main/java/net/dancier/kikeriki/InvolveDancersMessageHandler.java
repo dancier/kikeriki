@@ -1,71 +1,93 @@
 package net.dancier.kikeriki;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.dancier.kikeriki.messages.*;
 import net.dancier.kikeriki.state.DancerInvolvement;
 import net.dancier.kikeriki.state.KikerikiState;
+import net.dancier.kikeriki.state.KikerikiStateFactory;
 
 
 @Slf4j
-@RequiredArgsConstructor
 public class InvolveDancersMessageHandler implements MessageHandler
 {
-  private final KikerikiState state;
+  private final KikerikiStateFactory stateFactory;
+  private final KikerikiState[] state;
+  private final long[] endOffsets;
   private final DancerInvolver involver;
 
-  @Getter
-  @Setter
-  private boolean involvementEnabled = false;
+
+  public InvolveDancersMessageHandler(
+    KikerikiStateFactory stateFactory,
+    int numPartitions,
+    DancerInvolver involver)
+  {
+    this.stateFactory = stateFactory;
+    this.state = new KikerikiState[numPartitions];
+    this.endOffsets = new long[numPartitions];
+    this.involver = involver;
+  }
+
 
   @Override
-  public void handle(String key, Message message)
+  public void addPartition(int partition, long endOffset)
   {
-    log.info("handling key={}, message={}", key, message);
+    state[partition] = stateFactory.createKikerikiState();
+    endOffsets[partition] = endOffset;
+  }
+
+  @Override
+  public void removePartition(int partition)
+  {
+    state[partition] = null;
+    endOffsets[partition] = -1;
+  }
+
+  @Override
+  public void handle(int partition, long offset, Message message)
+  {
+    log.info("handling partition={}, message={}", partition, message);
     switch (message.getType())
     {
       case LOGIN:
-        handle(key, (MessageLogin)message);
+        handle(partition, offset, (MessageLogin)message);
         break;
       case CHAT:
-        handle(key, (MessageChat)message);
+        handle(partition, offset, (MessageChat)message);
         break;
       case MAIL_SENT:
-        handle(key, (MessageMailSent)message);
+        handle(partition, offset, (MessageMailSent)message);
         break;
       default:
         throw new RuntimeException("Received message of unknown type: " + message);
     }
   }
 
-  void handle(String key, MessageLogin message)
+  private void handle(int partition, long offset, MessageLogin message)
   {
-    DancerInvolvement dancerInvolvement = state.handle(message);
-    if (involvementEnabled)
+    DancerInvolvement dancerInvolvement = state[partition].handle(message);
+    if (endOffsets[partition] <= offset)
     {
       involver.involveDancer(dancerInvolvement, message.getTime());
-      involver.involveOtherDancers(message.getTime());
+      involver.involveOtherDancers(state[partition].getDancerInvolvements(), message.getTime());
     }
   }
 
-  void handle(String key, MessageChat message)
+  private void handle(int partition, long offset, MessageChat message)
   {
-    DancerInvolvement dancerInvolvement = state.handle(message);
-    if (involvementEnabled)
+    DancerInvolvement dancerInvolvement = state[partition].handle(message);
+    if (endOffsets[partition] <= offset)
     {
       involver.involveDancer(dancerInvolvement, message.getTime());
-      involver.involveOtherDancers(message.getTime());
+      involver.involveOtherDancers(state[partition].getDancerInvolvements(), message.getTime());
     }
   }
 
-  void handle(String key, MessageMailSent message)
+  private void handle(int partition, long offset, MessageMailSent message)
   {
-    state.handle(message);
-    if (involvementEnabled)
+    state[partition].handle(message);
+    if (endOffsets[partition] <= offset)
     {
-      involver.involveOtherDancers(message.getTime());
+      involver.involveOtherDancers(state[partition].getDancerInvolvements(), message.getTime());
     }
   }
 }

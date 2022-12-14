@@ -7,13 +7,13 @@ import net.dancier.kikeriki.state.KikerikiState;
 
 import java.time.Duration;
 import java.time.ZonedDateTime;
+import java.util.stream.Stream;
 
 
 @Slf4j
 @RequiredArgsConstructor
 public class DancerInvolver
 {
-  private final KikerikiState state;
   private final Duration involveDancerAfter;
   private final Duration involvementCheckInterval;
   private final Duration reinvolvementInterval;
@@ -35,14 +35,13 @@ public class DancerInvolver
     }
   }
 
-  public void involveOtherDancers(ZonedDateTime now)
+  public void involveOtherDancers(Stream<DancerInvolvement> involvements, ZonedDateTime now)
   {
     if (lastGeneralInvolvement.plus(involvementCheckInterval).isAfter(now))
       return;
 
     lastGeneralInvolvement = now;
-    state
-      .getDancerInvolvements()
+    involvements
       .filter(dancerInvolvement -> dancerInvolvement.getLastInvolvement().plus(involveDancerAfter).isBefore(now))
       .forEach(dancerInvolvement -> sendMail(dancerInvolvement, now));
   }

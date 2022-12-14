@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.dancier.kikeriki.messages.*;
 import org.apache.kafka.clients.consumer.Consumer;
+import org.apache.kafka.clients.consumer.ConsumerRebalanceListener;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.common.errors.WakeupException;
@@ -31,7 +32,9 @@ public class KikerikiConsumer implements Callable<Integer>
     try
     {
       log.info("{} - Subscribing to topic {}", id, topic);
-      consumer.subscribe(Arrays.asList(topic));
+      KikerikiRebalanceListener rebalanceListener =
+        new KikerikiRebalanceListener(consumer, messageHandler);
+      consumer.subscribe(Arrays.asList(topic), rebalanceListener);
 
       while (true)
       {
@@ -78,6 +81,6 @@ public class KikerikiConsumer implements Callable<Integer>
   {
     consumed++;
     log.debug("{} - {}: {}/{} - {}={}", id, offset, topic, partition, key, message);
-    messageHandler.handle(key, message);
+    messageHandler.handle(partition, offset, message);
   }
 }

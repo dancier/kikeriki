@@ -12,6 +12,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.ZonedDateTime;
+import java.util.stream.Stream;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -21,152 +22,170 @@ import static org.mockito.Mockito.*;
 public class InvolveDancersMessageHandlerTest
 {
   @Test
-  @DisplayName("Handling of a login-message, if ivolvement is disabled")
+  @DisplayName("Handling of an outdated login-message")
   public void testHandleLoginMessageWithInvolvementDisabled(
     @Mock KikerikiState state,
     @Mock DancerInvolver involver,
     @Mock DancerInvolvement involvement)
   {
-    InvolveDancersMessageHandler handler = new InvolveDancersMessageHandler(state, involver);
-    handler.setInvolvementEnabled(false);
-
     // Given
+    InvolveDancersMessageHandler handler =
+      new InvolveDancersMessageHandler(
+        () -> state,
+        1,
+        involver);
     MessageLogin message = new MessageLogin();
     ZonedDateTime time = ZonedDateTime.now();
     message.setTime(time);
+    handler.addPartition(0, 6);
     when(state.handle(any(MessageLogin.class))).thenReturn(involvement);
 
     // When
-    handler.handle("foo", message);
+    handler.handle(0, 5l, message);
 
     // Then
     verify(state, times(1)).handle(message);
     verify(involver, never()).involveDancer(any(DancerInvolvement.class), any(ZonedDateTime.class));
-    verify(involver, never()).involveOtherDancers(any(ZonedDateTime.class));
+    verify(involver, never()).involveOtherDancers(any(Stream.class), any(ZonedDateTime.class));
   }
 
   @Test
-  @DisplayName("Handling of a login-message, if ivolvement is enabled")
+  @DisplayName("Handling of a current login-message")
   public void testHandleLoginMessageWithInvolvementEnabled(
     @Mock KikerikiState state,
     @Mock DancerInvolver involver,
     @Mock DancerInvolvement involvement)
   {
-    InvolveDancersMessageHandler handler = new InvolveDancersMessageHandler(state, involver);
-    handler.setInvolvementEnabled(true);
-
     // Given
+    InvolveDancersMessageHandler handler =
+      new InvolveDancersMessageHandler(
+        () -> state,
+        1,
+        involver);
     MessageLogin message = new MessageLogin();
     ZonedDateTime time = ZonedDateTime.now();
     message.setTime(time);
+    handler.addPartition(0, 6);
     when(state.handle(any(MessageLogin.class))).thenReturn(involvement);
 
     // When
-    handler.handle("foo", message);
+    handler.handle(0, 6l, message);
 
     // Then
     verify(state, times(1)).handle(message);
     verify(involver, times(1)).involveDancer(involvement, time);
-    verify(involver, times(1)).involveOtherDancers(time);
+    verify(involver, times(1)).involveOtherDancers(any(Stream.class), eq(time));
   }
 
   @Test
-  @DisplayName("Handling of a chat-message, if ivolvement is disabled")
+  @DisplayName("Handling of a outdated chat-message")
   public void testHandleChatMessageWithInvolvementDisabled(
     @Mock KikerikiState state,
     @Mock DancerInvolver involver,
     @Mock DancerInvolvement involvement)
   {
-    InvolveDancersMessageHandler handler = new InvolveDancersMessageHandler(state, involver);
-    handler.setInvolvementEnabled(false);
-
     // Given
+    InvolveDancersMessageHandler handler =
+      new InvolveDancersMessageHandler(
+        () -> state,
+        1,
+        involver);
     MessageChat message = new MessageChat();
     ZonedDateTime time = ZonedDateTime.now();
     message.setTime(time);
+    handler.addPartition(0, 6);
     when(state.handle(any(MessageChat.class))).thenReturn(involvement);
 
     // When
-    handler.handle("foo", message);
+    handler.handle(0, 5l, message);
 
     // Then
     verify(state, times(1)).handle(message);
     verify(involver, never()).involveDancer(any(DancerInvolvement.class), any(ZonedDateTime.class));
-    verify(involver, never()).involveOtherDancers(any(ZonedDateTime.class));
+    verify(involver, never()).involveOtherDancers(any(Stream.class), any(ZonedDateTime.class));
   }
 
   @Test
-  @DisplayName("Handling of a chat-message, if ivolvement is enabled")
+  @DisplayName("Handling of a current chat-message")
   public void testHandleChatMessageWithInvolvementEnabled(
     @Mock KikerikiState state,
     @Mock DancerInvolver involver,
     @Mock DancerInvolvement involvement)
   {
-    InvolveDancersMessageHandler handler = new InvolveDancersMessageHandler(state, involver);
-    handler.setInvolvementEnabled(true);
-
     // Given
+    InvolveDancersMessageHandler handler =
+      new InvolveDancersMessageHandler(
+        () -> state,
+        1,
+        involver);
     MessageChat message = new MessageChat();
     ZonedDateTime time = ZonedDateTime.now();
     message.setTime(time);
+    handler.addPartition(0, 6);
     when(state.handle(any(MessageChat.class))).thenReturn(involvement);
 
     // When
-    handler.handle("foo", message);
+    handler.handle(0, 6l, message);
 
     // Then
     verify(state, times(1)).handle(message);
     verify(involver, times(1)).involveDancer(involvement, time);
-    verify(involver, times(1)).involveOtherDancers(time);
+    verify(involver, times(1)).involveOtherDancers(any(Stream.class), eq(time));
   }
 
   @Test
-  @DisplayName("Handling of a mail-sent-message, if ivolvement is disabled")
+  @DisplayName("Handling of a outdated mail-sent-message")
   public void testHandleMailSentMessageWithInvolvementDisabled(
     @Mock KikerikiState state,
     @Mock DancerInvolver involver,
     @Mock DancerInvolvement involvement)
   {
-    InvolveDancersMessageHandler handler = new InvolveDancersMessageHandler(state, involver);
-    handler.setInvolvementEnabled(false);
-
     // Given
+    InvolveDancersMessageHandler handler =
+      new InvolveDancersMessageHandler(
+        () -> state,
+        1,
+        involver);
     MessageMailSent message = new MessageMailSent();
     ZonedDateTime time = ZonedDateTime.now();
     message.setTime(time);
+    handler.addPartition(0, 6);
     when(state.handle(any(MessageMailSent.class))).thenReturn(involvement);
 
     // When
-    handler.handle("foo", message);
+    handler.handle(0, 5l, message);
 
     // Then
     verify(state, times(1)).handle(message);
     verify(involver, never()).involveDancer(any(DancerInvolvement.class), any(ZonedDateTime.class));
-    verify(involver, never()).involveOtherDancers(any(ZonedDateTime.class));
+    verify(involver, never()).involveOtherDancers(any(Stream.class), any(ZonedDateTime.class));
   }
 
   @Test
-  @DisplayName("Handling of a mail-sent-message, if ivolvement is enabled")
+  @DisplayName("Handling of a current mail-sent-message")
   public void testHandleMailSentMessageWithInvolvementEnabled(
     @Mock KikerikiState state,
     @Mock DancerInvolver involver,
     @Mock DancerInvolvement involvement)
   {
-    InvolveDancersMessageHandler handler = new InvolveDancersMessageHandler(state, involver);
-    handler.setInvolvementEnabled(true);
-
     // Given
+    InvolveDancersMessageHandler handler =
+      new InvolveDancersMessageHandler(
+        () -> state,
+        1,
+        involver);
     MessageMailSent message = new MessageMailSent();
     ZonedDateTime time = ZonedDateTime.now();
     message.setTime(time);
+    handler.addPartition(0, 6);
     when(state.handle(any(MessageMailSent.class))).thenReturn(involvement);
 
     // When
-    handler.handle("foo", message);
+    handler.handle(0, 6l, message);
 
     // Then
     verify(state, times(1)).handle(message);
     verify(involver, never()).involveDancer(any(DancerInvolvement.class), any(ZonedDateTime.class));
-    verify(involver, times(1)).involveOtherDancers(time);
+    verify(involver, times(1)).involveOtherDancers(any(Stream.class), eq(time));
   }
 }

@@ -1,6 +1,7 @@
 dancier:
   kikeriki:
     topic: test
+    num-partitions: 10
     involve-dancer-after: 7d
     involvement-check-interval: 1d
     reinvolvement-interval: 28d
@@ -32,8 +33,8 @@ spring:
     client-id: DEV
     consumer:
       group-id: kikeriki
+      enable-auto-commit: false
       auto-offset-reset: earliest
-      auto-commit-interval: 5s
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       properties:
