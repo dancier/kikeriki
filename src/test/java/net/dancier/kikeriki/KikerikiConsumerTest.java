@@ -16,6 +16,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.core.io.Resource;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.test.context.EmbeddedKafka;
+import org.springframework.test.annotation.DirtiesContext;
 
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
@@ -68,9 +69,10 @@ public class KikerikiConsumerTest
 
 
   @Test
-  public void test()
+  @DirtiesContext
+  public void testValidMessages()
   {
-    await("Send messages were received")
+    await("Wait for service Kikeriki")
       .atMost(Duration.ofSeconds(5))
       .untilAsserted(() ->
         restTemplate.getForObject(
@@ -88,6 +90,63 @@ public class KikerikiConsumerTest
     kafkaTemplate.send(record);
     record = new ProducerRecord<>(TOPIC, 1,"klaus", read(loginMessageWithUnknownField));
     record.headers().add(TYPE_ID_HEADER, Message.Type.LOGIN.name().getBytes());
+    kafkaTemplate.send(record);
+    record = new ProducerRecord<>(TOPIC, 0, "peter", read(chatMessage));
+    record.headers().add(TYPE_ID_HEADER, Message.Type.CHAT.name().getBytes());
+    kafkaTemplate.send(record);
+    record = new ProducerRecord<>(TOPIC, 1, "klaus", read(chatMessageWithUnknownField));
+    record.headers().add(TYPE_ID_HEADER, Message.Type.CHAT.name().getBytes());
+    kafkaTemplate.send(record);
+    record = new ProducerRecord<>(TOPIC, 0, "peter", read(mailSentMessage));
+    record.headers().add(TYPE_ID_HEADER, Message.Type.MAIL_SENT.name().getBytes());
+    kafkaTemplate.send(record);
+    record = new ProducerRecord<>(TOPIC, 1, "klaus", read(mailSentMessageWithUnknownField));
+    record.headers().add(TYPE_ID_HEADER, Message.Type.MAIL_SENT.name().getBytes());
+    kafkaTemplate.send(record);
+
+    await("Send messages were received")
+      .atMost(Duration.ofSeconds(5))
+      .untilAsserted(() ->
+      {
+        Assertions
+          .assertThat(messageHandler.receivedMessages[0])
+          .describedAs("Expected messages were received for partition 0")
+          .hasSize(3);
+        Assertions
+          .assertThat(messageHandler.receivedMessages[1])
+          .describedAs("Expected messages were received for partition 1")
+          .hasSize(3);
+      });
+  }
+
+  @Test
+  @DirtiesContext
+  public void testPoisionPillIsSkipped()
+  {
+    await("Wait for service Kikeriki")
+      .atMost(Duration.ofSeconds(5))
+      .untilAsserted(() ->
+        restTemplate.getForObject(
+            "http://localhost:" + port + "/actuator/health",
+            String.class
+          )
+          .contains("UP"));
+
+    ProducerRecord<String, String> record;
+    // The header <code>__TypeId__</code> is set by the JsonSerializer
+    // on the sending side, if configured correctly
+
+    record = new ProducerRecord<>(TOPIC, 0,"peter", read(loginMessage));
+    record.headers().add(TYPE_ID_HEADER, Message.Type.LOGIN.name().getBytes());
+    kafkaTemplate.send(record);
+    record = new ProducerRecord<>(TOPIC, 1,"klaus", read(loginMessageWithUnknownField));
+    record.headers().add(TYPE_ID_HEADER, Message.Type.LOGIN.name().getBytes());
+    kafkaTemplate.send(record);
+    record = new ProducerRecord<>(TOPIC, 0, "peter", "BOOM!");
+    record.headers().add(TYPE_ID_HEADER, "FOO".getBytes());
+    kafkaTemplate.send(record);
+    record = new ProducerRecord<>(TOPIC, 1, "klaus", "BOOM!");
+    record.headers().add(TYPE_ID_HEADER, "BAR".getBytes());
     kafkaTemplate.send(record);
     record = new ProducerRecord<>(TOPIC, 0, "peter", read(chatMessage));
     record.headers().add(TYPE_ID_HEADER, Message.Type.CHAT.name().getBytes());
