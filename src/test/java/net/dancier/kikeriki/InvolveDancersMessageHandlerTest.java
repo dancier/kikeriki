@@ -14,6 +14,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.time.ZonedDateTime;
 import java.util.stream.Stream;
 
+import static org.assertj.core.api.Assertions.assertThatException;
+import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -21,6 +23,69 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 public class InvolveDancersMessageHandlerTest
 {
+  @Test
+  @DisplayName("Receiving an event for a not assigned partition triggers an exception")
+  public void testReceivingEventForUnassignedPartitionTriggersException(
+    @Mock KikerikiState state,
+    @Mock DancerInvolver involver)
+  {
+    // Given
+    InvolveDancersMessageHandler handler =
+      new InvolveDancersMessageHandler(
+        () -> state,
+        1,
+        involver);
+    MessageLogin message = new MessageLogin();
+    ZonedDateTime time = ZonedDateTime.now();
+    message.setTime(time);
+
+    // When & Then
+    assertThatException().isThrownBy(() -> handler.handle(0, 5l, message));
+  }
+
+  @Test
+  @DisplayName("Receiving an event for an assigned partition does not trigger an exception")
+  public void testReceivingEventForAssignedPartitionDoesNotTriggerException(
+    @Mock KikerikiState state,
+    @Mock DancerInvolver involver)
+  {
+    // Given
+    InvolveDancersMessageHandler handler =
+      new InvolveDancersMessageHandler(
+        () -> state,
+        1,
+        involver);
+    MessageLogin message = new MessageLogin();
+    ZonedDateTime time = ZonedDateTime.now();
+    message.setTime(time);
+    handler.addPartition(0, 6);
+
+    // When & Then
+    assertThatNoException().isThrownBy(() -> handler.handle(0, 5l, message));
+  }
+
+  @Test
+  @DisplayName("Receiving an event for a revoked partition triggers an exception")
+  public void testReceivingEventForRevokedPartitionTriggersException(
+    @Mock KikerikiState state,
+    @Mock DancerInvolver involver)
+  {
+    // Given
+    InvolveDancersMessageHandler handler =
+      new InvolveDancersMessageHandler(
+        () -> state,
+        1,
+        involver);
+    MessageLogin message = new MessageLogin();
+    ZonedDateTime time = ZonedDateTime.now();
+    message.setTime(time);
+    handler.addPartition(0, 6);
+    handler.removePartition(0);
+
+    // When & Then
+    assertThatException().isThrownBy(() -> handler.handle(0, 5l, message));
+  }
+
   @Test
   @DisplayName("Handling of an outdated login-message")
   public void testHandleLoginMessageWithInvolvementDisabled(
