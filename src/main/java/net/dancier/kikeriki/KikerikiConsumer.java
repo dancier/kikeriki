@@ -7,7 +7,10 @@ import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerRebalanceListener;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
+import org.apache.kafka.common.TopicPartition;
+import org.apache.kafka.common.errors.RecordDeserializationException;
 import org.apache.kafka.common.errors.WakeupException;
+import org.springframework.kafka.support.serializer.DeserializationException;
 
 import java.time.Duration;
 import java.util.Arrays;
@@ -38,18 +41,32 @@ public class KikerikiConsumer implements Callable<Integer>
 
       while (true)
       {
-        ConsumerRecords<String, Message> records =
+        try
+        {
+          ConsumerRecords<String, Message> records =
             consumer.poll(Duration.ofSeconds(1));
 
-        log.info("{} - Received {} messages", id, records.count());
-        for (ConsumerRecord<String, Message> record : records)
+          log.info("{} - Received {} messages", id, records.count());
+          for (ConsumerRecord<String, Message> record : records)
+          {
+            handleRecord(
+              record.topic(),
+              record.partition(),
+              record.offset(),
+              record.key(),
+              record.value());
+          }
+        }
+        catch(RecordDeserializationException e)
         {
-          handleRecord(
-            record.topic(),
-            record.partition(),
-            record.offset(),
-            record.key(),
-            record.value());
+          TopicPartition tp = e.topicPartition();
+          Long offset = e.offset();
+          log.error(
+            "{} - Skipping poison pill @ {}|{}",
+            id,
+            tp,
+            offset);
+          consumer.seek(tp, offset + 1);
         }
       }
     }
