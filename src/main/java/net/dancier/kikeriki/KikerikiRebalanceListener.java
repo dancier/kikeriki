@@ -37,5 +37,6 @@ public class KikerikiRebalanceListener implements ConsumerRebalanceListener
   public void onPartitionsLost(Collection<TopicPartition> partitions)
   {
     log.warn("Lost partitions: {}", partitions);
+    onPartitionsRevoked(partitions);
   }
 }
