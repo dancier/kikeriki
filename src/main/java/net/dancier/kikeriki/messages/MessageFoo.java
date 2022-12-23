@@ -1,19 +1,22 @@
-package net.dancier.kikeriki;
+package net.dancier.kikeriki.messages;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 
+import java.util.UUID;
+
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class MessageBar extends Message
+public class MessageFoo extends Message
 {
-  private String bar;
+  UUID dancerId;
+  private String foo;
 
 
   @Override
   public Type getType()
   {
-    return Type.BAR;
+    return Type.FOO;
   }
 }

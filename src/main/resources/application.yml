@@ -36,8 +36,8 @@ spring:
       properties:
         partition.assignment.strategy: org.apache.kafka.clients.consumer.StickyAssignor
         spring.json.type.mapping: >
-          FOO:net.dancier.kikeriki.MessageFoo,
-          BAR:net.dancier.kikeriki.MessageBar
+          FOO:net.dancier.kikeriki.messages.MessageFoo,
+          BAR:net.dancier.kikeriki.messages.MessageBar
 logging:
   level:
     root: INFO
