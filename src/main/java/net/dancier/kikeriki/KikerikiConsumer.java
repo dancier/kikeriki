@@ -2,9 +2,7 @@ package net.dancier.kikeriki;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.dancier.kikeriki.messages.Message;
-import net.dancier.kikeriki.messages.MessageBar;
-import net.dancier.kikeriki.messages.MessageFoo;
+import net.dancier.kikeriki.messages.*;
 import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
@@ -80,16 +78,6 @@ public class KikerikiConsumer implements Callable<Integer>
   {
     consumed++;
     log.debug("{} - {}: {}/{} - {}={}", id, offset, topic, partition, key, message);
-    switch (message.getType())
-    {
-      case FOO:
-        messageHandler.handleFoo(key, (MessageFoo)message);
-        return;
-      case BAR:
-        messageHandler.handleBar(key, (MessageBar)message);
-        return;
-      default:
-        throw new RuntimeException("Received message of unknown type: " + message);
-    }
+    messageHandler.handle(key, message);
   }
 }
