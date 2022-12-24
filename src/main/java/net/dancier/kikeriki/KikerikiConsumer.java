@@ -2,13 +2,15 @@ package net.dancier.kikeriki;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.dancier.kikeriki.messages.Message;
-import net.dancier.kikeriki.messages.MessageBar;
-import net.dancier.kikeriki.messages.MessageFoo;
+import net.dancier.kikeriki.messages.*;
 import org.apache.kafka.clients.consumer.Consumer;
+import org.apache.kafka.clients.consumer.ConsumerRebalanceListener;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
+import org.apache.kafka.common.TopicPartition;
+import org.apache.kafka.common.errors.RecordDeserializationException;
 import org.apache.kafka.common.errors.WakeupException;
+import org.springframework.kafka.support.serializer.DeserializationException;
 
 import java.time.Duration;
 import java.util.Arrays;
@@ -33,22 +35,38 @@ public class KikerikiConsumer implements Callable<Integer>
     try
     {
       log.info("{} - Subscribing to topic {}", id, topic);
-      consumer.subscribe(Arrays.asList(topic));
+      KikerikiRebalanceListener rebalanceListener =
+        new KikerikiRebalanceListener(consumer, messageHandler);
+      consumer.subscribe(Arrays.asList(topic), rebalanceListener);
 
       while (true)
       {
-        ConsumerRecords<String, Message> records =
+        try
+        {
+          ConsumerRecords<String, Message> records =
             consumer.poll(Duration.ofSeconds(1));
 
-        log.info("{} - Received {} messages", id, records.count());
-        for (ConsumerRecord<String, Message> record : records)
+          log.info("{} - Received {} messages", id, records.count());
+          for (ConsumerRecord<String, Message> record : records)
+          {
+            handleRecord(
+              record.topic(),
+              record.partition(),
+              record.offset(),
+              record.key(),
+              record.value());
+          }
+        }
+        catch(RecordDeserializationException e)
         {
-          handleRecord(
-            record.topic(),
-            record.partition(),
-            record.offset(),
-            record.key(),
-            record.value());
+          TopicPartition tp = e.topicPartition();
+          Long offset = e.offset();
+          log.error(
+            "{} - Skipping poison pill @ {}|{}",
+            id,
+            tp,
+            offset);
+          consumer.seek(tp, offset + 1);
         }
       }
     }
@@ -80,16 +98,6 @@ public class KikerikiConsumer implements Callable<Integer>
   {
     consumed++;
     log.debug("{} - {}: {}/{} - {}={}", id, offset, topic, partition, key, message);
-    switch (message.getType())
-    {
-      case FOO:
-        messageHandler.handleFoo(key, (MessageFoo)message);
-        return;
-      case BAR:
-        messageHandler.handleBar(key, (MessageBar)message);
-        return;
-      default:
-        throw new RuntimeException("Received message of unknown type: " + message);
-    }
+    messageHandler.handle(partition, offset, message);
   }
 }

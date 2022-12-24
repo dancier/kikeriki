@@ -1,11 +1,12 @@
 package net.dancier.kikeriki;
 
-import net.dancier.kikeriki.messages.MessageBar;
-import net.dancier.kikeriki.messages.MessageFoo;
+import net.dancier.kikeriki.messages.*;
 
 
 public interface MessageHandler
 {
-  void handleFoo(String key, MessageFoo foo);
-  void handleBar(String key, MessageBar bar);
+  void handle(int partition, long offset, Message message);
+
+  void addPartition(int partition, long endOffset);
+  void removePartition(int partition);
 }

@@ -12,6 +12,7 @@ public class MessageChat extends Message
 {
   UUID dancerId;
   ZonedDateTime time;
+  UUID messageId;
   ChatMessageStatus status;
 
 
