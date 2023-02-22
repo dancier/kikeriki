@@ -1,5 +1,4 @@
 {
   "dancerId":"e58ed763-928c-4155-bee9-fdbaaadc15f3",
-  "foo": "42",
-  "unknown-field": 666
+  "time": "2022-01-04T00:00:00+01:00[Europe/Berlin]"
 }

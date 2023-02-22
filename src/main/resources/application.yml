@@ -1,6 +1,9 @@
 dancier:
   kikeriki:
     topic: test
+    involve-dancer-after: 7d
+    involvement-check-interval: 1d
+    reinvolvement-interval: 28d
 management:
   server:
     port: 8081
@@ -36,8 +39,9 @@ spring:
       properties:
         partition.assignment.strategy: org.apache.kafka.clients.consumer.StickyAssignor
         spring.json.type.mapping: >
-          FOO:net.dancier.kikeriki.messages.MessageFoo,
-          BAR:net.dancier.kikeriki.messages.MessageBar
+          LOGIN:net.dancier.kikeriki.messages.MessageLogin,
+          CHAT:net.dancier.kikeriki.messages.MessageChat,
+          MAIL_SENT:net.dancier.kikeriki.messages.MessageMailSent
 logging:
   level:
     root: INFO

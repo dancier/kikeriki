@@ -7,6 +7,8 @@ import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.validation.annotation.Validated;
 
+import java.time.Duration;
+
 
 @ConfigurationProperties(prefix = "dancier.kikeriki")
 @Validated
@@ -17,4 +19,13 @@ public class KikerikiApplicationProperties
   @NotNull
   @NotEmpty
   private String topic;
+
+  @NotNull
+  private Duration involveDancerAfter;
+
+  @NotNull
+  private Duration involvementCheckInterval;
+
+  @NotNull
+  private Duration reinvolvementInterval;
 }
