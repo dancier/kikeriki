@@ -16,11 +16,13 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.core.io.Resource;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.test.context.EmbeddedKafka;
+import org.springframework.test.annotation.DirtiesContext;
 
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.*;
 
+import static net.dancier.kikeriki.KikerikiConsumerTest.NUM_PARTITIONS;
 import static net.dancier.kikeriki.KikerikiConsumerTest.TOPIC;
 import static org.awaitility.Awaitility.await;
 
@@ -33,10 +35,11 @@ import static org.awaitility.Awaitility.await;
         "dancier.kikeriki.involve-dancer-after=1s",
         "dancier.kikeriki.involvement-check-interval=10s",
         "dancier.kikeriki.reinvolvement-interval=60s" })
-@EmbeddedKafka(topics = TOPIC)
+@EmbeddedKafka(topics = TOPIC, partitions = NUM_PARTITIONS)
 public class KikerikiConsumerTest
 {
   public static final String TOPIC = "FOO";
+  public static final int NUM_PARTITIONS = 2;
   public static final String TYPE_ID_HEADER = "__TypeId__";
 
   @LocalServerPort
@@ -44,8 +47,10 @@ public class KikerikiConsumerTest
 
   @Autowired
   private TestRestTemplate restTemplate;
+  @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
   @Autowired
   private KafkaTemplate<String, String> kafkaTemplate;
+  @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
   @Autowired
   private TestMessageHandler messageHandler;
 
@@ -64,9 +69,10 @@ public class KikerikiConsumerTest
 
 
   @Test
-  public void test()
+  @DirtiesContext
+  public void testValidMessages()
   {
-    await("Send messages were received")
+    await("Wait for service Kikeriki")
       .atMost(Duration.ofSeconds(5))
       .untilAsserted(() ->
         restTemplate.getForObject(
@@ -79,22 +85,22 @@ public class KikerikiConsumerTest
     // The header <code>__TypeId__</code> is set by the JsonSerializer
     // on the sending side, if configured correctly
 
-    record = new ProducerRecord<>(TOPIC, "peter", read(loginMessage));
+    record = new ProducerRecord<>(TOPIC, 0,"peter", read(loginMessage));
     record.headers().add(TYPE_ID_HEADER, Message.Type.LOGIN.name().getBytes());
     kafkaTemplate.send(record);
-    record = new ProducerRecord<>(TOPIC, "klaus", read(loginMessageWithUnknownField));
+    record = new ProducerRecord<>(TOPIC, 1,"klaus", read(loginMessageWithUnknownField));
     record.headers().add(TYPE_ID_HEADER, Message.Type.LOGIN.name().getBytes());
     kafkaTemplate.send(record);
-    record = new ProducerRecord<>(TOPIC, "peter", read(chatMessage));
+    record = new ProducerRecord<>(TOPIC, 0, "peter", read(chatMessage));
     record.headers().add(TYPE_ID_HEADER, Message.Type.CHAT.name().getBytes());
     kafkaTemplate.send(record);
-    record = new ProducerRecord<>(TOPIC, "klaus", read(chatMessageWithUnknownField));
+    record = new ProducerRecord<>(TOPIC, 1, "klaus", read(chatMessageWithUnknownField));
     record.headers().add(TYPE_ID_HEADER, Message.Type.CHAT.name().getBytes());
     kafkaTemplate.send(record);
-    record = new ProducerRecord<>(TOPIC, "peter", read(mailSentMessage));
+    record = new ProducerRecord<>(TOPIC, 0, "peter", read(mailSentMessage));
     record.headers().add(TYPE_ID_HEADER, Message.Type.MAIL_SENT.name().getBytes());
     kafkaTemplate.send(record);
-    record = new ProducerRecord<>(TOPIC, "klaus", read(mailSentMessageWithUnknownField));
+    record = new ProducerRecord<>(TOPIC, 1, "klaus", read(mailSentMessageWithUnknownField));
     record.headers().add(TYPE_ID_HEADER, Message.Type.MAIL_SENT.name().getBytes());
     kafkaTemplate.send(record);
 
@@ -103,20 +109,69 @@ public class KikerikiConsumerTest
       .untilAsserted(() ->
       {
         Assertions
-          .assertThat(messageHandler.receivedMessages)
-          .describedAs("A message with key 'peter' has been received")
-          .containsKey("peter");
-        Assertions
-          .assertThat(messageHandler.receivedMessages.get("peter"))
-          .describedAs("Expected messages for key 'peter' were received")
+          .assertThat(messageHandler.receivedMessages[0])
+          .describedAs("Expected messages were received for partition 0")
           .hasSize(3);
         Assertions
-          .assertThat(messageHandler.receivedMessages)
-          .describedAs("A message with key 'klaus' has been received")
-          .containsKey("klaus");
+          .assertThat(messageHandler.receivedMessages[1])
+          .describedAs("Expected messages were received for partition 1")
+          .hasSize(3);
+      });
+  }
+
+  @Test
+  @DirtiesContext
+  public void testPoisionPillIsSkipped()
+  {
+    await("Wait for service Kikeriki")
+      .atMost(Duration.ofSeconds(5))
+      .untilAsserted(() ->
+        restTemplate.getForObject(
+            "http://localhost:" + port + "/actuator/health",
+            String.class
+          )
+          .contains("UP"));
+
+    ProducerRecord<String, String> record;
+    // The header <code>__TypeId__</code> is set by the JsonSerializer
+    // on the sending side, if configured correctly
+
+    record = new ProducerRecord<>(TOPIC, 0,"peter", read(loginMessage));
+    record.headers().add(TYPE_ID_HEADER, Message.Type.LOGIN.name().getBytes());
+    kafkaTemplate.send(record);
+    record = new ProducerRecord<>(TOPIC, 1,"klaus", read(loginMessageWithUnknownField));
+    record.headers().add(TYPE_ID_HEADER, Message.Type.LOGIN.name().getBytes());
+    kafkaTemplate.send(record);
+    record = new ProducerRecord<>(TOPIC, 0, "peter", "BOOM!");
+    record.headers().add(TYPE_ID_HEADER, "FOO".getBytes());
+    kafkaTemplate.send(record);
+    record = new ProducerRecord<>(TOPIC, 1, "klaus", "BOOM!");
+    record.headers().add(TYPE_ID_HEADER, "BAR".getBytes());
+    kafkaTemplate.send(record);
+    record = new ProducerRecord<>(TOPIC, 0, "peter", read(chatMessage));
+    record.headers().add(TYPE_ID_HEADER, Message.Type.CHAT.name().getBytes());
+    kafkaTemplate.send(record);
+    record = new ProducerRecord<>(TOPIC, 1, "klaus", read(chatMessageWithUnknownField));
+    record.headers().add(TYPE_ID_HEADER, Message.Type.CHAT.name().getBytes());
+    kafkaTemplate.send(record);
+    record = new ProducerRecord<>(TOPIC, 0, "peter", read(mailSentMessage));
+    record.headers().add(TYPE_ID_HEADER, Message.Type.MAIL_SENT.name().getBytes());
+    kafkaTemplate.send(record);
+    record = new ProducerRecord<>(TOPIC, 1, "klaus", read(mailSentMessageWithUnknownField));
+    record.headers().add(TYPE_ID_HEADER, Message.Type.MAIL_SENT.name().getBytes());
+    kafkaTemplate.send(record);
+
+    await("Send messages were received")
+      .atMost(Duration.ofSeconds(5))
+      .untilAsserted(() ->
+      {
         Assertions
-          .assertThat(messageHandler.receivedMessages.get("klaus"))
-          .describedAs("Expected messages for key 'klaus' were received")
+          .assertThat(messageHandler.receivedMessages[0])
+          .describedAs("Expected messages were received for partition 0")
+          .hasSize(3);
+        Assertions
+          .assertThat(messageHandler.receivedMessages[1])
+          .describedAs("Expected messages were received for partition 1")
           .hasSize(3);
       });
   }
@@ -124,18 +179,29 @@ public class KikerikiConsumerTest
 
   static class TestMessageHandler implements MessageHandler
   {
-    Map<String, List<Message>> receivedMessages = new HashMap<>();
+    private final List<Message> receivedMessages[];
+
+    public TestMessageHandler(int numPartitions)
+    {
+      receivedMessages = new List[numPartitions];
+    }
 
     @Override
-    public void handle(String key, Message message)
+    public void handle(int partition, long offset, Message message)
     {
-      List<Message> messagesForKey = receivedMessages.get(key);
-      if (messagesForKey == null)
-      {
-        messagesForKey = new LinkedList<>();
-        receivedMessages.put(key, messagesForKey);
-      }
-      messagesForKey.add(message);
+      receivedMessages[partition].add(message);
+    }
+
+    @Override
+    public void addPartition(int partition, long endOffset)
+    {
+      receivedMessages[partition] = new LinkedList<>();
+    }
+
+    @Override
+    public void removePartition(int partition)
+    {
+      receivedMessages[partition] = null;
     }
   }
 
@@ -147,7 +213,7 @@ public class KikerikiConsumerTest
     @Primary
     public MessageHandler testMessageHandler()
     {
-      return new TestMessageHandler();
+      return new TestMessageHandler(NUM_PARTITIONS);
     }
   }
 

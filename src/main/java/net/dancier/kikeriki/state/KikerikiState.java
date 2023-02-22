@@ -1,6 +1,5 @@
 package net.dancier.kikeriki.state;
 
-import lombok.RequiredArgsConstructor;
 import net.dancier.kikeriki.messages.MessageChat;
 import net.dancier.kikeriki.messages.MessageLogin;
 import net.dancier.kikeriki.messages.MessageMailSent;
@@ -13,7 +12,6 @@ import java.util.stream.Stream;
 
 
 @Component
-@RequiredArgsConstructor
 public class KikerikiState
 {
   private final Map<UUID, DancerInvolvement> state = new HashMap<>();

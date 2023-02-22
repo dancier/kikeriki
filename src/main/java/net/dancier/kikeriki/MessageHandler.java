@@ -5,5 +5,8 @@ import net.dancier.kikeriki.messages.*;
 
 public interface MessageHandler
 {
-  void handle(String key, Message message);
+  void handle(int partition, long offset, Message message);
+
+  void addPartition(int partition, long endOffset);
+  void removePartition(int partition);
 }
