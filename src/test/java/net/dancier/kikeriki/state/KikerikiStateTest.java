@@ -138,7 +138,7 @@ class KikerikiStateTest
       .isEqualTo(ZonedDateTime.parse("2021-12-31T00:00:00+01:00[Europe/Berlin]"));
 
     involvement = state.handle(read(chatMessageNewMessage, MessageChat.class));
-    assertThat(involvement.getUnreadMessages())
+    assertThat(involvement.getUnseenMessages())
       .describedAs("Unread chat-message is missing")
       .contains(UUID.fromString("a58ed763-728c-9355-b339-3db21adc15a3"));
 
@@ -146,7 +146,7 @@ class KikerikiStateTest
     assertThat(involvement.getLastInvolvement())
       .describedAs("Unexpected last involvement")
       .isEqualTo(ZonedDateTime.parse("2022-01-03T00:00:00+01:00[Europe/Berlin]"));
-    assertThat(involvement.getUnreadMessages())
+    assertThat(involvement.getUnseenMessages())
       .describedAs("Unread chat-message should be cleared")
       .isEmpty();
 
