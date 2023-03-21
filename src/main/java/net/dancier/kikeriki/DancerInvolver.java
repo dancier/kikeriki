@@ -27,7 +27,7 @@ public class DancerInvolver
     if (dancerInvolvement.getLastInvolvement().plus(involveDancerAfter).isBefore(now))
     {
       log.info(
-        "involving dancer %s (last involvement={}, now={})",
+        "involving dancer {} (last involvement={}, now={})",
         dancerInvolvement.getDancerId(),
         dancerInvolvement.getLastInvolvement(),
         now);
@@ -48,10 +48,13 @@ public class DancerInvolver
   void sendMail(DancerInvolvement involvement, ZonedDateTime now)
   {
     if (involvement.getLastMailSent().plus(reinvolvementInterval).isAfter(now))
+    {
       // Do not send involvement-mails more frequent than defined in reinvolvementInterval,
       // if the user does not react to it
       return;
+    }
 
     // TODO: Send a Mail and emmit a message of type MessageMailSent
+    log.warn("A mails should be send here!");
   }
 }
