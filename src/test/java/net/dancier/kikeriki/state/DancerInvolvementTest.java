@@ -243,7 +243,7 @@ public class DancerInvolvementTest
   }
 
   @Test
-  @DisplayName("If a timestamp for the last sent mail is set, the unseen chant-messages schould not be cleared")
+  @DisplayName("If a timestamp for the last sent mail is set, the unseen chant-messages should not be cleared")
   public void testSetLastMailSentDoesNotClearUnseenMessages()
   {
     // Given
@@ -258,7 +258,7 @@ public class DancerInvolvementTest
 
     // Then
     assertThat(involvement.getUnseenMessages())
-      .describedAs("The remembered unseen messages should not be cleard")
+      .describedAs("The remembered unseen messages should not be cleared")
       .isNotEmpty();
   }
 }

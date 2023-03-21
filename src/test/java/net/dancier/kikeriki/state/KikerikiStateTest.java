@@ -108,7 +108,7 @@ class KikerikiStateTest
   }
 
   @Test
-  @DisplayName("getOrCreateDancerInvolvement() retreives an existing DancerInvolvement")
+  @DisplayName("getOrCreateDancerInvolvement() retrieves an existing DancerInvolvement")
   public void testGetOrCreateDancerInvolvementRetreivesExistingDancerInvolvement()
   {
     // Given
@@ -121,7 +121,7 @@ class KikerikiStateTest
 
     // Then
     assertThat(retreived)
-      .describedAs("The retreived DancerInvolvement should equal the one that was created before.")
+      .describedAs("The retrieved DancerInvolvement should equal the one that was created before.")
       .isEqualTo(created);
   }
 
