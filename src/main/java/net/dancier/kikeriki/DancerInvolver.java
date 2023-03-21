@@ -3,7 +3,6 @@ package net.dancier.kikeriki;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.dancier.kikeriki.state.DancerInvolvement;
-import net.dancier.kikeriki.state.KikerikiState;
 
 import java.time.Duration;
 import java.time.ZonedDateTime;
