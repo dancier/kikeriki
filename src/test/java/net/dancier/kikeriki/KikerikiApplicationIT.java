@@ -3,7 +3,6 @@ package net.dancier.kikeriki;
 import io.micrometer.core.instrument.util.IOUtils;
 import net.dancier.kikeriki.messages.Message;
 import net.dancier.kikeriki.messages.MessageTest;
-import net.dancier.kikeriki.state.DancerInvolvement;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -103,9 +102,10 @@ public class KikerikiApplicationIT
             .filter(involvement -> involvement.getDancerId().toString().equals(UUID_DANCER))
             .findFirst()
             .get()
-            .getLastInvolvement())
+            .getLastInvolvement()
+            .map(zdt -> zdt.toInstant()))
           .describedAs("The last involvment of the dancer should be her/his last login")
-          .isEqualTo(ZonedDateTime.parse(LAST_LOGIN));
+          .contains(ZonedDateTime.parse(LAST_LOGIN).toInstant());
         assertThat(
           involveDancersMessageHandler
             .getDancerInvolvements()
@@ -114,7 +114,7 @@ public class KikerikiApplicationIT
             .get()
             .getLastMailSent())
           .describedAs("No mails should have been sent to the dancer yet")
-          .isEqualTo(DancerInvolvement.NEVER);
+          .isEmpty();
         assertThat(
           involveDancersMessageHandler
             .getDancerInvolvements()
@@ -146,9 +146,10 @@ public class KikerikiApplicationIT
             .filter(involvement -> involvement.getDancerId().toString().equals(UUID_DANCER))
             .findFirst()
             .get()
-            .getLastInvolvement())
+            .getLastInvolvement()
+            .map(zdt -> zdt.toInstant()))
           .describedAs("The last involvement of the dancer should be the reading of the chat-message")
-          .isEqualTo(ZonedDateTime.parse(MESSAG_READ));
+          .contains(ZonedDateTime.parse(MESSAG_READ).toInstant());
         assertThat(
           involveDancersMessageHandler
             .getDancerInvolvements()
@@ -157,7 +158,7 @@ public class KikerikiApplicationIT
             .get()
             .getLastMailSent())
           .describedAs("No mails should have been sent to the dancer yet")
-          .isEqualTo(DancerInvolvement.NEVER);
+          .isEmpty();
         assertThat(
           involveDancersMessageHandler
             .getDancerInvolvements()
@@ -189,18 +190,20 @@ public class KikerikiApplicationIT
             .filter(involvement -> involvement.getDancerId().toString().equals(UUID_DANCER))
             .findFirst()
             .get()
-            .getLastInvolvement())
+            .getLastInvolvement()
+            .map(zdt -> zdt.toInstant()))
           .describedAs("The last involvement of the dancer should be the reading of the chat-message")
-          .isEqualTo(ZonedDateTime.parse(MESSAG_READ));
+          .contains(ZonedDateTime.parse(MESSAG_READ).toInstant());
         assertThat(
           involveDancersMessageHandler
             .getDancerInvolvements()
             .filter(involvement -> involvement.getDancerId().toString().equals(UUID_DANCER))
             .findFirst()
             .get()
-            .getLastMailSent())
+            .getLastMailSent()
+            .map(zdt -> zdt.toInstant()))
           .describedAs("Unexpected timestamp for the last sent mail")
-          .isEqualTo(ZonedDateTime.parse(MAIL_SENT));
+          .contains(ZonedDateTime.parse(MAIL_SENT).toInstant());
         assertThat(
           involveDancersMessageHandler
             .getDancerInvolvements()

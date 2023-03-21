@@ -18,6 +18,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URI;
+import java.time.Instant;
 import java.time.ZonedDateTime;
 import java.util.UUID;
 
@@ -133,9 +134,9 @@ class KikerikiStateTest
 
 
     involvement = state.handle(read(loginMessage, MessageLogin.class));
-    assertThat(involvement.getLastInvolvement())
+    assertThat(involvement.getLastInvolvement().map(zdt -> zdt.toInstant()))
       .describedAs("Unexpected last involvement")
-      .isEqualTo(ZonedDateTime.parse("2021-12-31T00:00:00+01:00[Europe/Berlin]"));
+      .contains(ZonedDateTime.parse("2021-12-31T00:00:00+01:00[Europe/Berlin]").toInstant());
 
     involvement = state.handle(read(chatMessageNewMessage, MessageChat.class));
     assertThat(involvement.getUnseenMessages())
@@ -143,20 +144,20 @@ class KikerikiStateTest
       .contains(UUID.fromString("a58ed763-728c-9355-b339-3db21adc15a3"));
 
     involvement = state.handle(read(chatMessageMessageRead, MessageChat.class));
-    assertThat(involvement.getLastInvolvement())
+    assertThat(involvement.getLastInvolvement().map(zdt -> zdt.toInstant()))
       .describedAs("Unexpected last involvement")
-      .isEqualTo(ZonedDateTime.parse("2022-01-03T00:00:00+01:00[Europe/Berlin]"));
+      .contains(ZonedDateTime.parse("2022-01-03T00:00:00+01:00[Europe/Berlin]").toInstant());
     assertThat(involvement.getUnseenMessages())
       .describedAs("Unread chat-message should be cleared")
       .isEmpty();
 
     state.handle(read(mailSentMessage, MessageMailSent.class));
-    assertThat(involvement.getLastInvolvement())
+    assertThat(involvement.getLastInvolvement().map(zdt -> zdt.toInstant()))
       .describedAs("Unexpected last involvement")
-      .isEqualTo(ZonedDateTime.parse("2022-01-03T00:00:00+01:00[Europe/Berlin]"));
-    assertThat(involvement.getLastMailSent())
+      .contains(ZonedDateTime.parse("2022-01-03T00:00:00+01:00[Europe/Berlin]").toInstant());
+    assertThat(involvement.getLastMailSent().map(zdt -> zdt.toInstant()))
       .describedAs("Unexpected timestamp for last sent mail")
-      .isEqualTo(ZonedDateTime.parse("2022-01-04T00:00:00+01:00[Europe/Berlin]"));
+      .contains(ZonedDateTime.parse("2022-01-04T00:00:00+01:00[Europe/Berlin]").toInstant());
   }
 
 
