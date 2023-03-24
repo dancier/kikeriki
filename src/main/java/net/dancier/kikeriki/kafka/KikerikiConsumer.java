@@ -1,16 +1,14 @@
-package net.dancier.kikeriki;
+package net.dancier.kikeriki.kafka;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.dancier.kikeriki.messages.*;
 import org.apache.kafka.clients.consumer.Consumer;
-import org.apache.kafka.clients.consumer.ConsumerRebalanceListener;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.common.TopicPartition;
 import org.apache.kafka.common.errors.RecordDeserializationException;
 import org.apache.kafka.common.errors.WakeupException;
-import org.springframework.kafka.support.serializer.DeserializationException;
 
 import java.time.Duration;
 import java.util.Arrays;

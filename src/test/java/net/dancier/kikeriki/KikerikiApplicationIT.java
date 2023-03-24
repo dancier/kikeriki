@@ -1,6 +1,7 @@
 package net.dancier.kikeriki;
 
 import io.micrometer.core.instrument.util.IOUtils;
+import net.dancier.kikeriki.kafka.InvolveDancersMessageHandler;
 import net.dancier.kikeriki.messages.Message;
 import net.dancier.kikeriki.messages.MessageTest;
 import org.apache.kafka.clients.producer.ProducerRecord;
@@ -20,7 +21,7 @@ import java.time.Duration;
 import java.time.ZonedDateTime;
 import java.util.UUID;
 
-import static net.dancier.kikeriki.KikerikiConsumerTest.TOPIC;
+import static net.dancier.kikeriki.kafka.KikerikiConsumerTest.TOPIC;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
 import static org.skyscreamer.jsonassert.JSONAssert.assertEquals;

@@ -1,4 +1,4 @@
-package net.dancier.kikeriki;
+package net.dancier.kikeriki.kafka;
 
 import net.dancier.kikeriki.messages.*;
 

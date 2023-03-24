@@ -1,6 +1,7 @@
-package net.dancier.kikeriki;
+package net.dancier.kikeriki.kafka;
 
 import lombok.extern.slf4j.Slf4j;
+import net.dancier.kikeriki.DancerInvolver;
 import net.dancier.kikeriki.messages.*;
 import net.dancier.kikeriki.state.DancerState;
 import net.dancier.kikeriki.state.KikerikiState;
@@ -94,12 +95,12 @@ public class InvolveDancersMessageHandler implements MessageHandler
     }
   }
 
-  Stream<DancerState> getDancerState(int partition)
+  public Stream<DancerState> getDancerState(int partition)
   {
     return state[partition].getDancerState();
   }
 
-  Stream<DancerState> getDancerState()
+  public Stream<DancerState> getDancerState()
   {
     return Arrays
       .stream(state)

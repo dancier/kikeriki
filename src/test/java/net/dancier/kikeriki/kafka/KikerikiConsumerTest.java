@@ -1,4 +1,4 @@
-package net.dancier.kikeriki;
+package net.dancier.kikeriki.kafka;
 
 import io.micrometer.core.instrument.util.IOUtils;
 import net.dancier.kikeriki.messages.*;
@@ -22,8 +22,8 @@ import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.*;
 
-import static net.dancier.kikeriki.KikerikiConsumerTest.NUM_PARTITIONS;
-import static net.dancier.kikeriki.KikerikiConsumerTest.TOPIC;
+import static net.dancier.kikeriki.kafka.KikerikiConsumerTest.NUM_PARTITIONS;
+import static net.dancier.kikeriki.kafka.KikerikiConsumerTest.TOPIC;
 import static org.awaitility.Awaitility.await;
 
 

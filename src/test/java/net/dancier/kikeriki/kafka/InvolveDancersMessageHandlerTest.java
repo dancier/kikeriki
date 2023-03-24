@@ -1,5 +1,6 @@
-package net.dancier.kikeriki;
+package net.dancier.kikeriki.kafka;
 
+import net.dancier.kikeriki.DancerInvolver;
 import net.dancier.kikeriki.messages.MessageChat;
 import net.dancier.kikeriki.messages.MessageLogin;
 import net.dancier.kikeriki.messages.MessageMailSent;

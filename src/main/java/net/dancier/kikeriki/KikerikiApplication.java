@@ -2,8 +2,8 @@ package net.dancier.kikeriki;
 
 import jakarta.annotation.PreDestroy;
 import lombok.extern.slf4j.Slf4j;
+import net.dancier.kikeriki.kafka.KikerikiConsumer;
 import org.apache.kafka.clients.consumer.Consumer;
-import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
