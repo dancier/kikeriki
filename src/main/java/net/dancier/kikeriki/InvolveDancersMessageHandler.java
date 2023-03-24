@@ -65,32 +65,32 @@ public class InvolveDancersMessageHandler implements MessageHandler
     }
   }
 
-  private void handle(int partition, long offset, MessageLogin message)
+  private void handle(int partition, long offset, MessageLogin messageLogin)
   {
-    DancerState dancerState = state[partition].handle(message);
+    DancerState dancerState = state[partition].handle(messageLogin);
     if (endOffsets[partition] <= offset)
     {
-      involver.involveDancer(dancerState, message.getTime());
-      involver.involveOtherDancers(getDancerState(partition), message.getTime());
+      involver.involveDancer(dancerState, messageLogin.getTime());
+      involver.involveOtherDancers(getDancerState(partition), messageLogin.getTime());
     }
   }
 
-  private void handle(int partition, long offset, MessageChat message)
+  private void handle(int partition, long offset, MessageChat messageChat)
   {
-    DancerState dancerState = state[partition].handle(message);
+    DancerState dancerState = state[partition].handle(messageChat);
     if (endOffsets[partition] <= offset)
     {
-      involver.involveDancer(dancerState, message.getTime());
-      involver.involveOtherDancers(getDancerState(partition), message.getTime());
+      involver.involveDancer(dancerState, messageChat.getTime());
+      involver.involveOtherDancers(getDancerState(partition), messageChat.getTime());
     }
   }
 
-  private void handle(int partition, long offset, MessageMailSent message)
+  private void handle(int partition, long offset, MessageMailSent messageMailSent)
   {
-    state[partition].handle(message);
+    state[partition].handle(messageMailSent);
     if (endOffsets[partition] <= offset)
     {
-      involver.involveOtherDancers(getDancerState(partition), message.getTime());
+      involver.involveOtherDancers(getDancerState(partition), messageMailSent.getTime());
     }
   }
 
