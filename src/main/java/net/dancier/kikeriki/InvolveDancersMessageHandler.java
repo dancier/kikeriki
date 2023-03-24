@@ -6,6 +6,8 @@ import net.dancier.kikeriki.state.DancerInvolvement;
 import net.dancier.kikeriki.state.KikerikiState;
 import net.dancier.kikeriki.state.KikerikiStateFactory;
 
+import java.util.stream.Stream;
+
 
 @Slf4j
 public class InvolveDancersMessageHandler implements MessageHandler
@@ -68,7 +70,7 @@ public class InvolveDancersMessageHandler implements MessageHandler
     if (endOffsets[partition] <= offset)
     {
       involver.involveDancer(dancerInvolvement, message.getTime());
-      involver.involveOtherDancers(state[partition].getDancerInvolvements(), message.getTime());
+      involver.involveOtherDancers(getDancerInvolvements(partition), message.getTime());
     }
   }
 
@@ -78,7 +80,7 @@ public class InvolveDancersMessageHandler implements MessageHandler
     if (endOffsets[partition] <= offset)
     {
       involver.involveDancer(dancerInvolvement, message.getTime());
-      involver.involveOtherDancers(state[partition].getDancerInvolvements(), message.getTime());
+      involver.involveOtherDancers(getDancerInvolvements(partition), message.getTime());
     }
   }
 
@@ -87,7 +89,12 @@ public class InvolveDancersMessageHandler implements MessageHandler
     state[partition].handle(message);
     if (endOffsets[partition] <= offset)
     {
-      involver.involveOtherDancers(state[partition].getDancerInvolvements(), message.getTime());
+      involver.involveOtherDancers(getDancerInvolvements(partition), message.getTime());
     }
+  }
+
+  Stream<DancerInvolvement> getDancerInvolvements(int partition)
+  {
+    return state[partition].getDancerInvolvements();
   }
 }
