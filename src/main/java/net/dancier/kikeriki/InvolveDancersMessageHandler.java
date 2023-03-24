@@ -2,7 +2,7 @@ package net.dancier.kikeriki;
 
 import lombok.extern.slf4j.Slf4j;
 import net.dancier.kikeriki.messages.*;
-import net.dancier.kikeriki.state.DancerInvolvement;
+import net.dancier.kikeriki.state.DancerState;
 import net.dancier.kikeriki.state.KikerikiState;
 import net.dancier.kikeriki.state.KikerikiStateFactory;
 
@@ -67,21 +67,21 @@ public class InvolveDancersMessageHandler implements MessageHandler
 
   private void handle(int partition, long offset, MessageLogin message)
   {
-    DancerInvolvement dancerInvolvement = state[partition].handle(message);
+    DancerState dancerState = state[partition].handle(message);
     if (endOffsets[partition] <= offset)
     {
-      involver.involveDancer(dancerInvolvement, message.getTime());
-      involver.involveOtherDancers(getDancerInvolvements(partition), message.getTime());
+      involver.involveDancer(dancerState, message.getTime());
+      involver.involveOtherDancers(getDancerState(partition), message.getTime());
     }
   }
 
   private void handle(int partition, long offset, MessageChat message)
   {
-    DancerInvolvement dancerInvolvement = state[partition].handle(message);
+    DancerState dancerState = state[partition].handle(message);
     if (endOffsets[partition] <= offset)
     {
-      involver.involveDancer(dancerInvolvement, message.getTime());
-      involver.involveOtherDancers(getDancerInvolvements(partition), message.getTime());
+      involver.involveDancer(dancerState, message.getTime());
+      involver.involveOtherDancers(getDancerState(partition), message.getTime());
     }
   }
 
@@ -90,20 +90,20 @@ public class InvolveDancersMessageHandler implements MessageHandler
     state[partition].handle(message);
     if (endOffsets[partition] <= offset)
     {
-      involver.involveOtherDancers(getDancerInvolvements(partition), message.getTime());
+      involver.involveOtherDancers(getDancerState(partition), message.getTime());
     }
   }
 
-  Stream<DancerInvolvement> getDancerInvolvements(int partition)
+  Stream<DancerState> getDancerState(int partition)
   {
-    return state[partition].getDancerInvolvements();
+    return state[partition].getDancerState();
   }
 
-  Stream<DancerInvolvement> getDancerInvolvements()
+  Stream<DancerState> getDancerState()
   {
     return Arrays
       .stream(state)
       .filter(kikerikiState -> kikerikiState != null)
-      .flatMap(kikerikiState -> kikerikiState.getDancerInvolvements());
+      .flatMap(kikerikiState -> kikerikiState.getDancerState());
   }
 }

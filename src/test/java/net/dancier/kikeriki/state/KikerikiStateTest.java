@@ -18,7 +18,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URI;
-import java.time.Instant;
 import java.time.ZonedDateTime;
 import java.util.UUID;
 
@@ -53,8 +52,8 @@ class KikerikiStateTest
   }
 
   @Test
-  @DisplayName("A newly created KikerikiState should not contain any DancerInvolvement's")
-  public void testNewKikerikyStateShouldNotContainDancerInvolvements()
+  @DisplayName("A newly created KikerikiState should not contain any DancerState")
+  public void testNewKikerikyStateShouldNotContainDancerState()
   {
     // Given
 
@@ -62,67 +61,67 @@ class KikerikiStateTest
     KikerikiState state = new KikerikiState();
 
     // Then
-    assertThat(state.getDancerInvolvements())
-      .describedAs("There should not exist any DancerInvolvement yet")
+    assertThat(state.getDancerState())
+      .describedAs("There should not exist any DancerState yet")
       .isEmpty();
   }
 
   @Test
-  @DisplayName("getOrCreateDancerInvolvement() creates a DancerInvolvement, if it does not exist")
-  public void testGetOrCreateDancerInvolvementCreatesDancerInvolvement()
+  @DisplayName("getOrCreateDancerState() creates a DancerState, if it does not exist")
+  public void testGetOrCreateDancerStateCreatesDancerState()
   {
     // Given
     KikerikiState state = new KikerikiState();
 
     // When
-    DancerInvolvement created = state.getDancerInvolvement(UUID.randomUUID());
+    DancerState created = state.getDancerState(UUID.randomUUID());
 
     // Then
     assertThat(
       state
-        .getDancerInvolvements()
-        .filter(involvement -> involvement.equals(created))
+        .getDancerState()
+        .filter(dancerState -> dancerState.equals(created))
         .count())
-      .describedAs("It should exist exactly one DancerInvolvement with the UUID")
+      .describedAs("It should exist exactly one DancerState with the UUID")
       .isEqualTo(1);
   }
 
   @Test
-  @DisplayName("getOrCreateDancerInvolvement() does not create a DancerInvolvement, if it already exists")
-  public void testGetOrCreateDancerInvolvementDoesNotCreateDancerInvolvementIfExists()
+  @DisplayName("getDancerState() does not create a DancerState, if it already exists")
+  public void testGetDancerStateDoesNotCreateDancerStateIfExists()
   {
     // Given
     KikerikiState state = new KikerikiState();
     UUID uuid = UUID.randomUUID();
 
     // When
-    state.getDancerInvolvement(uuid);
+    state.getDancerState(uuid);
 
     // Then
     assertThat(
       state
-        .getDancerInvolvements()
-        .filter(involvement -> involvement.getDancerId().equals(uuid))
+        .getDancerState()
+        .filter(dancerStateement -> dancerStateement.getDancerId().equals(uuid))
         .count())
-      .describedAs("It should exist exactly one DancerInvolvement with the UUID")
+      .describedAs("It should exist exactly one DancerState with the UUID")
       .isEqualTo(1);
   }
 
   @Test
-  @DisplayName("getOrCreateDancerInvolvement() retrieves an existing DancerInvolvement")
-  public void testGetOrCreateDancerInvolvementRetreivesExistingDancerInvolvement()
+  @DisplayName("getDancerState() retrieves an existing DancerState")
+  public void testGetDancerStateRetreivesExistingDancerState()
   {
     // Given
     KikerikiState state = new KikerikiState();
     UUID uuid = UUID.randomUUID();
-    DancerInvolvement created = state.getDancerInvolvement(uuid);
+    DancerState created = state.getDancerState(uuid);
 
     // When
-    DancerInvolvement retreived = state.getDancerInvolvement(uuid);
+    DancerState retreived = state.getDancerState(uuid);
 
     // Then
     assertThat(retreived)
-      .describedAs("The retrieved DancerInvolvement should equal the one that was created before.")
+      .describedAs("The retrieved DancerState should equal the one that was created before.")
       .isEqualTo(created);
   }
 
@@ -130,32 +129,32 @@ class KikerikiStateTest
   public void testMiniIntegrationExample()
   {
     KikerikiState state = new KikerikiState();
-    DancerInvolvement involvement;
+    DancerState dancerState;
 
 
-    involvement = state.handle(read(loginMessage, MessageLogin.class));
-    assertThat(involvement.getLastInvolvement().map(zdt -> zdt.toInstant()))
+    dancerState = state.handle(read(loginMessage, MessageLogin.class));
+    assertThat(dancerState.getLastInvolvement().map(zdt -> zdt.toInstant()))
       .describedAs("Unexpected last involvement")
       .contains(ZonedDateTime.parse("2021-12-31T00:00:00+01:00[Europe/Berlin]").toInstant());
 
-    involvement = state.handle(read(chatMessageNewMessage, MessageChat.class));
-    assertThat(involvement.getUnseenMessages())
+    dancerState = state.handle(read(chatMessageNewMessage, MessageChat.class));
+    assertThat(dancerState.getUnseenMessages())
       .describedAs("Unread chat-message is missing")
       .contains(UUID.fromString("a58ed763-728c-9355-b339-3db21adc15a3"));
 
-    involvement = state.handle(read(chatMessageMessageRead, MessageChat.class));
-    assertThat(involvement.getLastInvolvement().map(zdt -> zdt.toInstant()))
+    dancerState = state.handle(read(chatMessageMessageRead, MessageChat.class));
+    assertThat(dancerState.getLastInvolvement().map(zdt -> zdt.toInstant()))
       .describedAs("Unexpected last involvement")
       .contains(ZonedDateTime.parse("2022-01-03T00:00:00+01:00[Europe/Berlin]").toInstant());
-    assertThat(involvement.getUnseenMessages())
+    assertThat(dancerState.getUnseenMessages())
       .describedAs("Unread chat-message should be cleared")
       .isEmpty();
 
     state.handle(read(mailSentMessage, MessageMailSent.class));
-    assertThat(involvement.getLastInvolvement().map(zdt -> zdt.toInstant()))
+    assertThat(dancerState.getLastInvolvement().map(zdt -> zdt.toInstant()))
       .describedAs("Unexpected last involvement")
       .contains(ZonedDateTime.parse("2022-01-03T00:00:00+01:00[Europe/Berlin]").toInstant());
-    assertThat(involvement.getLastMailSent().map(zdt -> zdt.toInstant()))
+    assertThat(dancerState.getLastMailSent().map(zdt -> zdt.toInstant()))
       .describedAs("Unexpected timestamp for last sent mail")
       .contains(ZonedDateTime.parse("2022-01-04T00:00:00+01:00[Europe/Berlin]").toInstant());
   }

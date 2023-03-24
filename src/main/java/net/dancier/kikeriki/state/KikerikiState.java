@@ -12,53 +12,53 @@ import java.util.stream.Stream;
 
 public class KikerikiState
 {
-  private final Map<UUID, DancerInvolvement> state = new HashMap<>();
+  private final Map<UUID, DancerState> state = new HashMap<>();
 
 
-  DancerInvolvement getDancerInvolvement(UUID dancerId)
+  DancerState getDancerState(UUID dancerId)
   {
-    DancerInvolvement involvement = state.get(dancerId);
-    if (involvement == null)
+    DancerState dancerState = state.get(dancerId);
+    if (dancerState == null)
     {
-      involvement = new DancerInvolvement(dancerId);
-      state.put(dancerId, involvement);
+      dancerState = new DancerState(dancerId);
+      state.put(dancerId, dancerState);
     }
-    return involvement;
+    return dancerState;
   }
 
-  public DancerInvolvement handle(MessageLogin message)
+  public DancerState handle(MessageLogin message)
   {
     UUID dancerId = message.getDancerId();
-    DancerInvolvement dancerInvolvement = getDancerInvolvement(dancerId);
-    dancerInvolvement.setLastLogin(message.getTime());
-    return dancerInvolvement;
+    DancerState dancerState = getDancerState(dancerId);
+    dancerState.setLastLogin(message.getTime());
+    return dancerState;
   }
 
-  public DancerInvolvement handle(MessageChat message)
+  public DancerState handle(MessageChat message)
   {
     UUID dancerId = message.getDancerId();
-    DancerInvolvement dancerInvolvement = getDancerInvolvement(dancerId);
+    DancerState dancerState = getDancerState(dancerId);
     switch (message.getStatus())
     {
       case NEW:
-        dancerInvolvement.addUnreadChatMessage(message.getMessageId());
+        dancerState.addUnreadChatMessage(message.getMessageId());
         break;
       case READ:
-        dancerInvolvement.markChatMessagesAsSeen(message.getTime());
+        dancerState.markChatMessagesAsSeen(message.getTime());
         break;
     }
-    return dancerInvolvement;
+    return dancerState;
   }
 
-  public DancerInvolvement handle(MessageMailSent message)
+  public DancerState handle(MessageMailSent message)
   {
     UUID dancerId = message.getDancerId();
-    DancerInvolvement dancerInvolvement = getDancerInvolvement(dancerId);
-    dancerInvolvement.setLastMailSent(message.getTime());
-    return dancerInvolvement;
+    DancerState dancerState = getDancerState(dancerId);
+    dancerState.setLastMailSent(message.getTime());
+    return dancerState;
   }
 
-  public Stream<DancerInvolvement> getDancerInvolvements()
+  public Stream<DancerState> getDancerState()
   {
     return state.values().stream();
   }

@@ -92,14 +92,14 @@ public class KikerikiApplicationIT
       {
         assertThat(
           involveDancersMessageHandler
-            .getDancerInvolvements()
-            .filter(involvement -> involvement.getDancerId().toString().equals(UUID_DANCER)))
+            .getDancerState()
+            .filter(dancerState -> dancerState.getDancerId().toString().equals(UUID_DANCER)))
           .describedAs("Wrong number of involvments for dancer " + UUID_DANCER)
           .hasSize(1);
         assertThat(
           involveDancersMessageHandler
-            .getDancerInvolvements()
-            .filter(involvement -> involvement.getDancerId().toString().equals(UUID_DANCER))
+            .getDancerState()
+            .filter(dancerState -> dancerState.getDancerId().toString().equals(UUID_DANCER))
             .findFirst()
             .get()
             .getLastInvolvement()
@@ -108,8 +108,8 @@ public class KikerikiApplicationIT
           .contains(ZonedDateTime.parse(LAST_LOGIN).toInstant());
         assertThat(
           involveDancersMessageHandler
-            .getDancerInvolvements()
-            .filter(involvement -> involvement.getDancerId().toString().equals(UUID_DANCER))
+            .getDancerState()
+            .filter(dancerState -> dancerState.getDancerId().toString().equals(UUID_DANCER))
             .findFirst()
             .get()
             .getLastMailSent())
@@ -117,8 +117,8 @@ public class KikerikiApplicationIT
           .isEmpty();
         assertThat(
           involveDancersMessageHandler
-            .getDancerInvolvements()
-            .filter(involvement -> involvement.getDancerId().toString().equals(UUID_DANCER))
+            .getDancerState()
+            .filter(dancerState -> dancerState.getDancerId().toString().equals(UUID_DANCER))
             .findFirst()
             .get()
             .getUnseenMessages())
@@ -136,14 +136,14 @@ public class KikerikiApplicationIT
       {
         assertThat(
           involveDancersMessageHandler
-            .getDancerInvolvements()
-            .filter(involvement -> involvement.getDancerId().toString().equals(UUID_DANCER)))
+            .getDancerState()
+            .filter(dancerState -> dancerState.getDancerId().toString().equals(UUID_DANCER)))
           .describedAs("Wrong number of involvments for dancer " + UUID_DANCER)
           .hasSize(1);
         assertThat(
           involveDancersMessageHandler
-            .getDancerInvolvements()
-            .filter(involvement -> involvement.getDancerId().toString().equals(UUID_DANCER))
+            .getDancerState()
+            .filter(dancerState -> dancerState.getDancerId().toString().equals(UUID_DANCER))
             .findFirst()
             .get()
             .getLastInvolvement()
@@ -152,8 +152,8 @@ public class KikerikiApplicationIT
           .contains(ZonedDateTime.parse(MESSAG_READ).toInstant());
         assertThat(
           involveDancersMessageHandler
-            .getDancerInvolvements()
-            .filter(involvement -> involvement.getDancerId().toString().equals(UUID_DANCER))
+            .getDancerState()
+            .filter(dancerState -> dancerState.getDancerId().toString().equals(UUID_DANCER))
             .findFirst()
             .get()
             .getLastMailSent())
@@ -161,8 +161,8 @@ public class KikerikiApplicationIT
           .isEmpty();
         assertThat(
           involveDancersMessageHandler
-            .getDancerInvolvements()
-            .filter(involvement -> involvement.getDancerId().toString().equals(UUID_DANCER))
+            .getDancerState()
+            .filter(dancerState -> dancerState.getDancerId().toString().equals(UUID_DANCER))
             .findFirst()
             .get()
             .getUnseenMessages())
@@ -180,14 +180,14 @@ public class KikerikiApplicationIT
       {
         assertThat(
           involveDancersMessageHandler
-            .getDancerInvolvements()
-            .filter(involvement -> involvement.getDancerId().toString().equals(UUID_DANCER)))
+            .getDancerState()
+            .filter(dancerState -> dancerState.getDancerId().toString().equals(UUID_DANCER)))
           .describedAs("Wrong number of involvments for dancer " + UUID_DANCER)
           .hasSize(1);
         assertThat(
           involveDancersMessageHandler
-            .getDancerInvolvements()
-            .filter(involvement -> involvement.getDancerId().toString().equals(UUID_DANCER))
+            .getDancerState()
+            .filter(dancerState -> dancerState.getDancerId().toString().equals(UUID_DANCER))
             .findFirst()
             .get()
             .getLastInvolvement()
@@ -196,8 +196,8 @@ public class KikerikiApplicationIT
           .contains(ZonedDateTime.parse(MESSAG_READ).toInstant());
         assertThat(
           involveDancersMessageHandler
-            .getDancerInvolvements()
-            .filter(involvement -> involvement.getDancerId().toString().equals(UUID_DANCER))
+            .getDancerState()
+            .filter(dancerState -> dancerState.getDancerId().toString().equals(UUID_DANCER))
             .findFirst()
             .get()
             .getLastMailSent()
@@ -206,8 +206,8 @@ public class KikerikiApplicationIT
           .contains(ZonedDateTime.parse(MAIL_SENT).toInstant());
         assertThat(
           involveDancersMessageHandler
-            .getDancerInvolvements()
-            .filter(involvement -> involvement.getDancerId().toString().equals(UUID_DANCER))
+            .getDancerState()
+            .filter(dancerState -> dancerState.getDancerId().toString().equals(UUID_DANCER))
             .findFirst()
             .get()
             .getUnseenMessages())

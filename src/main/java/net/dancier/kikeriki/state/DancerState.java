@@ -12,7 +12,7 @@ import java.util.*;
 @RequiredArgsConstructor
 @EqualsAndHashCode(of = "dancerId")
 @ToString
-public class DancerInvolvement
+public class DancerState
 {
   @Getter
   private final UUID dancerId;

@@ -9,17 +9,17 @@ import java.util.UUID;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
 
-public class DancerInvolvementTest
+public class DancerStateTest
 {
   @Test
   @DisplayName("A newly created instance should have no timestamp for a last involvment")
   public void testNewInvolvementHasNoLastInvolvementTimestamp()
   {
     // When
-    DancerInvolvement involvement = new DancerInvolvement(UUID.randomUUID());
+    DancerState dancerState = new DancerState(UUID.randomUUID());
 
     // Then
-    assertThat(involvement.getLastInvolvement())
+    assertThat(dancerState.getLastInvolvement())
       .as("last involvement")
       .isEmpty();
   }
@@ -29,10 +29,10 @@ public class DancerInvolvementTest
   public void testNewInvolvementHasNoLastMailSentTimestamp()
   {
     // When
-    DancerInvolvement involvement = new DancerInvolvement(UUID.randomUUID());
+    DancerState dancerState = new DancerState(UUID.randomUUID());
 
     // Then
-    assertThat(involvement.getLastMailSent())
+    assertThat(dancerState.getLastMailSent())
       .as("last mail sent")
       .isEmpty();
   }
@@ -42,10 +42,10 @@ public class DancerInvolvementTest
   public void testNewInvolvementHasNoUnseenChatMessages()
   {
     // When
-    DancerInvolvement involvement = new DancerInvolvement(UUID.randomUUID());
+    DancerState dancerState = new DancerState(UUID.randomUUID());
 
     // Then
-    assertThat(involvement.getUnseenMessages())
+    assertThat(dancerState.getUnseenMessages())
       .as("unseen messages")
       .isEmpty();
   }
@@ -55,14 +55,14 @@ public class DancerInvolvementTest
   public void testAddUnreadChatMessageIsAddedToUnseenMessages()
   {
     // Given
-    DancerInvolvement involvement = new DancerInvolvement(UUID.randomUUID());
+    DancerState dancerState = new DancerState(UUID.randomUUID());
     UUID messageId = UUID.randomUUID();
 
     // When
-    involvement.addUnreadChatMessage(messageId);
+    dancerState.addUnreadChatMessage(messageId);
 
     // Then
-    assertThat(involvement.getUnseenMessages())
+    assertThat(dancerState.getUnseenMessages())
       .as("unseen messages")
       .contains(messageId);
   }
@@ -72,13 +72,13 @@ public class DancerInvolvementTest
   public void testAddUnreadChatMessageShouldNotChangeLastInvolvement()
   {
     // Given
-    DancerInvolvement involvement = new DancerInvolvement(UUID.randomUUID());
+    DancerState dancerState = new DancerState(UUID.randomUUID());
 
     // When
-    involvement.addUnreadChatMessage(UUID.randomUUID());
+    dancerState.addUnreadChatMessage(UUID.randomUUID());
 
     // Then
-    assertThat(involvement.getLastInvolvement())
+    assertThat(dancerState.getLastInvolvement())
       .as("last involvement")
       .isEmpty();
   }
@@ -88,14 +88,14 @@ public class DancerInvolvementTest
   public void testSetLastLoginShouldBeReflectedInLastInvolvement()
   {
     // Given
-    DancerInvolvement involvement = new DancerInvolvement(UUID.randomUUID());
+    DancerState dancerState = new DancerState(UUID.randomUUID());
     ZonedDateTime timestampLastLogin = ZonedDateTime.now();
 
     // When
-    involvement.setLastLogin(timestampLastLogin);
+    dancerState.setLastLogin(timestampLastLogin);
 
     // Then
-    assertThat(involvement.getLastInvolvement())
+    assertThat(dancerState.getLastInvolvement())
       .as("last involvement")
       .contains(timestampLastLogin);
   }
@@ -105,14 +105,14 @@ public class DancerInvolvementTest
   public void testSetLastLoginMarksMessagesAsSeen()
   {
     // Given
-    DancerInvolvement involvement = new DancerInvolvement(UUID.randomUUID());
-    involvement.addUnreadChatMessage(UUID.randomUUID());
+    DancerState dancerState = new DancerState(UUID.randomUUID());
+    dancerState.addUnreadChatMessage(UUID.randomUUID());
 
     // When
-    involvement.setLastLogin(ZonedDateTime.now());
+    dancerState.setLastLogin(ZonedDateTime.now());
 
     // Then
-    assertThat(involvement.getUnseenMessages())
+    assertThat(dancerState.getUnseenMessages())
       .as("unseen messages")
       .isEmpty();
   }
@@ -122,14 +122,14 @@ public class DancerInvolvementTest
   public void testSetLastLoginResetsLastMailSent()
   {
     // Given
-    DancerInvolvement involvement = new DancerInvolvement(UUID.randomUUID());
-    involvement.setLastMailSent(ZonedDateTime.now());
+    DancerState dancerState = new DancerState(UUID.randomUUID());
+    dancerState.setLastMailSent(ZonedDateTime.now());
 
     // When
-    involvement.setLastLogin(ZonedDateTime.now());
+    dancerState.setLastLogin(ZonedDateTime.now());
 
     // Then
-    assertThat(involvement.getLastMailSent())
+    assertThat(dancerState.getLastMailSent())
       .as("last mail sent")
       .isEmpty();
   }
@@ -139,14 +139,14 @@ public class DancerInvolvementTest
   public void testMarkChatMessagesAsSeenShouldBeRememberedAsLastInvolvement()
   {
     // Given
-    DancerInvolvement involvement = new DancerInvolvement(UUID.randomUUID());
+    DancerState dancerState = new DancerState(UUID.randomUUID());
     ZonedDateTime timestampMessageRead = ZonedDateTime.now();
 
     // When
-    involvement.markChatMessagesAsSeen(timestampMessageRead);
+    dancerState.markChatMessagesAsSeen(timestampMessageRead);
 
     // Then
-    assertThat(involvement.getLastInvolvement())
+    assertThat(dancerState.getLastInvolvement())
       .as("last involvement")
       .contains(timestampMessageRead);
   }
@@ -156,14 +156,14 @@ public class DancerInvolvementTest
   public void testMarkChatMessagesAsSeenShouldClearTheUnseenMessages()
   {
     // Given
-    DancerInvolvement involvement = new DancerInvolvement(UUID.randomUUID());
-    involvement.addUnreadChatMessage(UUID.randomUUID());
+    DancerState dancerState = new DancerState(UUID.randomUUID());
+    dancerState.addUnreadChatMessage(UUID.randomUUID());
 
     // When
-    involvement.markChatMessagesAsSeen(ZonedDateTime.now());
+    dancerState.markChatMessagesAsSeen(ZonedDateTime.now());
 
     // Then
-    assertThat(involvement.getUnseenMessages())
+    assertThat(dancerState.getUnseenMessages())
       .as("unseen messages")
       .isEmpty();
   }
@@ -173,14 +173,14 @@ public class DancerInvolvementTest
   public void testMarkChatMessagesAsSeenResetsLastMailSent()
   {
     // Given
-    DancerInvolvement involvement = new DancerInvolvement(UUID.randomUUID());
-    involvement.setLastMailSent(ZonedDateTime.now());
+    DancerState dancerState = new DancerState(UUID.randomUUID());
+    dancerState.setLastMailSent(ZonedDateTime.now());
 
     // When
-    involvement.markChatMessagesAsSeen(ZonedDateTime.now());
+    dancerState.markChatMessagesAsSeen(ZonedDateTime.now());
 
     // Then
-    assertThat(involvement.getLastMailSent())
+    assertThat(dancerState.getLastMailSent())
       .as("last mail sent")
       .isEmpty();
   }
@@ -190,14 +190,14 @@ public class DancerInvolvementTest
   public void testSetLastMailSentIsStored()
   {
     // Given
-    DancerInvolvement involvement = new DancerInvolvement(UUID.randomUUID());
+    DancerState dancerState = new DancerState(UUID.randomUUID());
     ZonedDateTime timestampLastMailSent = ZonedDateTime.now();
 
     // When
-    involvement.setLastMailSent(timestampLastMailSent);
+    dancerState.setLastMailSent(timestampLastMailSent);
 
     // Then
-    assertThat(involvement.getLastMailSent())
+    assertThat(dancerState.getLastMailSent())
       .as("last sent mail")
       .contains(timestampLastMailSent);
   }
@@ -207,13 +207,13 @@ public class DancerInvolvementTest
   public void testSetLastMailSentDoesNotChangeTheLastInvolvement()
   {
     // Given
-    DancerInvolvement involvement = new DancerInvolvement(UUID.randomUUID());
+    DancerState dancerState = new DancerState(UUID.randomUUID());
 
     // When
-    involvement.setLastMailSent(ZonedDateTime.now());
+    dancerState.setLastMailSent(ZonedDateTime.now());
 
     // Then
-    assertThat(involvement.getLastInvolvement())
+    assertThat(dancerState.getLastInvolvement())
       .as("last involvement")
       .isEmpty();
   }
@@ -223,14 +223,14 @@ public class DancerInvolvementTest
   public void testSetLastMailSentDoesNotClearUnseenMessages()
   {
     // Given
-    DancerInvolvement involvement = new DancerInvolvement(UUID.randomUUID());
-    involvement.addUnreadChatMessage(UUID.randomUUID());
+    DancerState dancerState = new DancerState(UUID.randomUUID());
+    dancerState.addUnreadChatMessage(UUID.randomUUID());
 
     // When
-    involvement.setLastMailSent(ZonedDateTime.now());
+    dancerState.setLastMailSent(ZonedDateTime.now());
 
     // Then
-    assertThat(involvement.getUnseenMessages())
+    assertThat(dancerState.getUnseenMessages())
       .as("unseen messages")
       .isNotEmpty();
   }

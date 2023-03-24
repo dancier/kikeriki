@@ -3,7 +3,7 @@ package net.dancier.kikeriki;
 import net.dancier.kikeriki.messages.MessageChat;
 import net.dancier.kikeriki.messages.MessageLogin;
 import net.dancier.kikeriki.messages.MessageMailSent;
-import net.dancier.kikeriki.state.DancerInvolvement;
+import net.dancier.kikeriki.state.DancerState;
 import net.dancier.kikeriki.state.KikerikiState;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -91,7 +91,7 @@ public class InvolveDancersMessageHandlerTest
   public void testHandleLoginMessageWithInvolvementDisabled(
     @Mock KikerikiState state,
     @Mock DancerInvolver involver,
-    @Mock DancerInvolvement involvement)
+    @Mock DancerState dancerState)
   {
     // Given
     InvolveDancersMessageHandler handler =
@@ -103,14 +103,14 @@ public class InvolveDancersMessageHandlerTest
     ZonedDateTime time = ZonedDateTime.now();
     message.setTime(time);
     handler.addPartition(0, 6);
-    when(state.handle(any(MessageLogin.class))).thenReturn(involvement);
+    when(state.handle(any(MessageLogin.class))).thenReturn(dancerState);
 
     // When
     handler.handle(0, 5l, message);
 
     // Then
     verify(state, times(1)).handle(message);
-    verify(involver, never()).involveDancer(any(DancerInvolvement.class), any(ZonedDateTime.class));
+    verify(involver, never()).involveDancer(any(DancerState.class), any(ZonedDateTime.class));
     verify(involver, never()).involveOtherDancers(any(Stream.class), any(ZonedDateTime.class));
   }
 
@@ -119,7 +119,7 @@ public class InvolveDancersMessageHandlerTest
   public void testHandleLoginMessageWithInvolvementEnabled(
     @Mock KikerikiState state,
     @Mock DancerInvolver involver,
-    @Mock DancerInvolvement involvement)
+    @Mock DancerState dancerState)
   {
     // Given
     InvolveDancersMessageHandler handler =
@@ -131,14 +131,14 @@ public class InvolveDancersMessageHandlerTest
     ZonedDateTime time = ZonedDateTime.now();
     message.setTime(time);
     handler.addPartition(0, 6);
-    when(state.handle(any(MessageLogin.class))).thenReturn(involvement);
+    when(state.handle(any(MessageLogin.class))).thenReturn(dancerState);
 
     // When
     handler.handle(0, 6l, message);
 
     // Then
     verify(state, times(1)).handle(message);
-    verify(involver, times(1)).involveDancer(involvement, time);
+    verify(involver, times(1)).involveDancer(dancerState, time);
     verify(involver, times(1)).involveOtherDancers(any(Stream.class), eq(time));
   }
 
@@ -147,7 +147,7 @@ public class InvolveDancersMessageHandlerTest
   public void testHandleChatMessageWithInvolvementDisabled(
     @Mock KikerikiState state,
     @Mock DancerInvolver involver,
-    @Mock DancerInvolvement involvement)
+    @Mock DancerState dancerState)
   {
     // Given
     InvolveDancersMessageHandler handler =
@@ -159,14 +159,14 @@ public class InvolveDancersMessageHandlerTest
     ZonedDateTime time = ZonedDateTime.now();
     message.setTime(time);
     handler.addPartition(0, 6);
-    when(state.handle(any(MessageChat.class))).thenReturn(involvement);
+    when(state.handle(any(MessageChat.class))).thenReturn(dancerState);
 
     // When
     handler.handle(0, 5l, message);
 
     // Then
     verify(state, times(1)).handle(message);
-    verify(involver, never()).involveDancer(any(DancerInvolvement.class), any(ZonedDateTime.class));
+    verify(involver, never()).involveDancer(any(DancerState.class), any(ZonedDateTime.class));
     verify(involver, never()).involveOtherDancers(any(Stream.class), any(ZonedDateTime.class));
   }
 
@@ -175,7 +175,7 @@ public class InvolveDancersMessageHandlerTest
   public void testHandleChatMessageWithInvolvementEnabled(
     @Mock KikerikiState state,
     @Mock DancerInvolver involver,
-    @Mock DancerInvolvement involvement)
+    @Mock DancerState dancerState)
   {
     // Given
     InvolveDancersMessageHandler handler =
@@ -187,14 +187,14 @@ public class InvolveDancersMessageHandlerTest
     ZonedDateTime time = ZonedDateTime.now();
     message.setTime(time);
     handler.addPartition(0, 6);
-    when(state.handle(any(MessageChat.class))).thenReturn(involvement);
+    when(state.handle(any(MessageChat.class))).thenReturn(dancerState);
 
     // When
     handler.handle(0, 6l, message);
 
     // Then
     verify(state, times(1)).handle(message);
-    verify(involver, times(1)).involveDancer(involvement, time);
+    verify(involver, times(1)).involveDancer(dancerState, time);
     verify(involver, times(1)).involveOtherDancers(any(Stream.class), eq(time));
   }
 
@@ -203,7 +203,7 @@ public class InvolveDancersMessageHandlerTest
   public void testHandleMailSentMessageWithInvolvementDisabled(
     @Mock KikerikiState state,
     @Mock DancerInvolver involver,
-    @Mock DancerInvolvement involvement)
+    @Mock DancerState dancerState)
   {
     // Given
     InvolveDancersMessageHandler handler =
@@ -215,14 +215,14 @@ public class InvolveDancersMessageHandlerTest
     ZonedDateTime time = ZonedDateTime.now();
     message.setTime(time);
     handler.addPartition(0, 6);
-    when(state.handle(any(MessageMailSent.class))).thenReturn(involvement);
+    when(state.handle(any(MessageMailSent.class))).thenReturn(dancerState);
 
     // When
     handler.handle(0, 5l, message);
 
     // Then
     verify(state, times(1)).handle(message);
-    verify(involver, never()).involveDancer(any(DancerInvolvement.class), any(ZonedDateTime.class));
+    verify(involver, never()).involveDancer(any(DancerState.class), any(ZonedDateTime.class));
     verify(involver, never()).involveOtherDancers(any(Stream.class), any(ZonedDateTime.class));
   }
 
@@ -231,7 +231,7 @@ public class InvolveDancersMessageHandlerTest
   public void testHandleMailSentMessageWithInvolvementEnabled(
     @Mock KikerikiState state,
     @Mock DancerInvolver involver,
-    @Mock DancerInvolvement involvement)
+    @Mock DancerState dancerState)
   {
     // Given
     InvolveDancersMessageHandler handler =
@@ -243,14 +243,14 @@ public class InvolveDancersMessageHandlerTest
     ZonedDateTime time = ZonedDateTime.now();
     message.setTime(time);
     handler.addPartition(0, 6);
-    when(state.handle(any(MessageMailSent.class))).thenReturn(involvement);
+    when(state.handle(any(MessageMailSent.class))).thenReturn(dancerState);
 
     // When
     handler.handle(0, 6l, message);
 
     // Then
     verify(state, times(1)).handle(message);
-    verify(involver, never()).involveDancer(any(DancerInvolvement.class), any(ZonedDateTime.class));
+    verify(involver, never()).involveDancer(any(DancerState.class), any(ZonedDateTime.class));
     verify(involver, times(1)).involveOtherDancers(any(Stream.class), eq(time));
   }
 }

@@ -2,7 +2,7 @@ package net.dancier.kikeriki;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.dancier.kikeriki.state.DancerInvolvement;
+import net.dancier.kikeriki.state.DancerState;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -29,23 +29,23 @@ public class DancerInvolver
 
 
   public void involveDancer(
-    DancerInvolvement dancerInvolvement,
+    DancerState dancerState,
     ZonedDateTime now)
   {
-    if (dancerInvolvement
+    if (dancerState
       .getLastInvolvement()
       .orElse(NEVER)
       .plus(involveDancerAfter).isBefore(now))
     {
       log.info(
         "involving dancer {} (last involvement={}, now={})",
-        dancerInvolvement.getDancerId(),
-        dancerInvolvement.getLastInvolvement(),
+        dancerState.getDancerId(),
+        dancerState.getLastInvolvement(),
         now);
     }
   }
 
-  public void involveOtherDancers(Stream<DancerInvolvement> involvements, ZonedDateTime now)
+  public void involveOtherDancers(Stream<DancerState> dancerStateStream, ZonedDateTime now)
   {
     if (lastGeneralInvolvement
       .orElse(NEVER)
@@ -55,18 +55,18 @@ public class DancerInvolver
     }
 
     lastGeneralInvolvement = Optional.of(now);
-    involvements
-      .filter(dancerInvolvement -> dancerInvolvement
+    dancerStateStream
+      .filter(dancerState -> dancerState
         .getLastInvolvement()
         .orElse(NEVER)
         .plus(involveDancerAfter)
         .isBefore(now))
-      .forEach(dancerInvolvement -> sendMail(dancerInvolvement, now));
+      .forEach(dancerState -> sendMail(dancerState, now));
   }
 
-  void sendMail(DancerInvolvement dancerInvolvement, ZonedDateTime now)
+  void sendMail(DancerState dancerState, ZonedDateTime now)
   {
-    if (dancerInvolvement
+    if (dancerState
       .getLastMailSent()
       .orElse(NEVER)
       .plus(reinvolvementInterval)
