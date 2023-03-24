@@ -6,6 +6,7 @@ import net.dancier.kikeriki.state.DancerInvolvement;
 import net.dancier.kikeriki.state.KikerikiState;
 import net.dancier.kikeriki.state.KikerikiStateFactory;
 
+import java.util.Arrays;
 import java.util.stream.Stream;
 
 
@@ -96,5 +97,13 @@ public class InvolveDancersMessageHandler implements MessageHandler
   Stream<DancerInvolvement> getDancerInvolvements(int partition)
   {
     return state[partition].getDancerInvolvements();
+  }
+
+  Stream<DancerInvolvement> getDancerInvolvements()
+  {
+    return Arrays
+      .stream(state)
+      .filter(kikerikiState -> kikerikiState != null)
+      .flatMap(kikerikiState -> kikerikiState.getDancerInvolvements());
   }
 }

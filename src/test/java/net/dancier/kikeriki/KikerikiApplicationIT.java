@@ -4,7 +4,6 @@ import io.micrometer.core.instrument.util.IOUtils;
 import net.dancier.kikeriki.messages.Message;
 import net.dancier.kikeriki.messages.MessageTest;
 import net.dancier.kikeriki.state.DancerInvolvement;
-import net.dancier.kikeriki.state.KikerikiState;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,7 +52,7 @@ public class KikerikiApplicationIT
   @Autowired
   private KafkaTemplate<String, String> kafkaTemplate;
   @Autowired
-  private KikerikiState kikerikiState;
+  private InvolveDancersMessageHandler involveDancersMessageHandler;
 
   @Value("classpath:messages/login.json")
   Resource loginMessage;
@@ -93,13 +92,13 @@ public class KikerikiApplicationIT
       .untilAsserted(() ->
       {
         assertThat(
-          kikerikiState
+          involveDancersMessageHandler
             .getDancerInvolvements()
             .filter(involvement -> involvement.getDancerId().toString().equals(UUID_DANCER)))
           .describedAs("Wrong number of involvments for dancer " + UUID_DANCER)
           .hasSize(1);
         assertThat(
-          kikerikiState
+          involveDancersMessageHandler
             .getDancerInvolvements()
             .filter(involvement -> involvement.getDancerId().toString().equals(UUID_DANCER))
             .findFirst()
@@ -108,7 +107,7 @@ public class KikerikiApplicationIT
           .describedAs("The last involvment of the dancer should be her/his last login")
           .isEqualTo(ZonedDateTime.parse(LAST_LOGIN));
         assertThat(
-          kikerikiState
+          involveDancersMessageHandler
             .getDancerInvolvements()
             .filter(involvement -> involvement.getDancerId().toString().equals(UUID_DANCER))
             .findFirst()
@@ -117,7 +116,7 @@ public class KikerikiApplicationIT
           .describedAs("No mails should have been sent to the dancer yet")
           .isEqualTo(DancerInvolvement.NEVER);
         assertThat(
-          kikerikiState
+          involveDancersMessageHandler
             .getDancerInvolvements()
             .filter(involvement -> involvement.getDancerId().toString().equals(UUID_DANCER))
             .findFirst()
@@ -136,13 +135,13 @@ public class KikerikiApplicationIT
       .untilAsserted(() ->
       {
         assertThat(
-          kikerikiState
+          involveDancersMessageHandler
             .getDancerInvolvements()
             .filter(involvement -> involvement.getDancerId().toString().equals(UUID_DANCER)))
           .describedAs("Wrong number of involvments for dancer " + UUID_DANCER)
           .hasSize(1);
         assertThat(
-          kikerikiState
+          involveDancersMessageHandler
             .getDancerInvolvements()
             .filter(involvement -> involvement.getDancerId().toString().equals(UUID_DANCER))
             .findFirst()
@@ -151,7 +150,7 @@ public class KikerikiApplicationIT
           .describedAs("The last involvement of the dancer should be the reading of the chat-message")
           .isEqualTo(ZonedDateTime.parse(MESSAG_READ));
         assertThat(
-          kikerikiState
+          involveDancersMessageHandler
             .getDancerInvolvements()
             .filter(involvement -> involvement.getDancerId().toString().equals(UUID_DANCER))
             .findFirst()
@@ -160,7 +159,7 @@ public class KikerikiApplicationIT
           .describedAs("No mails should have been sent to the dancer yet")
           .isEqualTo(DancerInvolvement.NEVER);
         assertThat(
-          kikerikiState
+          involveDancersMessageHandler
             .getDancerInvolvements()
             .filter(involvement -> involvement.getDancerId().toString().equals(UUID_DANCER))
             .findFirst()
@@ -179,13 +178,13 @@ public class KikerikiApplicationIT
       .untilAsserted(() ->
       {
         assertThat(
-          kikerikiState
+          involveDancersMessageHandler
             .getDancerInvolvements()
             .filter(involvement -> involvement.getDancerId().toString().equals(UUID_DANCER)))
           .describedAs("Wrong number of involvments for dancer " + UUID_DANCER)
           .hasSize(1);
         assertThat(
-          kikerikiState
+          involveDancersMessageHandler
             .getDancerInvolvements()
             .filter(involvement -> involvement.getDancerId().toString().equals(UUID_DANCER))
             .findFirst()
@@ -194,7 +193,7 @@ public class KikerikiApplicationIT
           .describedAs("The last involvement of the dancer should be the reading of the chat-message")
           .isEqualTo(ZonedDateTime.parse(MESSAG_READ));
         assertThat(
-          kikerikiState
+          involveDancersMessageHandler
             .getDancerInvolvements()
             .filter(involvement -> involvement.getDancerId().toString().equals(UUID_DANCER))
             .findFirst()
@@ -203,7 +202,7 @@ public class KikerikiApplicationIT
           .describedAs("Unexpected timestamp for the last sent mail")
           .isEqualTo(ZonedDateTime.parse(MAIL_SENT));
         assertThat(
-          kikerikiState
+          involveDancersMessageHandler
             .getDancerInvolvements()
             .filter(involvement -> involvement.getDancerId().toString().equals(UUID_DANCER))
             .findFirst()

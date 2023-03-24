@@ -3,7 +3,6 @@ package net.dancier.kikeriki.state;
 import net.dancier.kikeriki.messages.MessageChat;
 import net.dancier.kikeriki.messages.MessageLogin;
 import net.dancier.kikeriki.messages.MessageMailSent;
-import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,7 +10,6 @@ import java.util.UUID;
 import java.util.stream.Stream;
 
 
-@Component
 public class KikerikiState
 {
   private final Map<UUID, DancerInvolvement> state = new HashMap<>();
