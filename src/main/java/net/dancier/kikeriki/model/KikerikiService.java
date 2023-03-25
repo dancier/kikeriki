@@ -29,47 +29,51 @@ public class KikerikiService
 
   public void involveDancer(
     DancerState dancerState,
-    ZonedDateTime now)
+    ZonedDateTime streamTimeNow)
   {
     if (dancerState
       .getLastInvolvement()
       .orElse(NEVER)
-      .plus(involveDancerAfter).isBefore(now))
+      .plus(involveDancerAfter).isBefore(streamTimeNow))
     {
       log.info(
         "involving dancer {} (last involvement={}, now={})",
         dancerState.getDancerId(),
         dancerState.getLastInvolvement(),
-        now);
+        streamTimeNow);
     }
   }
 
-  public void involveOtherDancers(Stream<DancerState> dancerStateStream, ZonedDateTime now)
+  public void involveOtherDancers(
+    Stream<DancerState> dancerStateStream,
+    ZonedDateTime streamTimeNow)
   {
     if (lastGeneralInvolvement
       .orElse(NEVER)
-      .plus(involvementCheckInterval).isAfter(now))
+      .plus(involvementCheckInterval).isAfter(streamTimeNow))
     {
       return;
     }
 
-    lastGeneralInvolvement = Optional.of(now);
+    lastGeneralInvolvement = Optional.of(streamTimeNow);
     dancerStateStream
       .filter(dancerState -> dancerState
         .getLastInvolvement()
         .orElse(NEVER)
         .plus(involveDancerAfter)
-        .isBefore(now))
-      .forEach(dancerState -> sendMail(dancerState, now));
+        .isBefore(streamTimeNow))
+      .forEach(dancerState -> sendMail(dancerState, streamTimeNow));
   }
 
-  void sendMail(DancerState dancerState, ZonedDateTime now)
+  void sendMail(
+    DancerState dancerState,
+    ZonedDateTime streamTimeNow)
   {
     if (dancerState
       .getLastMailSent()
       .orElse(NEVER)
       .plus(reinvolvementInterval)
-      .isAfter(now))
+      .isAfter(streamTimeNow))
     {
       // Do not send involvement-mails more frequent than defined in reinvolvementInterval,
       // if the user does not react to it
