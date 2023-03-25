@@ -43,6 +43,8 @@ public class KikerikiService
         dancerState.getDancerId(),
         dancerState.getLastInvolvement(),
         streamTimeNow);
+
+      involvementStrategy.involveDancer(dancerState);
     }
   }
 
@@ -57,6 +59,10 @@ public class KikerikiService
       return;
     }
 
+    log.info(
+      "starting general dancer involvement (last involvement={}, now={})",
+      lastGeneralInvolvement,
+      streamTimeNow);
     lastGeneralInvolvement = Optional.of(streamTimeNow);
 
     dancerStateStream
