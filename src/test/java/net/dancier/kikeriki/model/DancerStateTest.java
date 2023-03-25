@@ -1,4 +1,4 @@
-package net.dancier.kikeriki.state;
+package net.dancier.kikeriki.model;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

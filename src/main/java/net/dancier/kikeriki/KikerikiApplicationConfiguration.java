@@ -4,7 +4,8 @@ import net.dancier.kikeriki.kafka.InvolveDancersMessageHandler;
 import net.dancier.kikeriki.kafka.KikerikiConsumer;
 import net.dancier.kikeriki.kafka.MessageHandler;
 import net.dancier.kikeriki.messages.Message;
-import net.dancier.kikeriki.state.KikerikiState;
+import net.dancier.kikeriki.model.KikerikiService;
+import net.dancier.kikeriki.model.KikerikiState;
 import org.apache.kafka.clients.consumer.Consumer;
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -18,10 +19,10 @@ import org.springframework.kafka.core.ConsumerFactory;
 public class KikerikiApplicationConfiguration
 {
   @Bean
-  public DancerInvolver involver(
+  public KikerikiService kikerikiService(
     KikerikiApplicationProperties properties)
   {
-    return new DancerInvolver(
+    return new KikerikiService(
       properties.getInvolveDancerAfter(),
       properties.getInvolvementCheckInterval(),
       properties.getReinvolvementInterval());
@@ -30,12 +31,12 @@ public class KikerikiApplicationConfiguration
   @Bean
   public MessageHandler messageHandler(
     KikerikiApplicationProperties properties,
-    DancerInvolver involver)
+    KikerikiService kikerikiService)
   {
     return new InvolveDancersMessageHandler(
       () -> new KikerikiState(),
       properties.getNumPartitions(),
-      involver);
+      kikerikiService);
   }
 
   @Bean
@@ -43,12 +44,12 @@ public class KikerikiApplicationConfiguration
       Consumer<String, Message> kafkaConsumer,
       MessageHandler messageHandler,
       KafkaProperties kafkaProperties,
-      KikerikiApplicationProperties applicationProperties)
+      KikerikiApplicationProperties kikerikiApplicationProperties)
   {
     return
         new KikerikiConsumer(
             kafkaProperties.getClientId(),
-            applicationProperties.getTopic(),
+            kikerikiApplicationProperties.getTopic(),
             kafkaConsumer,
             messageHandler);
   }

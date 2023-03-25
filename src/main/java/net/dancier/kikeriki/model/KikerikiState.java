@@ -1,4 +1,4 @@
-package net.dancier.kikeriki.state;
+package net.dancier.kikeriki.model;
 
 import net.dancier.kikeriki.messages.MessageChat;
 import net.dancier.kikeriki.messages.MessageLogin;
@@ -26,35 +26,35 @@ public class KikerikiState
     return dancerState;
   }
 
-  public DancerState handle(MessageLogin message)
+  public DancerState handle(MessageLogin messageLogin)
   {
-    UUID dancerId = message.getDancerId();
+    UUID dancerId = messageLogin.getDancerId();
     DancerState dancerState = getDancerState(dancerId);
-    dancerState.setLastLogin(message.getTime());
+    dancerState.setLastLogin(messageLogin.getTime());
     return dancerState;
   }
 
-  public DancerState handle(MessageChat message)
+  public DancerState handle(MessageChat messageChat)
   {
-    UUID dancerId = message.getDancerId();
+    UUID dancerId = messageChat.getDancerId();
     DancerState dancerState = getDancerState(dancerId);
-    switch (message.getStatus())
+    switch (messageChat.getStatus())
     {
       case NEW:
-        dancerState.addUnreadChatMessage(message.getMessageId());
+        dancerState.addUnreadChatMessage(messageChat.getMessageId());
         break;
       case READ:
-        dancerState.markChatMessagesAsSeen(message.getTime());
+        dancerState.markChatMessagesAsSeen(messageChat.getTime());
         break;
     }
     return dancerState;
   }
 
-  public DancerState handle(MessageMailSent message)
+  public DancerState handle(MessageMailSent messageMailSent)
   {
-    UUID dancerId = message.getDancerId();
+    UUID dancerId = messageMailSent.getDancerId();
     DancerState dancerState = getDancerState(dancerId);
-    dancerState.setLastMailSent(message.getTime());
+    dancerState.setLastMailSent(messageMailSent.getTime());
     return dancerState;
   }
 

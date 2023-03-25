@@ -1,11 +1,11 @@
 package net.dancier.kikeriki.kafka;
 
 import lombok.extern.slf4j.Slf4j;
-import net.dancier.kikeriki.DancerInvolver;
 import net.dancier.kikeriki.messages.*;
-import net.dancier.kikeriki.state.DancerState;
-import net.dancier.kikeriki.state.KikerikiState;
-import net.dancier.kikeriki.state.KikerikiStateFactory;
+import net.dancier.kikeriki.model.DancerState;
+import net.dancier.kikeriki.model.KikerikiService;
+import net.dancier.kikeriki.model.KikerikiState;
+import net.dancier.kikeriki.model.KikerikiStateFactory;
 
 import java.util.Arrays;
 import java.util.stream.Stream;
@@ -14,35 +14,35 @@ import java.util.stream.Stream;
 @Slf4j
 public class InvolveDancersMessageHandler implements MessageHandler
 {
-  private final KikerikiStateFactory stateFactory;
-  private final KikerikiState[] state;
+  private final KikerikiStateFactory kikerikiStateFactory;
+  private final KikerikiState[] kikerikiState;
   private final long[] endOffsets;
-  private final DancerInvolver involver;
+  private final KikerikiService kikerikiService;
 
 
   public InvolveDancersMessageHandler(
-    KikerikiStateFactory stateFactory,
+    KikerikiStateFactory kikerikiStateFactory,
     int numPartitions,
-    DancerInvolver involver)
+    KikerikiService kikerikiService)
   {
-    this.stateFactory = stateFactory;
-    this.state = new KikerikiState[numPartitions];
+    this.kikerikiStateFactory = kikerikiStateFactory;
+    this.kikerikiState = new KikerikiState[numPartitions];
     this.endOffsets = new long[numPartitions];
-    this.involver = involver;
+    this.kikerikiService = kikerikiService;
   }
 
 
   @Override
   public void addPartition(int partition, long endOffset)
   {
-    state[partition] = stateFactory.createKikerikiState();
+    kikerikiState[partition] = kikerikiStateFactory.createKikerikiState();
     endOffsets[partition] = endOffset;
   }
 
   @Override
   public void removePartition(int partition)
   {
-    state[partition] = null;
+    kikerikiState[partition] = null;
     endOffsets[partition] = -1;
   }
 
@@ -68,42 +68,42 @@ public class InvolveDancersMessageHandler implements MessageHandler
 
   private void handle(int partition, long offset, MessageLogin messageLogin)
   {
-    DancerState dancerState = state[partition].handle(messageLogin);
+    DancerState dancerState = kikerikiState[partition].handle(messageLogin);
     if (endOffsets[partition] <= offset)
     {
-      involver.involveDancer(dancerState, messageLogin.getTime());
-      involver.involveOtherDancers(getDancerState(partition), messageLogin.getTime());
+      kikerikiService.involveDancer(dancerState, messageLogin.getTime());
+      kikerikiService.involveOtherDancers(getDancerState(partition), messageLogin.getTime());
     }
   }
 
   private void handle(int partition, long offset, MessageChat messageChat)
   {
-    DancerState dancerState = state[partition].handle(messageChat);
+    DancerState dancerState = kikerikiState[partition].handle(messageChat);
     if (endOffsets[partition] <= offset)
     {
-      involver.involveDancer(dancerState, messageChat.getTime());
-      involver.involveOtherDancers(getDancerState(partition), messageChat.getTime());
+      kikerikiService.involveDancer(dancerState, messageChat.getTime());
+      kikerikiService.involveOtherDancers(getDancerState(partition), messageChat.getTime());
     }
   }
 
   private void handle(int partition, long offset, MessageMailSent messageMailSent)
   {
-    state[partition].handle(messageMailSent);
+    kikerikiState[partition].handle(messageMailSent);
     if (endOffsets[partition] <= offset)
     {
-      involver.involveOtherDancers(getDancerState(partition), messageMailSent.getTime());
+      kikerikiService.involveOtherDancers(getDancerState(partition), messageMailSent.getTime());
     }
   }
 
   public Stream<DancerState> getDancerState(int partition)
   {
-    return state[partition].getDancerState();
+    return kikerikiState[partition].getDancerState();
   }
 
   public Stream<DancerState> getDancerState()
   {
     return Arrays
-      .stream(state)
+      .stream(kikerikiState)
       .filter(kikerikiState -> kikerikiState != null)
       .flatMap(kikerikiState -> kikerikiState.getDancerState());
   }

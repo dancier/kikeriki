@@ -1,4 +1,4 @@
-package net.dancier.kikeriki.state;
+package net.dancier.kikeriki.model;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -53,7 +53,7 @@ class KikerikiStateTest
 
   @Test
   @DisplayName("A newly created KikerikiState should not contain any DancerState")
-  public void testNewKikerikyStateShouldNotContainDancerState()
+  public void testNewKikerikiStateShouldNotContainDancerState()
   {
     // Given
 
@@ -71,14 +71,14 @@ class KikerikiStateTest
   public void testGetOrCreateDancerStateCreatesDancerState()
   {
     // Given
-    KikerikiState state = new KikerikiState();
+    KikerikiState kikerikiState = new KikerikiState();
 
     // When
-    DancerState created = state.getDancerState(UUID.randomUUID());
+    DancerState created = kikerikiState.getDancerState(UUID.randomUUID());
 
     // Then
     assertThat(
-      state
+      kikerikiState
         .getDancerState()
         .filter(dancerState -> dancerState.equals(created))
         .count())
@@ -91,15 +91,15 @@ class KikerikiStateTest
   public void testGetDancerStateDoesNotCreateDancerStateIfExists()
   {
     // Given
-    KikerikiState state = new KikerikiState();
+    KikerikiState kikerikiState = new KikerikiState();
     UUID uuid = UUID.randomUUID();
 
     // When
-    state.getDancerState(uuid);
+    kikerikiState.getDancerState(uuid);
 
     // Then
     assertThat(
-      state
+      kikerikiState
         .getDancerState()
         .filter(dancerStateement -> dancerStateement.getDancerId().equals(uuid))
         .count())
@@ -112,12 +112,12 @@ class KikerikiStateTest
   public void testGetDancerStateRetreivesExistingDancerState()
   {
     // Given
-    KikerikiState state = new KikerikiState();
+    KikerikiState kikerikiState = new KikerikiState();
     UUID uuid = UUID.randomUUID();
-    DancerState created = state.getDancerState(uuid);
+    DancerState created = kikerikiState.getDancerState(uuid);
 
     // When
-    DancerState retreived = state.getDancerState(uuid);
+    DancerState retreived = kikerikiState.getDancerState(uuid);
 
     // Then
     assertThat(retreived)
@@ -128,21 +128,21 @@ class KikerikiStateTest
   @Test
   public void testMiniIntegrationExample()
   {
-    KikerikiState state = new KikerikiState();
+    KikerikiState kikerikiState = new KikerikiState();
     DancerState dancerState;
 
 
-    dancerState = state.handle(read(loginMessage, MessageLogin.class));
+    dancerState = kikerikiState.handle(read(loginMessage, MessageLogin.class));
     assertThat(dancerState.getLastInvolvement().map(zdt -> zdt.toInstant()))
       .describedAs("Unexpected last involvement")
       .contains(ZonedDateTime.parse("2021-12-31T00:00:00+01:00[Europe/Berlin]").toInstant());
 
-    dancerState = state.handle(read(chatMessageNewMessage, MessageChat.class));
+    dancerState = kikerikiState.handle(read(chatMessageNewMessage, MessageChat.class));
     assertThat(dancerState.getUnseenMessages())
       .describedAs("Unread chat-message is missing")
       .contains(UUID.fromString("a58ed763-728c-9355-b339-3db21adc15a3"));
 
-    dancerState = state.handle(read(chatMessageMessageRead, MessageChat.class));
+    dancerState = kikerikiState.handle(read(chatMessageMessageRead, MessageChat.class));
     assertThat(dancerState.getLastInvolvement().map(zdt -> zdt.toInstant()))
       .describedAs("Unexpected last involvement")
       .contains(ZonedDateTime.parse("2022-01-03T00:00:00+01:00[Europe/Berlin]").toInstant());
@@ -150,7 +150,7 @@ class KikerikiStateTest
       .describedAs("Unread chat-message should be cleared")
       .isEmpty();
 
-    state.handle(read(mailSentMessage, MessageMailSent.class));
+    kikerikiState.handle(read(mailSentMessage, MessageMailSent.class));
     assertThat(dancerState.getLastInvolvement().map(zdt -> zdt.toInstant()))
       .describedAs("Unexpected last involvement")
       .contains(ZonedDateTime.parse("2022-01-03T00:00:00+01:00[Europe/Berlin]").toInstant());

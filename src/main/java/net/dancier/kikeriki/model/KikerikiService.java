@@ -1,8 +1,7 @@
-package net.dancier.kikeriki;
+package net.dancier.kikeriki.model;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.dancier.kikeriki.state.DancerState;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -14,7 +13,7 @@ import java.util.stream.Stream;
 
 @Slf4j
 @RequiredArgsConstructor
-public class DancerInvolver
+public class KikerikiService
 {
   private final static ZonedDateTime NEVER =
     ZonedDateTime.ofInstant(

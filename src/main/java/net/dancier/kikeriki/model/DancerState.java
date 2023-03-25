@@ -1,4 +1,4 @@
-package net.dancier.kikeriki.state;
+package net.dancier.kikeriki.model;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

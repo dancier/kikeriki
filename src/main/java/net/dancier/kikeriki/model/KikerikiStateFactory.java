@@ -1,4 +1,4 @@
-package net.dancier.kikeriki.state;
+package net.dancier.kikeriki.model;
 
 public interface KikerikiStateFactory
 {
