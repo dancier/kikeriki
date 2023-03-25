@@ -14,7 +14,7 @@ jobs:
         java-version: 17.0.4+1
         distribution: zulu
     - name: Build the project with Maven
-      run: ./mvnw --batch-mode -update-snapshots package
+      run: ./mvnw --batch-mode -update-snapshots verify
     - name: Login to the Docker registry
       run:  docker login --username ${{ secrets.DOCKER_HUB_USER }} --password ${{ secrets.DOCKER_HUB_PASS }}
     - name: Build the Docker image
