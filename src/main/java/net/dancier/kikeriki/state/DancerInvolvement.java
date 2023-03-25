@@ -5,13 +5,8 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 
-import java.time.Instant;
-import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 
 @RequiredArgsConstructor
@@ -19,24 +14,21 @@ import java.util.UUID;
 @ToString
 public class DancerInvolvement
 {
-  public final static ZonedDateTime NEVER = ZonedDateTime.ofInstant(Instant.EPOCH, ZoneId.of("Europe/Berlin"));
-
-
   @Getter
   private final UUID dancerId;
   private final Set<UUID> unseenMessages = new HashSet<>();
 
   @Getter
-  private ZonedDateTime lastMailSent = NEVER;
+  private Optional<ZonedDateTime> lastMailSent = Optional.empty();
   @Getter
-  private ZonedDateTime lastInvolvement = NEVER;
+  private Optional<ZonedDateTime> lastInvolvement = Optional.empty();
 
 
   public void setLastLogin(ZonedDateTime timestamp)
   {
-    lastInvolvement = timestamp;
+    lastInvolvement = Optional.of(timestamp);
     unseenMessages.clear();
-    lastMailSent = NEVER;
+    lastMailSent = Optional.empty();
   }
 
   public void addUnreadChatMessage(UUID id)
@@ -46,14 +38,14 @@ public class DancerInvolvement
 
   public void markChatMessagesAsSeen(ZonedDateTime timestamp)
   {
-    lastInvolvement = timestamp;
+    lastInvolvement = Optional.of(timestamp);
     unseenMessages.clear();
-    lastMailSent = NEVER;
+    lastMailSent = Optional.empty();
   }
 
   public void setLastMailSent(ZonedDateTime timestamp)
   {
-    lastMailSent = timestamp;
+    lastMailSent = Optional.of(timestamp);
   }
 
   public Set<UUID> getUnseenMessages()

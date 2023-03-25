@@ -12,29 +12,29 @@ import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 public class DancerInvolvementTest
 {
   @Test
-  @DisplayName("The last involvement of a newly created instance should be the unix-epoch")
-  public void testNewInvolvementHasUnixEpochAsLastInvolvement()
+  @DisplayName("A newly created instance should have no timestamp for a last involvment")
+  public void testNewInvolvementHasNoLastInvolvementTimestamp()
   {
     // When
     DancerInvolvement involvement = new DancerInvolvement(UUID.randomUUID());
 
     // Then
     assertThat(involvement.getLastInvolvement())
-      .describedAs("The last involvement should equal the unix-epoch")
-      .isEqualTo(DancerInvolvement.NEVER);
+      .as("last involvement")
+      .isEmpty();
   }
 
   @Test
-  @DisplayName("The timestamp of the last sent mail of a newly created instance should be the unix-epoch")
-  public void testNewInvolvementHasUnixEpochAsLastMailSent()
+  @DisplayName("A newly created instance should have no timestamp for a last mail sent")
+  public void testNewInvolvementHasNoLastMailSentTimestamp()
   {
     // When
     DancerInvolvement involvement = new DancerInvolvement(UUID.randomUUID());
 
     // Then
     assertThat(involvement.getLastMailSent())
-      .describedAs("The timestamp of the last sent mail should equal the unix-epoch")
-      .isEqualTo(DancerInvolvement.NEVER);
+      .as("last mail sent")
+      .isEmpty();
   }
 
   @Test
@@ -46,7 +46,7 @@ public class DancerInvolvementTest
 
     // Then
     assertThat(involvement.getUnseenMessages())
-      .describedAs("There should not be any unseen chat-messages")
+      .as("unseen messages")
       .isEmpty();
   }
 
@@ -57,14 +57,13 @@ public class DancerInvolvementTest
     // Given
     DancerInvolvement involvement = new DancerInvolvement(UUID.randomUUID());
     UUID messageId = UUID.randomUUID();
-    ZonedDateTime before = involvement.getLastInvolvement();
 
     // When
     involvement.addUnreadChatMessage(messageId);
 
     // Then
     assertThat(involvement.getUnseenMessages())
-      .describedAs("The set of unseen messages should contain the added chat-message-ID")
+      .as("unseen messages")
       .contains(messageId);
   }
 
@@ -74,16 +73,14 @@ public class DancerInvolvementTest
   {
     // Given
     DancerInvolvement involvement = new DancerInvolvement(UUID.randomUUID());
-    UUID messageId = UUID.randomUUID();
-    ZonedDateTime before = involvement.getLastInvolvement();
 
     // When
-    involvement.addUnreadChatMessage(messageId);
+    involvement.addUnreadChatMessage(UUID.randomUUID());
 
     // Then
     assertThat(involvement.getLastInvolvement())
-      .describedAs("The last involvement should not have changed")
-      .isEqualTo(before);
+      .as("last involvement")
+      .isEmpty();
   }
 
   @Test
@@ -92,18 +89,15 @@ public class DancerInvolvementTest
   {
     // Given
     DancerInvolvement involvement = new DancerInvolvement(UUID.randomUUID());
-    UUID messageId = UUID.randomUUID();
-    ZonedDateTime before = involvement.getLastInvolvement();
-    involvement.addUnreadChatMessage(messageId);
-    ZonedDateTime timestampLastLogin = before.plusHours(3);
+    ZonedDateTime timestampLastLogin = ZonedDateTime.now();
 
     // When
     involvement.setLastLogin(timestampLastLogin);
 
     // Then
     assertThat(involvement.getLastInvolvement())
-      .describedAs("The last involvement should reflect the last login")
-      .isEqualTo(timestampLastLogin);
+      .as("last involvement")
+      .contains(timestampLastLogin);
   }
 
   @Test
@@ -112,38 +106,32 @@ public class DancerInvolvementTest
   {
     // Given
     DancerInvolvement involvement = new DancerInvolvement(UUID.randomUUID());
-    UUID messageId = UUID.randomUUID();
-    ZonedDateTime before = involvement.getLastInvolvement();
-    involvement.addUnreadChatMessage(messageId);
-    ZonedDateTime timestampLastLogin = before.plusHours(3);
+    involvement.addUnreadChatMessage(UUID.randomUUID());
 
     // When
-    involvement.setLastLogin(timestampLastLogin);
+    involvement.setLastLogin(ZonedDateTime.now());
 
     // Then
     assertThat(involvement.getUnseenMessages())
-      .describedAs("The remembered unseen messages should be cleard")
+      .as("unseen messages")
       .isEmpty();
   }
 
   @Test
-  @DisplayName("If a timestamp for the last login is set, the timestamp for the last mail sent is reset to the unix-epoch")
+  @DisplayName("If a timestamp for the last login is set, the timestamp for the last mail sent is cleared")
   public void testSetLastLoginResetsLastMailSent()
   {
     // Given
     DancerInvolvement involvement = new DancerInvolvement(UUID.randomUUID());
-    ZonedDateTime before = involvement.getLastInvolvement();
-    ZonedDateTime timestampLastMailSent = before.plusHours(1);
-    involvement.setLastMailSent(timestampLastMailSent);
-    ZonedDateTime timestampLastLogin = before.plusHours(3);
+    involvement.setLastMailSent(ZonedDateTime.now());
 
     // When
-    involvement.setLastLogin(timestampLastLogin);
+    involvement.setLastLogin(ZonedDateTime.now());
 
     // Then
     assertThat(involvement.getLastMailSent())
-      .describedAs("The timestamp for the last mail sent should equal the unix-epoch")
-      .isEqualTo(DancerInvolvement.NEVER);
+      .as("last mail sent")
+      .isEmpty();
   }
 
   @Test
@@ -152,16 +140,15 @@ public class DancerInvolvementTest
   {
     // Given
     DancerInvolvement involvement = new DancerInvolvement(UUID.randomUUID());
-    ZonedDateTime before = involvement.getLastInvolvement();
-    ZonedDateTime timestampMessageRead = before.plusHours(3);
+    ZonedDateTime timestampMessageRead = ZonedDateTime.now();
 
     // When
     involvement.markChatMessagesAsSeen(timestampMessageRead);
 
     // Then
     assertThat(involvement.getLastInvolvement())
-      .describedAs("Last involvement should reflect the time the message was read")
-      .isEqualTo(timestampMessageRead);
+      .as("last involvement")
+      .contains(timestampMessageRead);
   }
 
   @Test
@@ -170,38 +157,32 @@ public class DancerInvolvementTest
   {
     // Given
     DancerInvolvement involvement = new DancerInvolvement(UUID.randomUUID());
-    UUID messageId = UUID.randomUUID();
-    ZonedDateTime before = involvement.getLastInvolvement();
-    involvement.addUnreadChatMessage(messageId);
-    ZonedDateTime timestampMessageRead = before.plusHours(3);
+    involvement.addUnreadChatMessage(UUID.randomUUID());
 
     // When
-    involvement.markChatMessagesAsSeen(timestampMessageRead);
+    involvement.markChatMessagesAsSeen(ZonedDateTime.now());
 
     // Then
     assertThat(involvement.getUnseenMessages())
-      .describedAs("The remembered unseen messages should be cleard")
+      .as("unseen messages")
       .isEmpty();
   }
 
   @Test
-  @DisplayName("If the chat-messages are marked as seen, the timestamp for the last mail sent is reset to the unix-epoch")
+  @DisplayName("If the chat-messages are marked as seen, the timestamp for the last mail sent is cleard")
   public void testMarkChatMessagesAsSeenResetsLastMailSent()
   {
     // Given
     DancerInvolvement involvement = new DancerInvolvement(UUID.randomUUID());
-    ZonedDateTime before = involvement.getLastInvolvement();
-    ZonedDateTime timestampLastMailSent = before.plusHours(1);
-    involvement.setLastMailSent(timestampLastMailSent);
-    ZonedDateTime timestampMessageRead = before.plusHours(3);
+    involvement.setLastMailSent(ZonedDateTime.now());
 
     // When
-    involvement.markChatMessagesAsSeen(timestampMessageRead);
+    involvement.markChatMessagesAsSeen(ZonedDateTime.now());
 
     // Then
     assertThat(involvement.getLastMailSent())
-      .describedAs("The timestamp for the last mail sent should equal the unix-epoch")
-      .isEqualTo(DancerInvolvement.NEVER);
+      .as("last mail sent")
+      .isEmpty();
   }
 
   @Test
@@ -210,18 +191,15 @@ public class DancerInvolvementTest
   {
     // Given
     DancerInvolvement involvement = new DancerInvolvement(UUID.randomUUID());
-    UUID messageId = UUID.randomUUID();
-    ZonedDateTime before = involvement.getLastInvolvement();
-    involvement.addUnreadChatMessage(messageId);
-    ZonedDateTime timestampLastMailSent = before.plusHours(3);
+    ZonedDateTime timestampLastMailSent = ZonedDateTime.now();
 
     // When
     involvement.setLastMailSent(timestampLastMailSent);
 
     // Then
     assertThat(involvement.getLastMailSent())
-      .describedAs("The timestamp for the last sent mail should have been stored")
-      .isEqualTo(timestampLastMailSent);
+      .as("last sent mail")
+      .contains(timestampLastMailSent);
   }
 
   @Test
@@ -230,35 +208,30 @@ public class DancerInvolvementTest
   {
     // Given
     DancerInvolvement involvement = new DancerInvolvement(UUID.randomUUID());
-    ZonedDateTime before = involvement.getLastInvolvement();
-    ZonedDateTime timestampLastMailSent = before.plusHours(3);
 
     // When
-    involvement.setLastMailSent(timestampLastMailSent);
+    involvement.setLastMailSent(ZonedDateTime.now());
 
     // Then
     assertThat(involvement.getLastInvolvement())
-      .describedAs("The last involvement should not have been changed")
-      .isEqualTo(before);
+      .as("last involvement")
+      .isEmpty();
   }
 
   @Test
-  @DisplayName("If a timestamp for the last sent mail is set, the unseen chant-messages schould not be cleared")
+  @DisplayName("If a timestamp for the last sent mail is set, the unseen chant-messages should not be cleared")
   public void testSetLastMailSentDoesNotClearUnseenMessages()
   {
     // Given
     DancerInvolvement involvement = new DancerInvolvement(UUID.randomUUID());
-    UUID messageId = UUID.randomUUID();
-    ZonedDateTime before = involvement.getLastInvolvement();
-    involvement.addUnreadChatMessage(messageId);
-    ZonedDateTime timestampLastMailSent = before.plusHours(3);
+    involvement.addUnreadChatMessage(UUID.randomUUID());
 
     // When
-    involvement.setLastMailSent(timestampLastMailSent);
+    involvement.setLastMailSent(ZonedDateTime.now());
 
     // Then
     assertThat(involvement.getUnseenMessages())
-      .describedAs("The remembered unseen messages should not be cleard")
+      .as("unseen messages")
       .isNotEmpty();
   }
 }
