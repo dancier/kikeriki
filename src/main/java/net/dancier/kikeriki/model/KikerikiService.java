@@ -23,6 +23,7 @@ public class KikerikiService
   private final Duration involveDancerAfter;
   private final Duration involvementCheckInterval;
   private final Duration reinvolvementInterval;
+  private final InvolvementStrategy involvementStrategy;
 
   private Optional<ZonedDateTime> lastGeneralInvolvement = Optional.empty();
 
@@ -34,7 +35,8 @@ public class KikerikiService
     if (dancerState
       .getLastInvolvement()
       .orElse(NEVER)
-      .plus(involveDancerAfter).isBefore(streamTimeNow))
+      .plus(involveDancerAfter)
+      .isBefore(streamTimeNow))
     {
       log.info(
         "involving dancer {} (last involvement={}, now={})",
@@ -56,16 +58,17 @@ public class KikerikiService
     }
 
     lastGeneralInvolvement = Optional.of(streamTimeNow);
+
     dancerStateStream
       .filter(dancerState -> dancerState
         .getLastInvolvement()
         .orElse(NEVER)
         .plus(involveDancerAfter)
         .isBefore(streamTimeNow))
-      .forEach(dancerState -> sendMail(dancerState, streamTimeNow));
+      .forEach(dancerState -> reinvolveDancer(dancerState, streamTimeNow));
   }
 
-  void sendMail(
+  void reinvolveDancer(
     DancerState dancerState,
     ZonedDateTime streamTimeNow)
   {
@@ -80,7 +83,6 @@ public class KikerikiService
       return;
     }
 
-    // TODO: Send a Mail and emmit a message of type MessageMailSent
-    log.warn("A mails should be send here!");
+    involvementStrategy.involveDancer(dancerState);
   }
 }
