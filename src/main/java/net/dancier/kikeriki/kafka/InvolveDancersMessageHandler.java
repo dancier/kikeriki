@@ -49,6 +49,13 @@ public class InvolveDancersMessageHandler implements MessageHandler
   @Override
   public void handle(int partition, long offset, Message message)
   {
+    if (kikerikiState[partition] == null)
+    {
+      throw new IllegalStateException(
+        "Cannot handle " + message + " from partition " + partition +
+        " @offset=" + offset + ": unassigned partition!");
+    }
+
     log.info("handling partition={}, message={}", partition, message);
     switch (message.getType())
     {
