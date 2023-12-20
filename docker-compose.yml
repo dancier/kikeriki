@@ -24,9 +24,9 @@ services:
     image: juplo/toolbox
     command: >
       bash -c "
-        kafka-topics --bootstrap-server kafka:9092 --delete --if-exists --topic test
-        kafka-topics --bootstrap-server kafka:9092 --create --topic test --partitions 10 --replication-factor 1
-        kafka-topics --bootstrap-server kafka:9092 --describe --topic test
+        kafka-topics --bootstrap-server kafka:9092 --delete --if-exists --topic message-posted
+        kafka-topics --bootstrap-server kafka:9092 --create --topic message-posted --partitions 10 --replication-factor 1
+        kafka-topics --bootstrap-server kafka:9092 --describe --topic message-posted
       "
     depends_on:
       - kafka
@@ -37,3 +37,21 @@ services:
     command: sleep infinity
     depends_on:
       - kafka
+
+  kafka-ui:
+    container_name: kafka-ui
+    image: tchiotludo/akhq:latest
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8080/ui" ]
+      interval: 10s
+      timeout: 2s
+    ports:
+      - "8088:8080"
+    environment:
+      AKHQ_CONFIGURATION: |
+        akhq:
+          connections:
+            docker-kafka-server:
+              properties:
+                bootstrap.servers: "kafka:9092"
+

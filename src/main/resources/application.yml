@@ -1,10 +1,9 @@
-dancier:
-  kikeriki:
-    topic: test
-    num-partitions: 10
-    involve-dancer-after: 7d
-    involvement-check-interval: 1d
-    reinvolvement-interval: 28d
+spring:
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: kikeriki
+
 management:
   endpoint:
     shutdown:
@@ -18,29 +17,6 @@ management:
       enabled: true
     java:
       enabled: true
-info:
-  kafka:
-    bootstrap-server: ${spring.kafka.bootstrap-servers}
-    client-id: ${spring.kafka.client-id}
-    group-id: ${spring.kafka.consumer.group-id}
-    topic: ${kikeriki.consumer.topic}
-    auto-offset-reset: ${spring.kafka.consumer.auto-offset-reset}
-spring:
-  kafka:
-    bootstrap-servers: :9092
-    client-id: DEV
-    consumer:
-      group-id: kikeriki
-      enable-auto-commit: false
-      auto-offset-reset: earliest
-      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
-      properties:
-        partition.assignment.strategy: org.apache.kafka.clients.consumer.StickyAssignor
-        spring.json.type.mapping: >
-          LOGIN:net.dancier.kikeriki.messages.MessageLogin,
-          CHAT:net.dancier.kikeriki.messages.MessageChat,
-          MAIL_SENT:net.dancier.kikeriki.messages.MessageMailSent
 logging:
   level:
     root: INFO
