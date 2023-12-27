@@ -1,4 +1,4 @@
-package net.dancier.kikeriki;
+package net.dancier.kikeriki.application;
 
 import io.cloudevents.CloudEvent;
 import org.slf4j.Logger;
@@ -20,5 +20,6 @@ public class ListenerAll {
   void listener(CloudEvent cloudEvent) {
     log.info("Got this event....");
     log.info(cloudEvent.toString());
+
   }
 }
