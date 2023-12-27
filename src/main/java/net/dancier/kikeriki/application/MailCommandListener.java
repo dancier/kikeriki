@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Component;
 
@@ -21,6 +22,8 @@ public class MailCommandListener {
 
   private final ObjectMapper objectMapper;
 
+  private final MailSender mailSender;
+
   @KafkaListener(topics = {"email-sending-requested"})
   void listener(CloudEvent cloudEvent) {
     log.info("Got Mail Command: " + cloudEvent);
@@ -30,6 +33,7 @@ public class MailCommandListener {
       log.info("Transformed: " + simpleMailMessage);
       DancierMailMessage bla = objectMapper.readValue(cloudEvent.getData().toBytes(), DancierMailMessage.class);
       log.info("The mailmessage: " + bla);
+      mailSender.send(bla);
     } catch (IOException ioe) {
       log.info(ioe.toString());
     }
