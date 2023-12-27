@@ -11,9 +11,14 @@ public class ChatListener {
 
   Logger log = LoggerFactory.getLogger(ChatListener.class);
 
-  @KafkaListener(topics = {"message-posted", "chat-created", "message-read", "profile-updated"})
-  void listener(CloudEvent data) {
+  @KafkaListener(topics = {
+    "message-posted",
+    "chat-created",
+    "message-read",
+    "profile-updated",
+    "email-sending-requested"})
+  void listener(CloudEvent cloudEvent) {
     log.info("Got this event....");
-    log.info(data.toString());
+    log.info(cloudEvent.toString());
   }
 }
