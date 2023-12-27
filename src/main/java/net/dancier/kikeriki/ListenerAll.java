@@ -7,16 +7,16 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ChatListener {
+public class ListenerAll {
 
-  Logger log = LoggerFactory.getLogger(ChatListener.class);
+  Logger log = LoggerFactory.getLogger(ListenerAll.class);
 
   @KafkaListener(topics = {
     "message-posted",
     "chat-created",
     "message-read",
-    "profile-updated",
-    "email-sending-requested"})
+    "profile-updated"
+  })
   void listener(CloudEvent cloudEvent) {
     log.info("Got this event....");
     log.info(cloudEvent.toString());
