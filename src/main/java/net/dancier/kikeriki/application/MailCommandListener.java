@@ -28,6 +28,9 @@ public class MailCommandListener {
     try {
       simpleMailMessage = objectMapper.readValue(cloudEvent.getData().toBytes(), JsonNode.class);
       log.info("Transformed: " + simpleMailMessage);
+      SimpleMailMessage bla = objectMapper.readValue(cloudEvent.getData().toBytes(), SimpleMailMessage.class);
+
+
     } catch (IOException ioe) {
       log.info(ioe.toString());
     }
