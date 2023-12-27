@@ -1,6 +1,7 @@
 package net.dancier.kikeriki.application;
 
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cloudevents.CloudEvent;
 import lombok.RequiredArgsConstructor;
@@ -23,9 +24,9 @@ public class MailCommandListener {
   @KafkaListener(topics = {"email-sending-requested"})
   void listener(CloudEvent cloudEvent) {
     log.info("Got Mail Command: " + cloudEvent);
-    SimpleMailMessage simpleMailMessage = null;
+    JsonNode simpleMailMessage = null;
     try {
-      simpleMailMessage = objectMapper.readValue(cloudEvent.getData().toBytes(), SimpleMailMessage.class);
+      simpleMailMessage = objectMapper.readValue(cloudEvent.getData().toBytes(), JsonNode.class);
     } catch (IOException ioe) {
       log.info(ioe.toString());
     }
