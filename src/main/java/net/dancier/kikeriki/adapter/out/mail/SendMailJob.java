@@ -9,6 +9,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Component
@@ -24,6 +25,8 @@ public class SendMailJob {
   @Scheduled(fixedRate = 2000)
   public void sendMails() {
     log.info("Checking...");
+    List<MailOutboxJpaEntity> all = mailOutboxJpaRepository.findAll();
+    log.info("All: {}", all);
     Collection<MailOutboxJpaEntity> itemsToBeSend = mailOutboxJpaRepository.lockAndList();
     log.info("Got this: {}", itemsToBeSend);
     for(MailOutboxJpaEntity item: itemsToBeSend) {

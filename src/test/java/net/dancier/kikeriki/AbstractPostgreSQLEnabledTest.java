@@ -11,7 +11,7 @@ import org.testcontainers.containers.PostgreSQLContainer;
 public class AbstractPostgreSQLEnabledTest {
 
     static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>(
-            "postgres:15-alpine"
+            "postgres:16-alpine"
     );
 
     @BeforeAll
