@@ -10,9 +10,9 @@ import org.springframework.stereotype.Component;
 
 @RequiredArgsConstructor
 @Component
-public class DancierDancierSendMailAdapter implements DancierSendMailPort {
+public class DancierSendMailAdapter implements DancierSendMailPort {
 
-  public static final Logger log = LoggerFactory.getLogger(DancierDancierSendMailAdapter.class);
+  public static final Logger log = LoggerFactory.getLogger(DancierSendMailAdapter.class);
 
   public final JavaMailSender javaMailSender;
   @Override
