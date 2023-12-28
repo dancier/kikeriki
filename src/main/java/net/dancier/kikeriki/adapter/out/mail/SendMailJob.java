@@ -25,6 +25,7 @@ public class SendMailJob {
   public void sendMails() {
     log.info("Checking...");
     Collection<MailOutboxJpaEntity> itemsToBeSend = mailOutboxJpaRepository.lockAndList();
+    log.info("Got this: {}", itemsToBeSend);
     for(MailOutboxJpaEntity item: itemsToBeSend) {
       sendMail(item);
     }
@@ -32,7 +33,7 @@ public class SendMailJob {
 
   private void sendMail(MailOutboxJpaEntity item) {
     log.info("Sending the mail via SMTP: {}", item);
-    javaMailSender.send(item.getEmailSendingRequestedEvent());
+//    javaMailSender.send(item.getEmailSendingRequestedEvent());
   }
 
 }
