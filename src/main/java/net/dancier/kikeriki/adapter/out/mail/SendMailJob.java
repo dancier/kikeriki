@@ -21,7 +21,6 @@ public class SendMailJob {
 
   private final JavaMailSender javaMailSender;
 
-  @Transactional
   @Scheduled(fixedRate = 2000)
   public void sendMails() {
     log.info("Checking...");
@@ -30,13 +29,15 @@ public class SendMailJob {
     for(MailOutboxJpaEntity item: itemsToBeSend) {
       sendMail(item);
       item.setStatus(MailOutboxJpaEntity.STATUS.DONE);
-      mailOutboxJpaRepository.save(item);
     }
   }
 
+  @Transactional
   private void sendMail(MailOutboxJpaEntity item) {
     log.info("Sending the mail via SMTP: {}", item);
     javaMailSender.send(item.getEmailSendingRequestedEvent());
+    item.setStatus(MailOutboxJpaEntity.STATUS.DONE);
+    mailOutboxJpaRepository.save(item);
   }
 
 }
