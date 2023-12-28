@@ -38,6 +38,7 @@ public class MailSystemTest extends AbstractPostgreSQLEnabledTest{
     EmailSendingRequestedEvent emailSendingRequestedEvent = new EmailSendingRequestedEvent();
     emailSendingRequestedEvent.setId(UUID.randomUUID().toString());
     emailSendingRequestedEvent.setTo("foo");
+//    emailSendingRequestedEvent.setCc("bar");
     emailSendingRequestedEvent.setText("hall welt");
     MailOutboxJpaEntity entity = new MailOutboxJpaEntity();
     entity.setId(emailSendingRequestedEvent.getId());
