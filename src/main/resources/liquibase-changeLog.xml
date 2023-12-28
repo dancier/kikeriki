@@ -1,0 +1,20 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext
+   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+   http://www.liquibase.org/xml/ns/dbchangelog
+   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+    <changeSet id="2023-12-28-01-add-mailoutbox" author="Marc">
+        <sql>
+            CREATE TABLE mail_outbox (
+                id VARCHAR(256) PRIMARY KEY,
+                status VARCHAR(256) NOT NULL,
+                mail JSONB NOT NULL,
+                created_at TIMESTAMP WITHOUT TIME ZONE
+            );
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>
