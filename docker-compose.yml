@@ -36,6 +36,27 @@ services:
             docker-kafka-server:
               properties:
                 bootstrap.servers: "kafka:9092"
+  setup:
+    image: juplo/toolbox
+    command: >
+      bash -c "
+        kafka-topics --bootstrap-server kafka:9092 --delete --if-exists --topic message-posted
+        kafka-topics --bootstrap-server kafka:9092 --create --topic message-posted --partitions 10 --replication-factor 1
+
+        kafka-topics --bootstrap-server kafka:9092 --delete --if-exists --topic chat-created
+        kafka-topics --bootstrap-server kafka:9092 --create --topic chat-created --partitions 10 --replication-factor 1
+
+        kafka-topics --bootstrap-server kafka:9092 --delete --if-exists --topic profile-updated
+        kafka-topics --bootstrap-server kafka:9092 --create --topic profile-updated --partitions 10 --replication-factor 1
+
+        kafka-topics --bootstrap-server kafka:9092 --delete --if-exists --topic email-sending-requested
+        kafka-topics --bootstrap-server kafka:9092 --create --topic email-sending-requested --partitions 10 --replication-factor 1
+
+        kafka-topics --bootstrap-server kafka:9092 --delete --if-exists --topic message-read
+        kafka-topics --bootstrap-server kafka:9092 --create --topic message-read --partitions 10 --replication-factor 1
+      "
+    depends_on:
+      - kafka
   kikeriki-db:
     image: postgres:16
     restart: always
