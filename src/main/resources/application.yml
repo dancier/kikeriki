@@ -1,4 +1,11 @@
 spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/kikeriki
+    username: kikeriki
+    password: kikeriki
+  jpa:
+    hibernate:
+      ddl-auto: validate
   kafka:
     bootstrap-servers: localhost:9092
     consumer:
