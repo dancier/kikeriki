@@ -22,4 +22,8 @@ public class EmailSendingRequestedEvent extends SimpleMailMessage {
   public void setCc(String[] in) {
     super.setCc(in);
   }
+
+  public void setBcc(String[] in) {
+    super.setBcc(in);
+  }
 }
