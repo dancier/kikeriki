@@ -19,6 +19,7 @@ public class MailSenderConfiguration {
       return javaMailSender;
   }
 
+  @Bean
   @Profile("staging")
   public JavaMailSender getRealSender(
     @Value("${app.mail.host}") String hostname,
