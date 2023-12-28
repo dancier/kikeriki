@@ -1,4 +1,4 @@
-package net.dancier.kikeriki.application.domain.model;
+package net.dancier.kikeriki.application.domain.model.state;
 
 
 import lombok.AccessLevel;

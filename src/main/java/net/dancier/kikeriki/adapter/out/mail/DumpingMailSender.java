@@ -1,4 +1,4 @@
-package net.dancier.kikeriki.application;
+package net.dancier.kikeriki.adapter.out.mail;
 
 import jakarta.mail.internet.MimeMessage;
 import org.slf4j.Logger;

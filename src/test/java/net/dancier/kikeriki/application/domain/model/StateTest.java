@@ -1,5 +1,8 @@
 package net.dancier.kikeriki.application.domain.model;
 
+import net.dancier.kikeriki.application.domain.model.state.MailMessage;
+import net.dancier.kikeriki.application.domain.model.state.State;
+import net.dancier.kikeriki.application.domain.model.state.UnreadChatMessage;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;

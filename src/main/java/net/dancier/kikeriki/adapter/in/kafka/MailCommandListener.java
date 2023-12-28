@@ -1,15 +1,15 @@
-package net.dancier.kikeriki.application;
+package net.dancier.kikeriki.adapter.in.kafka;
 
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cloudevents.CloudEvent;
 import lombok.RequiredArgsConstructor;
+import net.dancier.kikeriki.application.domain.model.events.EmailSendingRequestedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.mail.MailSender;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -31,7 +31,7 @@ public class MailCommandListener {
     try {
       simpleMailMessage = objectMapper.readValue(cloudEvent.getData().toBytes(), JsonNode.class);
       log.info("Transformed: " + simpleMailMessage);
-      DancierMailMessage bla = objectMapper.readValue(cloudEvent.getData().toBytes(), DancierMailMessage.class);
+      EmailSendingRequestedEvent bla = objectMapper.readValue(cloudEvent.getData().toBytes(), EmailSendingRequestedEvent.class);
       log.info("The mailmessage: " + bla);
       mailSender.send(bla);
     } catch (IOException ioe) {

@@ -1,4 +1,4 @@
-package net.dancier.kikeriki.application;
+package net.dancier.kikeriki.adapter.in.kafka;
 
 import io.cloudevents.CloudEvent;
 import org.slf4j.Logger;

@@ -1,4 +1,4 @@
-package net.dancier.kikeriki.application;
+package net.dancier.kikeriki.adapter.out.mail;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

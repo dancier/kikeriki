@@ -1,7 +1,6 @@
-package net.dancier.kikeriki.application;
+package net.dancier.kikeriki.adapter.out.mail;
 
 import jakarta.mail.internet.MimeMessage;
-import jakarta.validation.constraints.Null;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.mail.MailException;

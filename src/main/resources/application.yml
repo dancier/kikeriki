@@ -21,3 +21,9 @@ logging:
   level:
     root: INFO
     net.dancier: DEBUG
+app:
+  mail:
+    host: mail.your-server.de
+    port: 465
+    user: user
+    pass: pass
