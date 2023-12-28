@@ -10,6 +10,8 @@ spring:
     bootstrap-servers: localhost:9092
     consumer:
       group-id: kikeriki
+  liquibase:
+    change-log: classpath:liquibase-changeLog.xml
 management:
   endpoint:
     shutdown:

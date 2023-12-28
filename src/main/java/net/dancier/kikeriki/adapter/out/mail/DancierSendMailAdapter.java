@@ -8,16 +8,24 @@ import org.slf4j.LoggerFactory;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
+
 @RequiredArgsConstructor
 @Component
 public class DancierSendMailAdapter implements DancierSendMailPort {
 
   public static final Logger log = LoggerFactory.getLogger(DancierSendMailAdapter.class);
 
-  public final JavaMailSender javaMailSender;
-  @Override
+  public final MailOutboxJpaRepository mailOutboxJpaRepository;
+
+ @Override
   public void schedule(EmailSendingRequestedEvent emailSendingRequestedEvent) {
       log.info("Storing message for later delivery: {}", emailSendingRequestedEvent);
-      javaMailSender.send(emailSendingRequestedEvent);
+      MailOutboxJpaEntity mailOutboxJpaEntity = new MailOutboxJpaEntity();
+      mailOutboxJpaEntity.setId(emailSendingRequestedEvent.getId());
+      mailOutboxJpaEntity.setStatus(MailOutboxJpaEntity.STATUS.NEW);
+      mailOutboxJpaEntity.setCreatedAt(LocalDateTime.now());
+      mailOutboxJpaEntity.setEmailSendingRequestedEvent(emailSendingRequestedEvent);
+      mailOutboxJpaRepository.save(mailOutboxJpaEntity);
   }
 }

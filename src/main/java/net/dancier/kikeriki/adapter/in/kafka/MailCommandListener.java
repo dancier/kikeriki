@@ -31,6 +31,7 @@ public class MailCommandListener {
     try {
       EmailSendingRequestedEvent emailSendingRequestedEvent = objectMapper.readValue(cloudEvent.getData().toBytes(), EmailSendingRequestedEvent.class);
       log.info("Got that request to send a mail: {}", emailSendingRequestedEvent);
+      emailSendingRequestedEvent.setId(cloudEvent.getId());
       applicationEventPublisher.publishEvent(emailSendingRequestedEvent);
     } catch (IOException ioe) {
       log.info(ioe.toString());
