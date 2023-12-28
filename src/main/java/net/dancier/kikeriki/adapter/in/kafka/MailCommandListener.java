@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import net.dancier.kikeriki.application.domain.model.events.EmailSendingRequestedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.mail.MailSender;
 import org.springframework.stereotype.Component;
@@ -22,18 +23,15 @@ public class MailCommandListener {
 
   private final ObjectMapper objectMapper;
 
-  private final MailSender mailSender;
+  private final ApplicationEventPublisher applicationEventPublisher;
 
   @KafkaListener(topics = {"email-sending-requested"})
   void listener(CloudEvent cloudEvent) {
     log.info("Got Mail Command: " + cloudEvent);
-    JsonNode simpleMailMessage = null;
     try {
-      simpleMailMessage = objectMapper.readValue(cloudEvent.getData().toBytes(), JsonNode.class);
-      log.info("Transformed: " + simpleMailMessage);
-      EmailSendingRequestedEvent bla = objectMapper.readValue(cloudEvent.getData().toBytes(), EmailSendingRequestedEvent.class);
-      log.info("The mailmessage: " + bla);
-      mailSender.send(bla);
+      EmailSendingRequestedEvent emailSendingRequestedEvent = objectMapper.readValue(cloudEvent.getData().toBytes(), EmailSendingRequestedEvent.class);
+      log.info("Got that request to send a mail: {}", emailSendingRequestedEvent);
+      applicationEventPublisher.publishEvent(emailSendingRequestedEvent);
     } catch (IOException ioe) {
       log.info(ioe.toString());
     }
