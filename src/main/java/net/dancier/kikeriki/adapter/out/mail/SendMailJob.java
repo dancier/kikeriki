@@ -27,11 +27,11 @@ public class SendMailJob {
     log.info("Checking...");
     List<MailOutboxJpaEntity> all = mailOutboxJpaRepository.findAll();
     log.info("All: {}", all);
-    Collection<MailOutboxJpaEntity> itemsToBeSend = mailOutboxJpaRepository.lockAndList();
+  /*  Collection<MailOutboxJpaEntity> itemsToBeSend = mailOutboxJpaRepository.lockAndList();
     log.info("Got this: {}", itemsToBeSend);
     for(MailOutboxJpaEntity item: itemsToBeSend) {
       sendMail(item);
-    }
+    }*/
   }
 
   private void sendMail(MailOutboxJpaEntity item) {
