@@ -19,4 +19,7 @@ public class EmailSendingRequestedEvent extends SimpleMailMessage {
     super.setTo(in);
   }
 
+  public void setCc(String[] in) {
+    super.setCc(in);
+  }
 }

@@ -1,5 +1,6 @@
 package net.dancier.kikeriki.adapter.out.mail;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
