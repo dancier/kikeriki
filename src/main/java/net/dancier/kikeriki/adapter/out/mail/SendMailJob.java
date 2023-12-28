@@ -29,12 +29,14 @@ public class SendMailJob {
     log.info("Got this: {}", itemsToBeSend);
     for(MailOutboxJpaEntity item: itemsToBeSend) {
       sendMail(item);
+      item.setStatus(MailOutboxJpaEntity.STATUS.DONE);
+      mailOutboxJpaRepository.save(item);
     }
   }
 
   private void sendMail(MailOutboxJpaEntity item) {
     log.info("Sending the mail via SMTP: {}", item);
-//    javaMailSender.send(item.getEmailSendingRequestedEvent());
+    javaMailSender.send(item.getEmailSendingRequestedEvent());
   }
 
 }

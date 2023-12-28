@@ -30,7 +30,9 @@ public class MailOutboxJpaEntity {
 
   public static enum STATUS {
     NEW,
-    IN_PROGRESS
+    IN_PROGRESS,
+
+    DONE
   }
 
 }
