@@ -34,6 +34,7 @@ public class SendMailJob {
   @Transactional
   private void sendMail(MailOutboxJpaEntity item) {
     log.info("Sending the mail via SMTP: {}", item);
+    log.info("And sender: {}", javaMailSender);
     javaMailSender.send(item.getEmailSendingRequestedEvent());
     item.setStatus(MailOutboxJpaEntity.STATUS.DONE);
     mailOutboxJpaRepository.save(item);
