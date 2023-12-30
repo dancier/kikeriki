@@ -1,6 +1,5 @@
 package net.dancier.kikeriki.adapter.out.mail;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,15 +10,14 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
-import java.util.List;
 
 import static net.dancier.kikeriki.adapter.out.mail.MailOutboxJpaEntity.STATUS.*;
 
 @RequiredArgsConstructor
 @Component
-public class SendMailJob {
+public class MailSenderJob {
 
-  private static final Logger log = LoggerFactory.getLogger(SendMailJob.class);
+  private static final Logger log = LoggerFactory.getLogger(MailSenderJob.class);
 
   private final MailOutboxJpaRepository mailOutboxJpaRepository;
 
@@ -43,7 +41,7 @@ public class SendMailJob {
       item.setStatus(DONE);
     } catch (MailAuthenticationException mailAuthenticationException) {
       item.setStatus(TEMPORARY_FAILED);
-      log.error("Problem with password." + mailAuthenticationException);
+      log.error("Problem with password." + mailAuthenticationException.getStackTrace());
     } catch (MailException mailException) {
       item.setStatus(FINALLY_FAILED);
       log.error("Some: " + mailException);

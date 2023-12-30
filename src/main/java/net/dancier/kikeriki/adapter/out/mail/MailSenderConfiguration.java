@@ -15,7 +15,7 @@ public class MailSenderConfiguration {
   @Bean
   @Profile({"dev"})
   public JavaMailSender getJavaMailSender() {
-      JavaMailSender javaMailSender = new DumpingMailSender();
+      JavaMailSender javaMailSender = new MailSenderDumping();
       return javaMailSender;
   }
 

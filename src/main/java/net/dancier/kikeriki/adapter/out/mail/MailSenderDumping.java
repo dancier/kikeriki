@@ -10,9 +10,9 @@ import org.springframework.mail.javamail.MimeMessagePreparator;
 
 import java.io.InputStream;
 
-public class DumpingMailSender implements JavaMailSender {
+public class MailSenderDumping implements JavaMailSender {
 
-    private static final Logger log = LoggerFactory.getLogger(DumpingMailSender.class);
+    private static final Logger log = LoggerFactory.getLogger(MailSenderDumping.class);
 
     @Override
     public MimeMessage createMimeMessage() {
