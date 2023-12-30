@@ -32,6 +32,10 @@ public class MailOutboxJpaEntity {
     NEW,
     IN_PROGRESS,
 
+    TEMPORARY_FAILED,
+
+    FINALLY_FAILED,
+
     DONE
   }
 

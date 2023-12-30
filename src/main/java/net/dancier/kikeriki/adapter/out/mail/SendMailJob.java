@@ -4,12 +4,16 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.mail.MailAuthenticationException;
+import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
 import java.util.List;
+
+import static net.dancier.kikeriki.adapter.out.mail.MailOutboxJpaEntity.STATUS.*;
 
 @RequiredArgsConstructor
 @Component
@@ -31,12 +35,19 @@ public class SendMailJob {
     }
   }
 
-  @Transactional
   private void sendMail(MailOutboxJpaEntity item) {
     log.info("Sending the mail via SMTP: {}", item);
     log.info("And sender: {}", javaMailSender);
-    javaMailSender.send(item.getEmailSendingRequestedEvent());
-    item.setStatus(MailOutboxJpaEntity.STATUS.DONE);
+    try {
+      javaMailSender.send(item.getEmailSendingRequestedEvent());
+      item.setStatus(DONE);
+    } catch (MailAuthenticationException mailAuthenticationException) {
+      item.setStatus(TEMPORARY_FAILED);
+      log.error("Problem with password." + mailAuthenticationException);
+    } catch (MailException mailException) {
+      item.setStatus(FINALLY_FAILED);
+      log.error("Some: " + mailException);
+    }
     mailOutboxJpaRepository.save(item);
   }
 
