@@ -26,5 +26,6 @@ public class ApplicationEventListeners {
   @EventListener
   public void handle(MessagePostedEvent messagePostedEvent) {
     log.info("Handling MessagePostedEvent: " + messagePostedEvent);
+
   }
 }

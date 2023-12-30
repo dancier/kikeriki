@@ -1,5 +1,7 @@
 package net.dancier.kikeriki.adapter.out.mail;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,6 +13,8 @@ import java.util.Properties;
 
 @Configuration
 public class MailSenderConfiguration {
+
+  private final Logger log = LoggerFactory.getLogger(MailSenderConfiguration.class);
 
   @Bean
   @Profile({"dev"})
@@ -27,6 +31,8 @@ public class MailSenderConfiguration {
     @Value("${app.mail.user}") String user,
     @Value("${app.mail.pass}") String pass
   ) {
+    log.info("Setup Mailsender with: {}/{}/{}/{}", hostname, port, user, pass);
+    
     JavaMailSenderImpl javaMailSender = new JavaMailSenderImpl();
     javaMailSender.setHost(hostname);
     javaMailSender.setPort(Integer.valueOf(port));
