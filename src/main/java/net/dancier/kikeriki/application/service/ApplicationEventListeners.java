@@ -2,6 +2,7 @@ package net.dancier.kikeriki.application.service;
 
 import lombok.RequiredArgsConstructor;
 import net.dancier.kikeriki.application.domain.model.events.EmailSendingRequestedEvent;
+import net.dancier.kikeriki.application.domain.model.events.MessagePostedEvent;
 import net.dancier.kikeriki.application.port.DancierSendMailPort;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,5 +21,10 @@ public class ApplicationEventListeners {
   public void handle(EmailSendingRequestedEvent event) {
     log.info("Handling: {}", event);
     sendMailPort.schedule(event);
+  }
+
+  @EventListener
+  public void handle(MessagePostedEvent messagePostedEvent) {
+    log.info("Handling MessagePostedEvent: " + messagePostedEvent);
   }
 }
