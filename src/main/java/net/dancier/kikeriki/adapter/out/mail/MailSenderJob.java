@@ -41,7 +41,7 @@ public class MailSenderJob {
       item.setStatus(DONE);
     } catch (MailAuthenticationException mailAuthenticationException) {
       item.setStatus(TEMPORARY_FAILED);
-      log.error("Problem with password." + mailAuthenticationException.getStackTrace());
+      log.error("Problem with password." + mailAuthenticationException);
     } catch (MailException mailException) {
       item.setStatus(FINALLY_FAILED);
       log.error("Some: " + mailException);
