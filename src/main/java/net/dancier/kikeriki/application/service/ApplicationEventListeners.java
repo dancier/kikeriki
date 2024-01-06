@@ -43,6 +43,7 @@ public class ApplicationEventListeners {
     for(UUID recipientId : recipients) {
       var recipientState = statePort.get(recipientId);
       recipientState.addUnreadChatMessage(unreadChatMessage);
+      statePort.save(state, UUID.randomUUID().toString());
     }
   }
 }
