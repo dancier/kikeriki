@@ -11,13 +11,13 @@ import java.util.UUID;
 @Data
 public class MessagePostedEvent {
 
-  @NotNull
+//  @NotNull
   String messageId;
 
-  @NotEmpty
+//  @NotEmpty
   List<UUID> recipients;
 
-  @NotNull
+//  @NotNull
   LocalDateTime createdAd;
 
 }
