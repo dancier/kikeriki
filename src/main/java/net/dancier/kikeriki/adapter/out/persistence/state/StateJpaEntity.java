@@ -25,7 +25,7 @@ public class StateJpaEntity {
 
   @lombok.Data
   public static class Data {
-
+      String value;
   }
 
 }
