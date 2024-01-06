@@ -31,8 +31,8 @@ public class MailSenderConfiguration {
     @Value("${app.mail.user}") String user,
     @Value("${app.mail.pass}") String pass
   ) {
-    log.info("Setup Mailsender with: {}/{}/{}/{}", hostname, port, user, pass);
-    
+    log.info("Setup Mailsender with: {}/{}/{}", hostname, port, user);
+
     JavaMailSenderImpl javaMailSender = new JavaMailSenderImpl();
     javaMailSender.setHost(hostname);
     javaMailSender.setPort(Integer.valueOf(port));
