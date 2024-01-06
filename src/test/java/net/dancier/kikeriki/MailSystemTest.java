@@ -20,7 +20,6 @@ public class MailSystemTest extends AbstractPostgreSQLEnabledTest{
   @Autowired
   MailOutboxJpaRepository mailOutboxJpaRepository;
 
-
   @Test
   public void test() {
       List<MailOutboxJpaEntity> all = mailOutboxJpaRepository.findAll();

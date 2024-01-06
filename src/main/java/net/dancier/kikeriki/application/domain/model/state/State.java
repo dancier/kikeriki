@@ -15,7 +15,7 @@ public class State {
 
   private Optional<MailMessage> optSentLastMessage = Optional.empty();
 
-  public void setLastMessage(@NonNull MailMessage mailMessage) {
+  public void setLastMailMessage(@NonNull MailMessage mailMessage) {
     this.optSentLastMessage = Optional.of(mailMessage);
   }
 

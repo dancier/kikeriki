@@ -32,6 +32,8 @@ logging:
     root: INFO
     net.dancier: DEBUG
 app:
+  state-adapter:
+    stub: false
   mail:
     host: mail.your-server.de
     port: 465

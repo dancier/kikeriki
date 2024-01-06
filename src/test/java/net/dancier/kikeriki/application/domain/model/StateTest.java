@@ -22,13 +22,13 @@ class StateTest {
 
     LocalDateTime now = LocalDateTime.now();
     MailMessage mailMessage = MailMessage.of(now);
-    state.setLastMessage(mailMessage);
+    state.setLastMailMessage(mailMessage);
 
     assertThat(state.getLastTimeMailWasSent()).isNotEmpty();
     assertThat(state.getLastTimeMailWasSent().get()).isEqualTo(now);
 
     assertThatThrownBy(() -> {
-      state.setLastMessage(null);
+      state.setLastMailMessage(null);
     }).isInstanceOf(NullPointerException.class);
   }
 
@@ -107,7 +107,7 @@ class StateTest {
     assertThat(state.allowedToSendAnotherMail(LocalDate.now())).isTrue();
 
     MailMessage mailMessage = MailMessage.of(LocalDateTime.now());
-    state.setLastMessage(mailMessage);
+    state.setLastMailMessage(mailMessage);
 
     assertThat(state.allowedToSendAnotherMail(LocalDate.now())).isFalse();
 
