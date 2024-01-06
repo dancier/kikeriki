@@ -38,12 +38,12 @@ public class ApplicationEventListeners {
     State state = new State();
 
     statePort.save(state, UUID.randomUUID().toString());
-    var unreadChatMessage = UnreadChatMessage.of(messagePostedEvent.getMessageId(),messagePostedEvent.getCreatedAd());
+    /*var unreadChatMessage = UnreadChatMessage.of(messagePostedEvent.getMessageId(),messagePostedEvent.getCreatedAd());
     List<UUID> recipients =  messagePostedEvent.getRecipients();
     for(UUID recipientId : recipients) {
       var recipientState = statePort.get(recipientId);
       recipientState.addUnreadChatMessage(unreadChatMessage);
       statePort.save(state, UUID.randomUUID().toString());
-    }
+    }*/
   }
 }
