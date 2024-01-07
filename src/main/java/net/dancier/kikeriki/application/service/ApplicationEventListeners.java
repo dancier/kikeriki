@@ -36,8 +36,7 @@ public class ApplicationEventListeners {
   public void handle(MessagePostedEvent messagePostedEvent) {
     log.info("Handling MessagePostedEvent: " + messagePostedEvent);
     log.info("With this content: {}", messagePostedEvent);
-    /*var unreadChatMessage = UnreadChatMessage.of(messagePostedEvent.getMessageId(),messagePostedEvent.getCreatedAd());
-    List<UUID> recipients =  messagePostedEvent.getRecipients();
+/*    List<UUID> recipients =  messagePostedEvent.getRecipients();
     for(UUID recipientId : recipients) {
       var recipientState = statePort.get(recipientId);
       recipientState.addUnreadChatMessage(unreadChatMessage);

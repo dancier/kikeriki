@@ -6,10 +6,12 @@ import net.dancier.kikeriki.AbstractPostgreSQLEnabledTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.kafka.test.context.EmbeddedKafka;
 
 import static org.assertj.core.api.BDDAssertions.then;
 
 @SpringBootTest
+@EmbeddedKafka
 public class MessagePostedEventDtoTest extends AbstractPostgreSQLEnabledTest {
 
   @Autowired
