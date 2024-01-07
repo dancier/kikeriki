@@ -1,5 +1,6 @@
 package net.dancier.kikeriki.adapter.in.kafka;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cloudevents.CloudEvent;
 import lombok.RequiredArgsConstructor;
 import net.dancier.kikeriki.application.domain.model.events.MessagePostedEvent;
@@ -9,6 +10,8 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
+
 @RequiredArgsConstructor
 @Component
 public class ListenerAll {
@@ -17,13 +20,15 @@ public class ListenerAll {
 
   private final ApplicationEventPublisher applicationEventPublisher;
 
+  private final ObjectMapper objectMapper;
+
   @KafkaListener(topics = {
     "message-posted",
     "chat-created",
     "message-read",
     "profile-updated"
   })
-  void listener(CloudEvent cloudEvent) {
+  void listener(CloudEvent cloudEvent) throws IOException {
     log.info("Got this event....");
     String businessEvent = cloudEvent.getType();
 
@@ -35,7 +40,9 @@ public class ListenerAll {
 
   }
 
-  private void messagePostedEvent(CloudEvent cloudEvent) {
-    applicationEventPublisher.publishEvent(new MessagePostedEvent());
+  private void messagePostedEvent(CloudEvent cloudEvent) throws IOException {
+    MessagePostedEventDto messagePostedEventDto =
+      objectMapper.readValue(cloudEvent.getData().toBytes(), MessagePostedEventDto.class);
+    applicationEventPublisher.publishEvent(messagePostedEventDto);
   }
 }
