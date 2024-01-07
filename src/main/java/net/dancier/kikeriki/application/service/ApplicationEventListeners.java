@@ -35,9 +35,7 @@ public class ApplicationEventListeners {
   @EventListener
   public void handle(MessagePostedEvent messagePostedEvent) {
     log.info("Handling MessagePostedEvent: " + messagePostedEvent);
-    State state = new State();
-
-    statePort.save(state, UUID.randomUUID().toString());
+    log.info("With this content: {}", messagePostedEvent);
     /*var unreadChatMessage = UnreadChatMessage.of(messagePostedEvent.getMessageId(),messagePostedEvent.getCreatedAd());
     List<UUID> recipients =  messagePostedEvent.getRecipients();
     for(UUID recipientId : recipients) {

@@ -11,6 +11,7 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 
 @RequiredArgsConstructor
 @Component
@@ -43,6 +44,14 @@ public class ListenerAll {
   private void messagePostedEvent(CloudEvent cloudEvent) throws IOException {
     MessagePostedEventDto messagePostedEventDto =
       objectMapper.readValue(cloudEvent.getData().toBytes(), MessagePostedEventDto.class);
-    applicationEventPublisher.publishEvent(messagePostedEventDto);
+    MessagePostedEvent messagePostedEvent = new MessagePostedEvent();
+    messagePostedEvent.setCreatedAd(
+      messagePostedEventDto.createdAt.toLocalDateTime()
+    );
+    messagePostedEvent.setMessageId(messagePostedEventDto.messageId);
+    messagePostedEvent.setAuthorId(messagePostedEventDto.authorId);
+    messagePostedEvent.setRecipients(messagePostedEventDto.participantIds);
+
+    applicationEventPublisher.publishEvent(messagePostedEvent);
   }
 }

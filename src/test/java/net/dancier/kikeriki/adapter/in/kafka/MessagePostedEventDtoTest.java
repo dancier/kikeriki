@@ -34,6 +34,8 @@ public class MessagePostedEventDtoTest extends AbstractPostgreSQLEnabledTest {
     then(messagePostedEventDto).isNotNull();
     then(messagePostedEventDto.participantIds).isNotEmpty();
     then(messagePostedEventDto.authorId).isNotBlank();
+    then(messagePostedEventDto.createdAt).isNotNull();
+    then(messagePostedEventDto.messageId).isNotNull();
   }
 
 }
