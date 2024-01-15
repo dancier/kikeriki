@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import net.dancier.kikeriki.application.domain.model.events.EmailSendingRequestedEvent;
 import net.dancier.kikeriki.application.domain.model.events.MessagePostedEvent;
 import net.dancier.kikeriki.application.domain.model.state.State;
-import net.dancier.kikeriki.application.domain.model.state.UnreadChatMessage;
 import net.dancier.kikeriki.application.port.DancierSendMailPort;
 import net.dancier.kikeriki.application.port.StatePort;
 import org.slf4j.Logger;
@@ -12,8 +11,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Component
@@ -36,11 +35,10 @@ public class ApplicationEventListeners {
   public void handle(MessagePostedEvent messagePostedEvent) {
     log.info("Handling MessagePostedEvent: " + messagePostedEvent);
     log.info("With this content: {}", messagePostedEvent);
-/*    List<UUID> recipients =  messagePostedEvent.getRecipients();
-    for(UUID recipientId : recipients) {
-      var recipientState = statePort.get(recipientId);
-      recipientState.addUnreadChatMessage(unreadChatMessage);
-      statePort.save(state, UUID.randomUUID().toString());
-    }*/
+    for (String recipientId: messagePostedEvent.getRecipients().stream().filter(r -> !r.equals(messagePostedEvent.getAuthorId())).collect(Collectors.toList())) {
+      UUID recipientsUuid = UUID.fromString(recipientId);
+      log.info("Loading for: " + recipientsUuid);
+      State state = statePort.get(recipientsUuid);
+    }
   }
 }

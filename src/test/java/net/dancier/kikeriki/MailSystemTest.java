@@ -7,8 +7,6 @@ import net.dancier.kikeriki.application.domain.model.events.EmailSendingRequeste
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.kafka.annotation.EnableKafka;
-import org.springframework.kafka.test.context.EmbeddedKafka;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -17,7 +15,6 @@ import java.util.UUID;
 import static org.assertj.core.api.BDDAssertions.then;
 
 @SpringBootTest
-@EmbeddedKafka
 public class MailSystemTest extends AbstractPostgreSQLEnabledTest{
 
   @Autowired
