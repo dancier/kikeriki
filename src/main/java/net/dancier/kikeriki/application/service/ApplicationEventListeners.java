@@ -36,9 +36,8 @@ public class ApplicationEventListeners {
     log.info("Handling MessagePostedEvent: " + messagePostedEvent);
     log.info("With this content: {}", messagePostedEvent);
     for (String recipientId: messagePostedEvent.getRecipients().stream().filter(r -> !r.equals(messagePostedEvent.getAuthorId())).collect(Collectors.toList())) {
-      UUID recipientsUuid = UUID.fromString(recipientId);
-      log.info("Loading for: " + recipientsUuid);
-      State state = statePort.get(recipientsUuid);
+      log.info("Loading for: " + recipientId);
+      State state = statePort.get(recipientId);
       log.info("Loaded: " + state);
     }
   }

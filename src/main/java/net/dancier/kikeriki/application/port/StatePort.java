@@ -6,7 +6,7 @@ import java.util.UUID;
 
 public interface StatePort {
 
-  State get(UUID dancerId);
+  State get(String dancerId);
 
   void save(State state, String dancer_id);
 

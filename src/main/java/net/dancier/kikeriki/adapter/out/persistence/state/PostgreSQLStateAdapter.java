@@ -3,6 +3,8 @@ package net.dancier.kikeriki.adapter.out.persistence.state;
 import lombok.RequiredArgsConstructor;
 import net.dancier.kikeriki.application.domain.model.state.State;
 import net.dancier.kikeriki.application.port.StatePort;
+import org.hibernate.FetchNotFoundException;
+import org.hibernate.annotations.NotFound;
 import org.springframework.stereotype.Component;
 
 import java.util.UUID;
@@ -15,8 +17,10 @@ public class PostgreSQLStateAdapter implements StatePort {
   private final StateJpaRepository stateJpaRepository;
 
   @Override
-  public State get(UUID dancerId) {
-    return null;
+  public State get(String dancerId) {
+    StateJpaEntity stateJpaEntity = stateJpaRepository.findById(dancerId).orElseThrow( () -> new IllegalStateException());
+
+    return new State();
   }
 
   @Override
