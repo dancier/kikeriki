@@ -39,6 +39,7 @@ public class ApplicationEventListeners {
       UUID recipientsUuid = UUID.fromString(recipientId);
       log.info("Loading for: " + recipientsUuid);
       State state = statePort.get(recipientsUuid);
+      log.info("Loaded: " + state);
     }
   }
 }

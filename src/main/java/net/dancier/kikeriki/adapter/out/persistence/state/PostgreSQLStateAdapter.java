@@ -3,8 +3,6 @@ package net.dancier.kikeriki.adapter.out.persistence.state;
 import lombok.RequiredArgsConstructor;
 import net.dancier.kikeriki.application.domain.model.state.State;
 import net.dancier.kikeriki.application.port.StatePort;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import java.util.UUID;
