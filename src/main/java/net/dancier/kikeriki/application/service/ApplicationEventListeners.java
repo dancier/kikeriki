@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import net.dancier.kikeriki.application.domain.model.events.EmailSendingRequestedEvent;
 import net.dancier.kikeriki.application.domain.model.events.MessagePostedEvent;
 import net.dancier.kikeriki.application.domain.model.state.State;
+import net.dancier.kikeriki.application.domain.model.state.UnreadChatMessage;
 import net.dancier.kikeriki.application.port.DancierSendMailPort;
 import net.dancier.kikeriki.application.port.StatePort;
 import org.slf4j.Logger;
@@ -39,6 +40,8 @@ public class ApplicationEventListeners {
       log.info("Loading for: " + recipientId);
       State state = statePort.get(recipientId);
       log.info("Loaded: " + state);
+      state.addUnreadChatMessage(UnreadChatMessage.of(messagePostedEvent.getMessageId(), messagePostedEvent.getCreatedAd()));
+      statePort.save(state,recipientId);
     }
   }
 }
