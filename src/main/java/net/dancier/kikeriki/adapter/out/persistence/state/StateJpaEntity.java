@@ -8,15 +8,13 @@ import lombok.Data;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
-import java.util.UUID;
-
 @Data
 @Table(name ="state")
 @Entity
 public class StateJpaEntity {
 
    @Id
-   private String dancer_id;
+   private String dancerId;
 
    @JdbcTypeCode(SqlTypes.JSON)
    @Column(name = "data")
