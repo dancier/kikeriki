@@ -51,6 +51,7 @@ public class ApplicationEventListeners {
   public void handle(MessageReadEvent messageReadEvent) {
     log.info("Handling Read....");
     State state = statePort.get(messageReadEvent.getReaderId());
-
+    state.removeReadMessages(messageReadEvent.getMessageId());
+    statePort.save(state.toDto(), messageReadEvent.getReaderId());
   }
 }
