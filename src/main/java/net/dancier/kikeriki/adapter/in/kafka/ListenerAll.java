@@ -46,6 +46,7 @@ public class ListenerAll {
   private void messageReadEvent(CloudEvent cloudEvent) throws IOException {
     log.info("Making application event....");
     MessageReadEventDto messageReadEventDto = objectMapper.readValue(cloudEvent.getData().toBytes(), MessageReadEventDto.class);
+    log.info("Got this: {}", messageReadEventDto);
     MessageReadEvent messageReadEvent = new MessageReadEvent();
     messageReadEvent.setMessageId(messageReadEventDto.messageId);
     messageReadEvent.setReaderId(messageReadEventDto.readerId);
