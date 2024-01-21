@@ -49,7 +49,7 @@ public class ApplicationEventListeners {
 
   @EventListener
   public void handle(MessageReadEvent messageReadEvent) {
-    log.info("Handling Read....");
+    log.info("Handling Read.... {}", messageReadEvent);
     State state = statePort.get(messageReadEvent.getReaderId());
     state.removeReadMessages(messageReadEvent.getMessageId());
     statePort.save(state.toDto(), messageReadEvent.getReaderId());
