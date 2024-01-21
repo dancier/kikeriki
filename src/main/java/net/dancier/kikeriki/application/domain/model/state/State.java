@@ -5,14 +5,14 @@ import net.dancier.kikeriki.application.port.StateDto;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 
 public class State {
 
   private List<UnreadChatMessage> unreadChatMessages = new LinkedList<>();
+
+  private Set<String> pendingReadMessages = new HashSet<>();
 
   private Optional<MailMessage> optSentLastMessage = Optional.empty();
 
@@ -62,6 +62,7 @@ public class State {
     StateDto stateDto = new StateDto();
     stateDto.setUnreadChatMessages(this.unreadChatMessages);
     stateDto.setOptSendlastMessage(this.optSentLastMessage);
+    stateDto.setPendingReadMessages(this.pendingReadMessages);
     return stateDto;
   }
 }

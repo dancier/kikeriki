@@ -3,6 +3,7 @@ package net.dancier.kikeriki.application.service;
 import lombok.RequiredArgsConstructor;
 import net.dancier.kikeriki.application.domain.model.events.EmailSendingRequestedEvent;
 import net.dancier.kikeriki.application.domain.model.events.MessagePostedEvent;
+import net.dancier.kikeriki.application.domain.model.events.MessageReadEvent;
 import net.dancier.kikeriki.application.domain.model.state.State;
 import net.dancier.kikeriki.application.domain.model.state.UnreadChatMessage;
 import net.dancier.kikeriki.application.port.DancierSendMailPort;
@@ -44,5 +45,10 @@ public class ApplicationEventListeners {
       state.addUnreadChatMessage(UnreadChatMessage.of(messagePostedEvent.getMessageId(), messagePostedEvent.getCreatedAd()));
       statePort.save(state.toDto(),recipientId);
     }
+  }
+
+  @EventListener
+  public void handle(MessageReadEvent messageReadEvent) {
+    State state = statePort.get(messageReadEvent.getReaderId());
   }
 }
