@@ -2,6 +2,7 @@ package net.dancier.kikeriki.adapter.out.persistence.state;
 
 import lombok.RequiredArgsConstructor;
 import net.dancier.kikeriki.application.domain.model.state.State;
+import net.dancier.kikeriki.application.port.StateDto;
 import net.dancier.kikeriki.application.port.StatePort;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,10 +32,10 @@ public class PostgreSQLStateAdapter implements StatePort {
   }
 
   @Override
-  public void save(State state, String dancerId) {
+  public void save(StateDto stateDto, String dancerId) {
     StateJpaEntity stateJpaEntity = new StateJpaEntity();
     stateJpaEntity.setDancerId(dancerId);
-    stateJpaEntity.setData(StateDto.of(state));
+    stateJpaEntity.setData(stateDto);
     stateJpaRepository.save(stateJpaEntity);
   }
 }

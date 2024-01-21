@@ -1,6 +1,7 @@
 package net.dancier.kikeriki.application.domain.model.state;
 
 import lombok.NonNull;
+import net.dancier.kikeriki.application.port.StateDto;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -55,5 +56,12 @@ public class State {
   public Boolean isCandidateForSendingMail(LocalDateTime forGivenDate) {
     return allowedToSendAnotherMail(forGivenDate.toLocalDate())
         && hasUnreadMessagesAfter(forGivenDate);
+  }
+
+  public StateDto toDto() {
+    StateDto stateDto = new StateDto();
+    stateDto.setUnreadChatMessages(this.unreadChatMessages);
+    stateDto.setOptSendlastMessage(this.optSentLastMessage);
+    return stateDto;
   }
 }

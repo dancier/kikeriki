@@ -8,6 +8,6 @@ public interface StatePort {
 
   State get(String dancerId);
 
-  void save(State state, String dancer_id);
+  void save(StateDto stateDto, String dancer_id);
 
 }
