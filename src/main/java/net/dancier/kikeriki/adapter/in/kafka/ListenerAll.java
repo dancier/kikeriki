@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cloudevents.CloudEvent;
 import lombok.RequiredArgsConstructor;
 import net.dancier.kikeriki.application.domain.model.events.MessagePostedEvent;
+import net.dancier.kikeriki.application.domain.model.events.MessageReadEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
@@ -42,8 +43,13 @@ public class ListenerAll {
 
   }
 
-  private void messageReadEvent(CloudEvent cloudEvent) {
+  private void messageReadEvent(CloudEvent cloudEvent) throws IOException {
     log.info("Making application event....");
+    MessageReadEventDto messageReadEventDto = objectMapper.readValue(cloudEvent.getData().toBytes(), MessageReadEventDto.class);
+    MessageReadEvent messageReadEvent = new MessageReadEvent();
+    messageReadEvent.setMessageId(messageReadEventDto.messageId);
+    messageReadEvent.setReaderId(messageReadEventDto.readerId);
+    applicationEventPublisher.publishEvent(messageReadEvent);
   }
 
   private void messagePostedEvent(CloudEvent cloudEvent) throws IOException {
