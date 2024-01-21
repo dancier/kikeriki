@@ -35,10 +35,15 @@ public class ListenerAll {
 
     switch (businessEvent) {
       case "message-posted" -> messagePostedEvent(cloudEvent);
+      case "message-read" -> messageReadEvent(cloudEvent);
       default -> {}
     }
     log.info(cloudEvent.toString());
 
+  }
+
+  private void messageReadEvent(CloudEvent cloudEvent) {
+    log.info("Making application event....");
   }
 
   private void messagePostedEvent(CloudEvent cloudEvent) throws IOException {

@@ -49,6 +49,8 @@ public class ApplicationEventListeners {
 
   @EventListener
   public void handle(MessageReadEvent messageReadEvent) {
+    log.info("Handling Read....");
     State state = statePort.get(messageReadEvent.getReaderId());
+
   }
 }
