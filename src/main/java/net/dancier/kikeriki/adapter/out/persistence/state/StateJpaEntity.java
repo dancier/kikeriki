@@ -18,12 +18,6 @@ public class StateJpaEntity {
 
    @JdbcTypeCode(SqlTypes.JSON)
    @Column(name = "data")
-   private Data data;
-
-
-  @lombok.Data
-  public static class Data {
-      String value;
-  }
+   private StateDto data;
 
 }

@@ -34,9 +34,7 @@ public class PostgreSQLStateAdapter implements StatePort {
   public void save(State state, String dancerId) {
     StateJpaEntity stateJpaEntity = new StateJpaEntity();
     stateJpaEntity.setDancerId(dancerId);
-    StateJpaEntity.Data data = new StateJpaEntity.Data();
-    data.setValue("foo");
-    stateJpaEntity.setData(data);
+    stateJpaEntity.setData(StateDto.of(state));
     stateJpaRepository.save(stateJpaEntity);
   }
 }
