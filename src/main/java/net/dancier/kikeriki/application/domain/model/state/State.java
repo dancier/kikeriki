@@ -40,6 +40,7 @@ public class State {
 
   public void removeReadMessages(String messageId) {
     this.unreadChatMessages.removeIf(unreadChatMessage -> unreadChatMessage.getChatMessageId().equals(messageId));
+    this.pendingReadMessages.add(messageId);
   }
 
   public Integer unreadMessagesCount() {
