@@ -11,7 +11,6 @@ import org.springframework.kafka.test.context.EmbeddedKafka;
 import static org.assertj.core.api.BDDAssertions.then;
 
 @SpringBootTest
-@EmbeddedKafka()
 public class MessagePostedEventDtoTest extends AbstractPostgreSQLEnabledTest {
 
   @Autowired

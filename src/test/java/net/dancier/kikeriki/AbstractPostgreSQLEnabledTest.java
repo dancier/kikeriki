@@ -1,16 +1,20 @@
 package net.dancier.kikeriki;
-import net.dancier.kikeriki.adapter.out.mail.MailSenderJob;
+
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.kafka.test.context.EmbeddedKafka;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.support.TestPropertySourceUtils;
 import org.testcontainers.containers.PostgreSQLContainer;
 
 @ContextConfiguration(initializers = AbstractPostgreSQLEnabledTest.DockerPostgreSQLDataSourceInitializer.class)
+@EmbeddedKafka(        brokerProperties={
+  "log.dir=out/embedded-kafka"
+})
 public class AbstractPostgreSQLEnabledTest {
 
   private static final Logger log = LoggerFactory.getLogger(AbstractPostgreSQLEnabledTest.class);
