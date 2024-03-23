@@ -1,6 +1,9 @@
 package net.dancier.kikeriki;
+import net.dancier.kikeriki.adapter.out.mail.MailSenderJob;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
@@ -10,18 +13,22 @@ import org.testcontainers.containers.PostgreSQLContainer;
 @ContextConfiguration(initializers = AbstractPostgreSQLEnabledTest.DockerPostgreSQLDataSourceInitializer.class)
 public class AbstractPostgreSQLEnabledTest {
 
-    static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>(
+  private static final Logger log = LoggerFactory.getLogger(AbstractPostgreSQLEnabledTest.class);
+
+  static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>(
             "postgres:16-alpine"
     );
 
     @BeforeAll
     static void beforeAll() {
-        postgreSQLContainer.start();
+      postgreSQLContainer.start();
+      log.info("Started PostgreSQLContainer...");
     }
 
     @AfterAll
     static void afterAll() {
-        postgreSQLContainer.stop();
+      postgreSQLContainer.stop();
+      log.info("Stopped PostgreSQLContainer...");
     }
 
     public static class DockerPostgreSQLDataSourceInitializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {

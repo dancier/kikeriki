@@ -7,14 +7,12 @@ import net.dancier.kikeriki.application.domain.model.events.MessageReadEvent;
 import net.dancier.kikeriki.application.domain.model.state.State;
 import net.dancier.kikeriki.application.domain.model.state.UnreadChatMessage;
 import net.dancier.kikeriki.application.port.DancierSendMailPort;
-import net.dancier.kikeriki.application.port.StateDto;
 import net.dancier.kikeriki.application.port.StatePort;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor

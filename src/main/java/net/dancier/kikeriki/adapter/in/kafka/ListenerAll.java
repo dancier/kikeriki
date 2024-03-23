@@ -50,6 +50,7 @@ public class ListenerAll {
     MessageReadEvent messageReadEvent = new MessageReadEvent();
     messageReadEvent.setMessageId(messageReadEventDto.messageId);
     messageReadEvent.setReaderId(messageReadEventDto.readerId);
+
     applicationEventPublisher.publishEvent(messageReadEvent);
   }
 
