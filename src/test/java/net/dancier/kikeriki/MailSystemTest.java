@@ -17,10 +17,6 @@ import java.util.UUID;
 import static org.assertj.core.api.BDDAssertions.then;
 
 @SpringBootTest
-@EmbeddedKafka(        brokerProperties={
-  "log.dir=out/embedded-kafka"
-})
-
 public class MailSystemTest extends AbstractPostgreSQLEnabledTest{
 
   @Autowired

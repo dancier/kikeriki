@@ -11,10 +11,6 @@ import org.springframework.kafka.test.context.EmbeddedKafka;
 import static org.assertj.core.api.BDDAssertions.then;
 
 @SpringBootTest
-@EmbeddedKafka(        brokerProperties={
-  "log.dir=out/embedded-kafka"
-})
-
 public class MessagePostedEventDtoTest extends AbstractPostgreSQLEnabledTest {
 
   @Autowired
