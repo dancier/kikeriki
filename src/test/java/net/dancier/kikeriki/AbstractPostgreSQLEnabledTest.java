@@ -12,9 +12,6 @@ import org.springframework.test.context.support.TestPropertySourceUtils;
 import org.testcontainers.containers.PostgreSQLContainer;
 
 @ContextConfiguration(initializers = AbstractPostgreSQLEnabledTest.DockerPostgreSQLDataSourceInitializer.class)
-@EmbeddedKafka(        brokerProperties={
-  "log.dir=out/embedded-kafka"
-})
 public class AbstractPostgreSQLEnabledTest {
 
   private static final Logger log = LoggerFactory.getLogger(AbstractPostgreSQLEnabledTest.class);
