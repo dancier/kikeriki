@@ -10,13 +10,12 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.support.TestPropertySourceUtils;
 import org.testcontainers.containers.KafkaContainer;
 import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.utility.DockerImageName;
 
-@ContextConfiguration(initializers = AbstractPostgreSQLEnabledTest.DockerPostgreSQLDataSourceInitializer.class)
-public class AbstractPostgreSQLEnabledTest {
+@ContextConfiguration(initializers = AbstractPostgreSQLandKafkaEnabledTest.DockerPostgreSQLDataSourceInitializer.class)
+public class AbstractPostgreSQLandKafkaEnabledTest {
 
-  private static final Logger log = LoggerFactory.getLogger(AbstractPostgreSQLEnabledTest.class);
+  private static final Logger log = LoggerFactory.getLogger(AbstractPostgreSQLandKafkaEnabledTest.class);
 
   static KafkaContainer kafkaContainer = new KafkaContainer(
     DockerImageName.parse("confluentinc/cp-kafka:7.3.3")
@@ -30,14 +29,14 @@ public class AbstractPostgreSQLEnabledTest {
     static void beforeAll() {
       postgreSQLContainer.start();
       kafkaContainer.start();
-      log.info("Started PostgreSQLContainer...");
+      log.info("Started needed Container...");
     }
 
     @AfterAll
     static void afterAll() {
       postgreSQLContainer.stop();
       kafkaContainer.stop();
-      log.info("Stopped PostgreSQLContainer...");
+      log.info("Stopped needed Container...");
     }
 
     public static class DockerPostgreSQLDataSourceInitializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {

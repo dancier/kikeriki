@@ -2,23 +2,22 @@ package net.dancier.kikeriki.adapter.in.kafka;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import net.dancier.kikeriki.AbstractPostgreSQLEnabledTest;
+import net.dancier.kikeriki.AbstractPostgreSQLandKafkaEnabledTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.kafka.test.context.EmbeddedKafka;
 
 import static org.assertj.core.api.BDDAssertions.then;
 
 @SpringBootTest
-public class MessagePostedEventDtoTest extends AbstractPostgreSQLEnabledTest {
+public class SerialisationTest extends AbstractPostgreSQLandKafkaEnabledTest {
 
   @Autowired
   ObjectMapper objectMapper;
 
   @Test
-  public void canDesiralize() throws JsonProcessingException {
-    String testJson = """
+  public void canDeserialize() throws JsonProcessingException {
+    String testSerializedObject = """
       {
         "text": "Hallo",
         "chatId": "5cb1f9b2-8e03-4714-a50e-08c681d8fd73",
@@ -31,7 +30,9 @@ public class MessagePostedEventDtoTest extends AbstractPostgreSQLEnabledTest {
         ]
       }
       """;
-    MessagePostedEventDto messagePostedEventDto = objectMapper.readValue(testJson, MessagePostedEventDto.class);
+
+    MessagePostedEventDto messagePostedEventDto = objectMapper.readValue(testSerializedObject, MessagePostedEventDto.class);
+
     then(messagePostedEventDto).isNotNull();
     then(messagePostedEventDto.participantIds).isNotEmpty();
     then(messagePostedEventDto.authorId).isNotBlank();

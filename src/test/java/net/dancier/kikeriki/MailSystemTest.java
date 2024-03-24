@@ -4,11 +4,9 @@ package net.dancier.kikeriki;
 import net.dancier.kikeriki.adapter.out.mail.MailOutboxJpaEntity;
 import net.dancier.kikeriki.adapter.out.mail.MailOutboxJpaRepository;
 import net.dancier.kikeriki.application.domain.model.events.EmailSendingRequestedEvent;
-import org.junit.Ignore;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.kafka.test.context.EmbeddedKafka;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -17,7 +15,7 @@ import java.util.UUID;
 import static org.assertj.core.api.BDDAssertions.then;
 
 @SpringBootTest
-public class MailSystemTest extends AbstractPostgreSQLEnabledTest{
+public class MailSystemTest extends AbstractPostgreSQLandKafkaEnabledTest {
 
   @Autowired
   MailOutboxJpaRepository mailOutboxJpaRepository;
