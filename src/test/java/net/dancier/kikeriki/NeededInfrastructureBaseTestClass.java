@@ -13,34 +13,39 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.support.TestPropertySourceUtils;
 import org.testcontainers.containers.KafkaContainer;
 import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
 
 @SpringBootTest
 @DirtiesContext
+@Testcontainers
 @ContextConfiguration(initializers = NeededInfrastructureBaseTestClass.DataSourceInitializer.class)
 public class NeededInfrastructureBaseTestClass {
 
   private static final Logger log = LoggerFactory.getLogger(NeededInfrastructureBaseTestClass.class);
 
+
+  @Container
   static KafkaContainer kafkaContainer = new KafkaContainer(
     DockerImageName.parse("confluentinc/cp-kafka:7.3.3")
   );
 
+  @Container
   static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>("postgres:16-alpine");
-
-    @BeforeAll
+/**    @BeforeAll
     static void beforeAll() {
       postgreSQLContainer.start();
       kafkaContainer.start();
       log.info("Started needed Container...");
     }
-
     @AfterAll
     static void afterAll() {
       postgreSQLContainer.stop();
       kafkaContainer.stop();
       log.info("Stopped needed Container...");
     }
+ **/
 
     public static class DataSourceInitializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
 
