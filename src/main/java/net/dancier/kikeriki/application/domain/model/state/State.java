@@ -14,21 +14,21 @@ public class State {
 
   private Set<String> pendingReadMessages = new HashSet<>();
 
-  private Optional<MailMessage> optSentLastMessage = Optional.empty();
+  private Optional<InfoMail> optLastTimeCustomerWasInformed = Optional.empty();
 
-  public void setLastMailMessage(@NonNull MailMessage mailMessage) {
-    this.optSentLastMessage = Optional.of(mailMessage);
+  public void setLastMailMessage(@NonNull InfoMail infoMail) {
+    this.optLastTimeCustomerWasInformed = Optional.of(infoMail);
   }
 
-  public Optional<LocalDateTime> getLastTimeMailWasSent() {
-    return optSentLastMessage.map(MailMessage::getCreatedAt);
+  public Optional<LocalDateTime> getLastTimeOfInfomail() {
+    return optLastTimeCustomerWasInformed.map(InfoMail::getCreatedAt);
   }
 
-  public Boolean allowedToSendAnotherMail(LocalDate now) {
-    if (optSentLastMessage.isEmpty()) {
+  public Boolean allowedToSendAnotherInfomail(LocalDate now) {
+    if (optLastTimeCustomerWasInformed.isEmpty()) {
       return true;
     } else {
-      return getLastTimeMailWasSent().get().toLocalDate().isBefore(now);
+      return getLastTimeOfInfomail().get().toLocalDate().isBefore(now);
     }
   }
 
@@ -47,22 +47,26 @@ public class State {
     return this.unreadChatMessages.size();
   }
 
-  public Boolean hasUnreadMessagesAfter(LocalDateTime thisTime) {
-    return this
-      .unreadChatMessages
-      .stream()
-      .anyMatch(unreadChatMessage -> unreadChatMessage.getCreatedAt().isAfter(thisTime));
+  public Boolean hastUnreadMessagesSinceLastInfomail() {
+    if (getLastTimeOfInfomail().isPresent()) {
+      return this
+        .unreadChatMessages
+        .stream()
+        .anyMatch(unreadChatMessage -> unreadChatMessage.getCreatedAt().isAfter(getLastTimeOfInfomail().get()));
+    } else {
+      return (unreadChatMessages.size() > 0);
+    }
   }
 
   public Boolean isCandidateForSendingMail(LocalDateTime forGivenDate) {
-    return allowedToSendAnotherMail(forGivenDate.toLocalDate())
-        && hasUnreadMessagesAfter(forGivenDate);
+    return allowedToSendAnotherInfomail(forGivenDate.toLocalDate())
+        && hastUnreadMessagesSinceLastInfomail();
   }
 
   public StateDto toDto() {
     StateDto stateDto = new StateDto();
     stateDto.setUnreadChatMessages(this.unreadChatMessages);
-    stateDto.setOptSendlastMessage(this.optSentLastMessage);
+    stateDto.setOptSendlastMessage(this.optLastTimeCustomerWasInformed);
     stateDto.setPendingReadMessages(this.pendingReadMessages);
     return stateDto;
   }

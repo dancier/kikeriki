@@ -1,6 +1,6 @@
 package net.dancier.kikeriki.application.domain.model;
 
-import net.dancier.kikeriki.application.domain.model.state.MailMessage;
+import net.dancier.kikeriki.application.domain.model.state.InfoMail;
 import net.dancier.kikeriki.application.domain.model.state.State;
 import net.dancier.kikeriki.application.domain.model.state.UnreadChatMessage;
 import org.junit.jupiter.api.Test;
@@ -18,14 +18,14 @@ class StateTest {
     State state = new State();
 
     // no message has been sent so the last MessageSentTimeStamp must by Optional.empty
-    assertThat(state.getLastTimeMailWasSent()).isEmpty();
+    assertThat(state.getLastTimeOfInfomail()).isEmpty();
 
     LocalDateTime now = LocalDateTime.now();
-    MailMessage mailMessage = MailMessage.of(now);
-    state.setLastMailMessage(mailMessage);
+    InfoMail infoMail = InfoMail.of(now);
+    state.setLastMailMessage(infoMail);
 
-    assertThat(state.getLastTimeMailWasSent()).isNotEmpty();
-    assertThat(state.getLastTimeMailWasSent().get()).isEqualTo(now);
+    assertThat(state.getLastTimeOfInfomail()).isNotEmpty();
+    assertThat(state.getLastTimeOfInfomail().get()).isEqualTo(now);
 
     assertThatThrownBy(() -> {
       state.setLastMailMessage(null);
@@ -34,20 +34,22 @@ class StateTest {
 
   @Test
   public void testOfAddingChatMessages() {
-    State state = new State();
+    State underTest = new State();
     LocalDateTime now = LocalDateTime.now();
-    LocalDateTime onHourLater = now.plusHours(1);
+    LocalDateTime oneHourLater = now.plusHours(1);
     LocalDateTime twoHoursLater = now.plusHours(2);
 
     UnreadChatMessage oldUnreadChatMessage = UnreadChatMessage.of(UUID.randomUUID().toString(), now);
-    state.addUnreadChatMessage(oldUnreadChatMessage);
 
-    assertThat(state.hasUnreadMessagesAfter(now)).isFalse();
+    underTest.addUnreadChatMessage(oldUnreadChatMessage);
 
-    UnreadChatMessage newUnreadChatMessage = UnreadChatMessage.of(UUID.randomUUID().toString(), twoHoursLater);
-    state.addUnreadChatMessage(newUnreadChatMessage);
+    assertThat(underTest.hastUnreadMessagesSinceLastInfomail()).isTrue();
 
-    assertThat(state.hasUnreadMessagesAfter(now)).isTrue();
+    UnreadChatMessage newUnreadChatMessage = UnreadChatMessage.of(UUID.randomUUID().toString(), oneHourLater);
+    underTest.addUnreadChatMessage(newUnreadChatMessage);
+    underTest.setLastMailMessage(InfoMail.of(twoHoursLater));
+
+    assertThat(underTest.hastUnreadMessagesSinceLastInfomail()).isFalse();
   }
 
   @Test
@@ -104,14 +106,14 @@ class StateTest {
   public void allowedToSendAMail() {
     State state = new State();
 
-    assertThat(state.allowedToSendAnotherMail(LocalDate.now())).isTrue();
+    assertThat(state.allowedToSendAnotherInfomail(LocalDate.now())).isTrue();
 
-    MailMessage mailMessage = MailMessage.of(LocalDateTime.now());
-    state.setLastMailMessage(mailMessage);
+    InfoMail infoMail = InfoMail.of(LocalDateTime.now());
+    state.setLastMailMessage(infoMail);
 
-    assertThat(state.allowedToSendAnotherMail(LocalDate.now())).isFalse();
+    assertThat(state.allowedToSendAnotherInfomail(LocalDate.now())).isFalse();
 
-    assertThat(state.allowedToSendAnotherMail(LocalDate.now().plusDays(1))).isTrue();
+    assertThat(state.allowedToSendAnotherInfomail(LocalDate.now().plusDays(1))).isTrue();
 
   }
 }

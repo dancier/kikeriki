@@ -10,11 +10,11 @@ import java.time.LocalDateTime;
 
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
-public class MailMessage {
+public class InfoMail {
 
   LocalDateTime createdAt;
 
-  public static MailMessage of(@NonNull LocalDateTime createdAt) {
-    return new MailMessage(createdAt);
+  public static InfoMail of(@NonNull LocalDateTime createdAt) {
+    return new InfoMail(createdAt);
   }
 }

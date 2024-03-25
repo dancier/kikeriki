@@ -20,6 +20,6 @@ public class MessagePostedEvent {
   List<String> recipients;
 
   @NotNull
-  LocalDateTime createdAd;
+  LocalDateTime createdAt;
 
 }

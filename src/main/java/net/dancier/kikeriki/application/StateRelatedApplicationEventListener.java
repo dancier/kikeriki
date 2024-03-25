@@ -15,9 +15,9 @@ import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Component
-public class StateRelatedAppplicationEventListener {
+public class StateRelatedApplicationEventListener {
 
-  public static final Logger log = LoggerFactory.getLogger(StateRelatedAppplicationEventListener.class);
+  public static final Logger log = LoggerFactory.getLogger(StateRelatedApplicationEventListener.class);
 
   private final StatePort statePort;
 
@@ -29,7 +29,7 @@ public class StateRelatedAppplicationEventListener {
       log.info("Loading for: " + recipientId);
       State state = statePort.get(recipientId);
       log.info("Loaded: " + state);
-      state.addUnreadChatMessage(UnreadChatMessage.of(messagePostedEvent.getMessageId(), messagePostedEvent.getCreatedAd()));
+      state.addUnreadChatMessage(UnreadChatMessage.of(messagePostedEvent.getMessageId(), messagePostedEvent.getCreatedAt()));
       statePort.save(state.toDto(),recipientId);
     }
   }

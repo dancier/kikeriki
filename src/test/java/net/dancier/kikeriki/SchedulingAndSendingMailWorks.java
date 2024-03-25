@@ -1,6 +1,7 @@
-package net.dancier.kikeriki.adapter.out.mail;
+package net.dancier.kikeriki;
 
-import net.dancier.kikeriki.NeededInfrastructureBaseTestClass;
+import net.dancier.kikeriki.adapter.out.mail.MailOutboxJpaEntity;
+import net.dancier.kikeriki.adapter.out.mail.MailOutboxJpaRepository;
 import net.dancier.kikeriki.application.domain.model.messages.EmailSendingRequestedCommand;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +38,7 @@ class SchedulingAndSendingMailWorks extends NeededInfrastructureBaseTestClass {
     List<MailOutboxJpaEntity> all = mailOutboxJpaRepository.findAll();
     assertThat(all).isEmpty();
 
-    applicationEventPublisher.publishEvent(getDummy());
+    applicationEventPublisher.publishEvent(getEmailSendingRequestedCommandStub());
 
     await()
       .pollInterval(Duration.ofSeconds(2))
@@ -49,7 +50,7 @@ class SchedulingAndSendingMailWorks extends NeededInfrastructureBaseTestClass {
       );
   }
 
-  private EmailSendingRequestedCommand getDummy() {
+  private EmailSendingRequestedCommand getEmailSendingRequestedCommandStub() {
     return new EmailSendingRequestedCommand.EmailSendingRequestedCommandBuilder()
       .setId(UUID.randomUUID().toString())
       .build();

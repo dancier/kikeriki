@@ -57,7 +57,7 @@ public class ListenerAll {
     MessagePostedEventDto messagePostedEventDto =
       objectMapper.readValue(cloudEvent.getData().toBytes(), MessagePostedEventDto.class);
     MessagePostedEvent messagePostedEvent = new MessagePostedEvent();
-    messagePostedEvent.setCreatedAd(
+    messagePostedEvent.setCreatedAt(
       messagePostedEventDto.createdAt.toLocalDateTime()
     );
     messagePostedEvent.setMessageId(messagePostedEventDto.messageId);
