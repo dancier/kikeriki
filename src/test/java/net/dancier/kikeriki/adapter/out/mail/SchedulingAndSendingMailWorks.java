@@ -5,6 +5,7 @@ import net.dancier.kikeriki.application.domain.model.messages.EmailSendingReques
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 
@@ -24,8 +25,9 @@ class SchedulingAndSendingMailWorks extends NeededInfrastructureBaseTestClass {
   @Autowired
   MailOutboxJpaRepository mailOutboxJpaRepository;
 
+
   @Autowired
-  DancierSendMailAdapter underTest;
+  ApplicationEventPublisher applicationEventPublisher;
 
   @MockBean
   JavaMailSender javaMailSender;
@@ -35,7 +37,7 @@ class SchedulingAndSendingMailWorks extends NeededInfrastructureBaseTestClass {
     List<MailOutboxJpaEntity> all = mailOutboxJpaRepository.findAll();
     assertThat(all).isEmpty();
 
-    underTest.schedule(getDummy());
+    applicationEventPublisher.publishEvent(getDummy());
 
     await()
       .pollInterval(Duration.ofSeconds(2))

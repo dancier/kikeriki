@@ -1,12 +1,10 @@
-package net.dancier.kikeriki.application.service;
+package net.dancier.kikeriki.application;
 
 import lombok.RequiredArgsConstructor;
-import net.dancier.kikeriki.application.domain.model.messages.EmailSendingRequestedCommand;
 import net.dancier.kikeriki.application.domain.model.messages.MessagePostedEvent;
 import net.dancier.kikeriki.application.domain.model.messages.MessageReadEvent;
 import net.dancier.kikeriki.application.domain.model.state.State;
 import net.dancier.kikeriki.application.domain.model.state.UnreadChatMessage;
-import net.dancier.kikeriki.application.port.DancierSendMailPort;
 import net.dancier.kikeriki.application.port.StatePort;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,20 +15,11 @@ import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Component
-public class ApplicationEventListeners {
+public class StateRelatedAppplicationEventListener {
+
+  public static final Logger log = LoggerFactory.getLogger(StateRelatedAppplicationEventListener.class);
 
   private final StatePort statePort;
-
-  public static final Logger log = LoggerFactory.getLogger(ApplicationEventListeners.class);
-
-  private final DancierSendMailPort sendMailPort;
-
-
-  @EventListener
-  public void handle(EmailSendingRequestedCommand command) {
-    log.info("I go a request to directly send an email. I will schedule that.: {}", command);
-    sendMailPort.schedule(command);
-  }
 
   @EventListener
   public void handle(MessagePostedEvent messagePostedEvent) {
