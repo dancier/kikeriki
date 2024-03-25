@@ -1,7 +1,7 @@
 package net.dancier.kikeriki.adapter.out.mail;
 
 import net.dancier.kikeriki.NeededInfrastructureBaseTestClass;
-import net.dancier.kikeriki.application.domain.model.events.EmailSendingRequestedEvent;
+import net.dancier.kikeriki.application.domain.model.messages.EmailSendingRequestedCommand;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -47,9 +47,9 @@ class SchedulingAndSendingMailWorks extends NeededInfrastructureBaseTestClass {
       );
   }
 
-  private EmailSendingRequestedEvent getDummy() {
-    EmailSendingRequestedEvent emailSendingRequestedEvent = new EmailSendingRequestedEvent();
-    emailSendingRequestedEvent.setId(UUID.randomUUID().toString());
-    return emailSendingRequestedEvent;
+  private EmailSendingRequestedCommand getDummy() {
+    return new EmailSendingRequestedCommand.EmailSendingRequestedCommandBuilder()
+      .setId(UUID.randomUUID().toString())
+      .build();
   }
 }

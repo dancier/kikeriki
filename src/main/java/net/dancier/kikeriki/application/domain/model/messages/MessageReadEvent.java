@@ -1,4 +1,4 @@
-package net.dancier.kikeriki.application.domain.model.events;
+package net.dancier.kikeriki.application.domain.model.messages;
 
 import lombok.Data;
 

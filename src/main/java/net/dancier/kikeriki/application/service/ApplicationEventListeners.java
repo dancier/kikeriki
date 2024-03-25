@@ -1,9 +1,9 @@
 package net.dancier.kikeriki.application.service;
 
 import lombok.RequiredArgsConstructor;
-import net.dancier.kikeriki.application.domain.model.events.EmailSendingRequestedEvent;
-import net.dancier.kikeriki.application.domain.model.events.MessagePostedEvent;
-import net.dancier.kikeriki.application.domain.model.events.MessageReadEvent;
+import net.dancier.kikeriki.application.domain.model.messages.EmailSendingRequestedCommand;
+import net.dancier.kikeriki.application.domain.model.messages.MessagePostedEvent;
+import net.dancier.kikeriki.application.domain.model.messages.MessageReadEvent;
 import net.dancier.kikeriki.application.domain.model.state.State;
 import net.dancier.kikeriki.application.domain.model.state.UnreadChatMessage;
 import net.dancier.kikeriki.application.port.DancierSendMailPort;
@@ -27,7 +27,7 @@ public class ApplicationEventListeners {
 
 
   @EventListener
-  public void handle(EmailSendingRequestedEvent event) {
+  public void handle(EmailSendingRequestedCommand event) {
     log.info("I go a request to directly send an email. I will schedule that.: {}", event);
     sendMailPort.schedule(event);
   }

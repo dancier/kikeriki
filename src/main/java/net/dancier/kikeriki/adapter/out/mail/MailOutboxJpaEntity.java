@@ -1,10 +1,9 @@
 package net.dancier.kikeriki.adapter.out.mail;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import net.dancier.kikeriki.application.domain.model.events.EmailSendingRequestedEvent;
+import net.dancier.kikeriki.application.domain.model.messages.EmailSendingRequestedCommand;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
@@ -24,7 +23,7 @@ public class MailOutboxJpaEntity {
 
   @JdbcTypeCode(SqlTypes.JSON)
   @Column(name = "mail")
-  private EmailSendingRequestedEvent emailSendingRequestedEvent;
+  private EmailSendingRequestedCommand emailSendingRequestedCommand;
 
   private LocalDateTime createdAt;
 

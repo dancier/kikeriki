@@ -37,7 +37,7 @@ public class MailSenderJob {
     log.info("Sending the mail via SMTP: {}", item);
     log.info("And sender: {}", javaMailSender);
     try {
-      javaMailSender.send(item.getEmailSendingRequestedEvent());
+      javaMailSender.send(Util.commandToSimpleMailMessage(item.getEmailSendingRequestedCommand()));
       item.setStatus(DONE);
     } catch (MailAuthenticationException mailAuthenticationException) {
       item.setStatus(TEMPORARY_FAILED);

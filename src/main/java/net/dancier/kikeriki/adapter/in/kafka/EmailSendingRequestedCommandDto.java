@@ -1,12 +1,10 @@
-package net.dancier.kikeriki.application.domain.model.events;
+package net.dancier.kikeriki.adapter.in.kafka;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import org.springframework.mail.SimpleMailMessage;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class EmailSendingRequestedEvent extends SimpleMailMessage {
+public class EmailSendingRequestedCommandDto extends SimpleMailMessage {
   private String id;
   public void setId(String id) {
     this.id = id;

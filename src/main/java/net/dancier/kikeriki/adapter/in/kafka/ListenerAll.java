@@ -3,8 +3,8 @@ package net.dancier.kikeriki.adapter.in.kafka;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cloudevents.CloudEvent;
 import lombok.RequiredArgsConstructor;
-import net.dancier.kikeriki.application.domain.model.events.MessagePostedEvent;
-import net.dancier.kikeriki.application.domain.model.events.MessageReadEvent;
+import net.dancier.kikeriki.application.domain.model.messages.MessagePostedEvent;
+import net.dancier.kikeriki.application.domain.model.messages.MessageReadEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
@@ -12,7 +12,6 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
 
 @RequiredArgsConstructor
 @Component

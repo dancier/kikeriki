@@ -1,16 +1,13 @@
 package net.dancier.kikeriki.adapter.in.kafka;
 
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cloudevents.CloudEvent;
 import lombok.RequiredArgsConstructor;
-import net.dancier.kikeriki.application.domain.model.events.EmailSendingRequestedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.kafka.annotation.KafkaListener;
-import org.springframework.mail.MailSender;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -29,12 +26,12 @@ public class MailCommandListener {
   void listener(CloudEvent cloudEvent) {
     log.info("Got Mail Command: " + cloudEvent);
     try {
-      EmailSendingRequestedEvent emailSendingRequestedEvent = objectMapper.readValue(cloudEvent.getData().toBytes(), EmailSendingRequestedEvent.class);
-      log.info("Got that request to send a mail: {}", emailSendingRequestedEvent);
-      emailSendingRequestedEvent.setId(cloudEvent.getId());
-      applicationEventPublisher.publishEvent(emailSendingRequestedEvent);
+      EmailSendingRequestedCommandDto emailSendingRequestedCommand = objectMapper.readValue(cloudEvent.getData().toBytes(), EmailSendingRequestedCommandDto.class);
+      log.info("Got that request to send a mail: {}", emailSendingRequestedCommand);
+      emailSendingRequestedCommand.setId(cloudEvent.getId());
+      applicationEventPublisher.publishEvent(emailSendingRequestedCommand);
     } catch (IOException ioe) {
-      log.info(ioe.toString());
+      log.error(ioe.toString());
     }
   }
 }
