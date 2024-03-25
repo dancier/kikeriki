@@ -27,12 +27,12 @@ public class NeededInfrastructureBaseTestClass {
 
 
   @Container
-  static KafkaContainer kafkaContainer = new KafkaContainer(
+  final static KafkaContainer kafkaContainer = new KafkaContainer(
     DockerImageName.parse("confluentinc/cp-kafka:7.3.3")
   );
 
   @Container
-  static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>("postgres:16-alpine");
+  final static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>("postgres:16-alpine");
 /**    @BeforeAll
     static void beforeAll() {
       postgreSQLContainer.start();
