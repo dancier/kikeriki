@@ -1,8 +1,5 @@
 package net.dancier.kikeriki;
 
-import jakarta.transaction.Transactional;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -25,7 +22,6 @@ public class NeededInfrastructureBaseTestClass {
 
   private static final Logger log = LoggerFactory.getLogger(NeededInfrastructureBaseTestClass.class);
 
-
   @Container
   final static KafkaContainer kafkaContainer = new KafkaContainer(
     DockerImageName.parse("confluentinc/cp-kafka:7.3.3")
@@ -33,19 +29,6 @@ public class NeededInfrastructureBaseTestClass {
 
   @Container
   final static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>("postgres:16-alpine");
-/**    @BeforeAll
-    static void beforeAll() {
-      postgreSQLContainer.start();
-      kafkaContainer.start();
-      log.info("Started needed Container...");
-    }
-    @AfterAll
-    static void afterAll() {
-      postgreSQLContainer.stop();
-      kafkaContainer.stop();
-      log.info("Stopped needed Container...");
-    }
- **/
 
     public static class DataSourceInitializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
 

@@ -28,6 +28,7 @@ public class StateIntegrationTest extends NeededInfrastructureBaseTestClass {
 
   @Test
   public void newUnreadMessage() {
+
     assertThat(statePort.get(ApplicationEventStubbing.RECIPIENT_ID).unreadMessagesCount()).isEqualTo(0);
 
     applicationEventPublisher.publishEvent(ApplicationEventStubbing.messagePostedEvent());

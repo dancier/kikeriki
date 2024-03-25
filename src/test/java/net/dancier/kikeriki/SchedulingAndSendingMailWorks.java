@@ -22,14 +22,11 @@ import static org.mockito.Mockito.verify;
 
 
 class SchedulingAndSendingMailWorks extends NeededInfrastructureBaseTestClass {
-
   @Autowired
   MailOutboxJpaRepository mailOutboxJpaRepository;
 
-
   @Autowired
   ApplicationEventPublisher applicationEventPublisher;
-
   @MockBean
   JavaMailSender javaMailSender;
 
