@@ -2,15 +2,13 @@ package net.dancier.kikeriki.adapter.in.kafka;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import net.dancier.kikeriki.AbstractPostgreSQLandKafkaEnabledTest;
+import net.dancier.kikeriki.NeededInfrastructureBaseTestClass;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.assertj.core.api.BDDAssertions.then;
 
-@SpringBootTest
-public class SerialisationTest extends AbstractPostgreSQLandKafkaEnabledTest {
+public class DeserializationTest extends NeededInfrastructureBaseTestClass {
 
   @Autowired
   ObjectMapper objectMapper;

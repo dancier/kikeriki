@@ -28,7 +28,7 @@ public class ApplicationEventListeners {
 
   @EventListener
   public void handle(EmailSendingRequestedEvent event) {
-    log.info("Handling: {}", event);
+    log.info("I go a request to directly send an email. I will schedule that.: {}", event);
     sendMailPort.schedule(event);
   }
 
