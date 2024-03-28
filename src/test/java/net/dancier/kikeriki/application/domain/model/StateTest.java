@@ -18,14 +18,14 @@ class StateTest {
     State state = new State();
 
     // no message has been sent so the last MessageSentTimeStamp must by Optional.empty
-    assertThat(state.getLastTimeOfInfomail()).isEmpty();
+    assertThat(state.getLastTimeOfInfoMail()).isEmpty();
 
     LocalDateTime now = LocalDateTime.now();
     InfoMail infoMail = InfoMail.of(now);
     state.setLastMailMessage(infoMail);
 
-    assertThat(state.getLastTimeOfInfomail()).isNotEmpty();
-    assertThat(state.getLastTimeOfInfomail().get()).isEqualTo(now);
+    assertThat(state.getLastTimeOfInfoMail()).isNotEmpty();
+    assertThat(state.getLastTimeOfInfoMail().get()).isEqualTo(now);
 
     assertThatThrownBy(() -> {
       state.setLastMailMessage(null);

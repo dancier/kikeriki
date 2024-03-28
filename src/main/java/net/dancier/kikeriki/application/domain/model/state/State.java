@@ -20,7 +20,7 @@ public class State {
     this.optLastTimeCustomerWasInformed = Optional.of(infoMail);
   }
 
-  public Optional<LocalDateTime> getLastTimeOfInfomail() {
+  public Optional<LocalDateTime> getLastTimeOfInfoMail() {
     return optLastTimeCustomerWasInformed.map(InfoMail::getCreatedAt);
   }
 
@@ -28,7 +28,7 @@ public class State {
     if (optLastTimeCustomerWasInformed.isEmpty()) {
       return true;
     } else {
-      return getLastTimeOfInfomail().get().toLocalDate().isBefore(now);
+      return getLastTimeOfInfoMail().get().toLocalDate().isBefore(now);
     }
   }
 
@@ -48,11 +48,11 @@ public class State {
   }
 
   public Boolean hastUnreadMessagesSinceLastInfomail() {
-    if (getLastTimeOfInfomail().isPresent()) {
+    if (getLastTimeOfInfoMail().isPresent()) {
       return this
         .unreadChatMessages
         .stream()
-        .anyMatch(unreadChatMessage -> unreadChatMessage.getCreatedAt().isAfter(getLastTimeOfInfomail().get()));
+        .anyMatch(unreadChatMessage -> unreadChatMessage.getCreatedAt().isAfter(getLastTimeOfInfoMail().get()));
     } else {
       return (unreadChatMessages.size() > 0);
     }

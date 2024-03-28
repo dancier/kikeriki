@@ -12,12 +12,13 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Component
-public class ListenerAll {
+public class StateRelatedEventListener {
 
-  private static final Logger log = LoggerFactory.getLogger(ListenerAll.class);
+  private static final Logger log = LoggerFactory.getLogger(StateRelatedEventListener.class);
 
   private final ApplicationEventPublisher applicationEventPublisher;
 
@@ -26,8 +27,7 @@ public class ListenerAll {
   @KafkaListener(topics = {
     "message-posted",
     "chat-created",
-    "message-read",
-    "profile-updated"
+    "message-read"
   })
   void listener(CloudEvent cloudEvent) throws IOException {
     log.info("Got this event....");
@@ -62,7 +62,9 @@ public class ListenerAll {
     );
     messagePostedEvent.setMessageId(messagePostedEventDto.messageId);
     messagePostedEvent.setAuthorId(messagePostedEventDto.authorId);
-    messagePostedEvent.setRecipients(messagePostedEventDto.participantIds);
+    messagePostedEvent.setRecipients(
+      messagePostedEventDto.participantIds.stream().filter(p -> !p.equals(messagePostedEventDto.authorId)).collect(Collectors.toList())
+    );
 
     applicationEventPublisher.publishEvent(messagePostedEvent);
   }

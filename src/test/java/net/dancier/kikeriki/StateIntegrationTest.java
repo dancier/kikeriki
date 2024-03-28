@@ -4,7 +4,6 @@ import net.dancier.kikeriki.application.domain.model.state.State;
 import net.dancier.kikeriki.application.port.StatePort;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
 
 import java.time.LocalDateTime;
@@ -15,13 +14,6 @@ public class StateIntegrationTest extends NeededInfrastructureBaseTestClass {
 
   @Autowired
   ApplicationEventPublisher applicationEventPublisher;
-
-  @Value("${spring.datasource.url}")
-  private String datasource;
-
-  @Value("${spring.kafka.bootstrap-servers}")
-  private String bootstrapServers;
-
 
   @Autowired
   StatePort statePort;
@@ -36,8 +28,10 @@ public class StateIntegrationTest extends NeededInfrastructureBaseTestClass {
     State resultingState = statePort.get(ApplicationEventStubbing.RECIPIENT_ID);
 
     assertThat(resultingState.unreadMessagesCount()).isEqualTo(1);
-    assertThat(resultingState.getLastTimeOfInfomail()).isEmpty();
+    assertThat(resultingState.getLastTimeOfInfoMail()).isEmpty();
     assertThat(resultingState.isCandidateForSendingMail(LocalDateTime.now())).isTrue();
+
+
   }
 
 }

@@ -17,13 +17,10 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 
 class SchedulingAndSendingMailWorks extends NeededInfrastructureBaseTestClass {
-  @Autowired
-  MailOutboxJpaRepository mailOutboxJpaRepository;
 
   @Autowired
   ApplicationEventPublisher applicationEventPublisher;
@@ -32,8 +29,7 @@ class SchedulingAndSendingMailWorks extends NeededInfrastructureBaseTestClass {
 
   @Test
   public void scheduleAndSendTest() {
-    List<MailOutboxJpaEntity> all = mailOutboxJpaRepository.findAll();
-    assertThat(all).isEmpty();
+    verify(javaMailSender, never()).send(any(SimpleMailMessage.class));
 
     applicationEventPublisher.publishEvent(getEmailSendingRequestedCommandStub());
 

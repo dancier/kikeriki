@@ -23,14 +23,11 @@ public class StateRelatedApplicationEventListener {
 
   @EventListener
   public void handle(MessagePostedEvent messagePostedEvent) {
-    log.info("Handling MessagePostedEvent: " + messagePostedEvent);
-    log.info("With this content: {}", messagePostedEvent);
-    for (String recipientId: messagePostedEvent.getRecipients().stream().filter(r -> !r.equals(messagePostedEvent.getAuthorId())).collect(Collectors.toList())) {
-      log.info("Loading for: " + recipientId);
+    for (String recipientId: messagePostedEvent.getRecipients()) {
       State state = statePort.get(recipientId);
-      log.info("Loaded: " + state);
       state.addUnreadChatMessage(UnreadChatMessage.of(messagePostedEvent.getMessageId(), messagePostedEvent.getCreatedAt()));
       statePort.save(state.toDto(),recipientId);
+      // schedule check in 30 minutes
     }
   }
 
