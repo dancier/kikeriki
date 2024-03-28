@@ -1,7 +1,5 @@
 package net.dancier.kikeriki;
 
-import net.dancier.kikeriki.adapter.out.mail.MailOutboxJpaEntity;
-import net.dancier.kikeriki.adapter.out.mail.MailOutboxJpaRepository;
 import net.dancier.kikeriki.application.domain.model.messages.EmailSendingRequestedCommand;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,14 +9,11 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 
 import java.time.Duration;
-import java.util.List;
 import java.util.UUID;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
-
 
 class SchedulingAndSendingMailWorks extends NeededInfrastructureBaseTestClass {
 

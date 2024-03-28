@@ -2,7 +2,7 @@ package net.dancier.kikeriki.application.port;
 
 import java.time.LocalDateTime;
 
-public interface ScheduleInfomailCheck {
+public interface ScheduleInfomailCheckPort {
   void schedule(LocalDateTime when, String dancerId);
 
 }
