@@ -20,20 +20,62 @@ services:
       - 9092:9081
       - 9081:9081
 
+  kafka-ui:
+    container_name: kafka-ui
+    image: tchiotludo/akhq:latest
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8080/ui" ]
+      interval: 10s
+      timeout: 2s
+    ports:
+      - "8088:8080"
+    environment:
+      AKHQ_CONFIGURATION: |
+        akhq:
+          connections:
+            docker-kafka-server:
+              properties:
+                bootstrap.servers: "kafka:9092"
   setup:
     image: juplo/toolbox
     command: >
       bash -c "
-        kafka-topics --bootstrap-server kafka:9092 --delete --if-exists --topic test
-        kafka-topics --bootstrap-server kafka:9092 --create --topic test --partitions 10 --replication-factor 1
-        kafka-topics --bootstrap-server kafka:9092 --describe --topic test
+        kafka-topics --bootstrap-server kafka:9092 --delete --if-exists --topic message-posted
+        kafka-topics --bootstrap-server kafka:9092 --create --topic message-posted --partitions 10 --replication-factor 1
+
+        kafka-topics --bootstrap-server kafka:9092 --delete --if-exists --topic chat-created
+        kafka-topics --bootstrap-server kafka:9092 --create --topic chat-created --partitions 10 --replication-factor 1
+
+        kafka-topics --bootstrap-server kafka:9092 --delete --if-exists --topic profile-updated
+        kafka-topics --bootstrap-server kafka:9092 --create --topic profile-updated --partitions 10 --replication-factor 1
+
+        kafka-topics --bootstrap-server kafka:9092 --delete --if-exists --topic email-sending-requested
+        kafka-topics --bootstrap-server kafka:9092 --create --topic email-sending-requested --partitions 10 --replication-factor 1
+
+        kafka-topics --bootstrap-server kafka:9092 --delete --if-exists --topic message-read
+        kafka-topics --bootstrap-server kafka:9092 --create --topic message-read --partitions 10 --replication-factor 1
       "
     depends_on:
       - kafka
-      - cli
+  kikeriki-db:
+    image: postgres:16
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: kikeriki
+      POSTGRES_PASSWORD: kikeriki
+      POSTGRES_DB: kikeriki
+    volumes:
+      - ./volumes/kikeriki-db-data:/var/lib/postgresql/data
+  pg-admin:
+    image: dpage/pgadmin4:8.1
+    restart: always
+    ports:
+      - "5050:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@dancier.net
+      PGADMIN_DEFAULT_PASSWORD: secret
+    volumes:
+      - ./volumes/pg-admin-data:/var/lib/pgadmin
 
-  cli:
-    image: juplo/toolbox
-    command: sleep infinity
-    depends_on:
-      - kafka
