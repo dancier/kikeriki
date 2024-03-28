@@ -26,7 +26,6 @@ public class StateRelatedEventListener {
 
   @KafkaListener(topics = {
     "message-posted",
-    "chat-created",
     "message-read"
   })
   void listener(CloudEvent cloudEvent) throws IOException {
@@ -39,7 +38,6 @@ public class StateRelatedEventListener {
       default -> {}
     }
     log.info(cloudEvent.toString());
-
   }
 
   private void messageReadEvent(CloudEvent cloudEvent) throws IOException {

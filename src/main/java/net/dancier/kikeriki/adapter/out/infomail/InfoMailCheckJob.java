@@ -10,7 +10,7 @@ public class InfoMailCheckJob {
   private static final Logger log = LoggerFactory.getLogger(InfoMailCheckJob.class);
 
   @Scheduled(fixedRate = 5000L)
-  public void recheck() {
-    log.info("rechecking");
+  public void check() {
+    log.info("checking");
   }
 }

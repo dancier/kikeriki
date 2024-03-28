@@ -11,13 +11,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
-import java.util.stream.Collectors;
-
 @RequiredArgsConstructor
 @Component
-public class StateRelatedApplicationEventListener {
+public class InfoMailRelatedApplicationEventListener {
 
-  public static final Logger log = LoggerFactory.getLogger(StateRelatedApplicationEventListener.class);
+  public static final Logger log = LoggerFactory.getLogger(InfoMailRelatedApplicationEventListener.class);
 
   private final StatePort statePort;
 
