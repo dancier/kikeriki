@@ -31,7 +31,6 @@ public class StateIntegrationTest extends NeededInfrastructureBaseTestClass {
     assertThat(resultingState.getLastTimeOfInfoMail()).isEmpty();
     assertThat(resultingState.isCandidateForSendingMail(LocalDateTime.now())).isTrue();
 
-
   }
 
 }
