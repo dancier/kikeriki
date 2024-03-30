@@ -23,10 +23,17 @@ public class InfomailAdapter implements ScheduleInfomailCheckPort {
     Objects.requireNonNull(dancerId);
     log.info("Scheduling check!!!");
 
-    ScheduledInfoMailCheckJpaEntity scheduledInfoMailCheckJpaEntity = new ScheduledInfoMailCheckJpaEntity();
-    scheduledInfoMailCheckJpaEntity.setStatus(ScheduledInfoMailCheckJpaEntity.STATUS.NEW);
-    scheduledInfoMailCheckJpaEntity.setDancerId(dancerId);
-    scheduledInfoMailCheckJpaEntity.setCheckAt(when);
-    scheduledInfoMailCheckJpaRepository.save(scheduledInfoMailCheckJpaEntity);
+    if (scheduledInfoMailCheckJpaRepository.findByDancerIdAndStatus(dancerId, ScheduledInfoMailCheckJpaEntity.STATUS.NEW).isEmpty()) {
+      log.info("Adding new check...");
+      ScheduledInfoMailCheckJpaEntity scheduledInfoMailCheckJpaEntity = new ScheduledInfoMailCheckJpaEntity();
+      scheduledInfoMailCheckJpaEntity.setStatus(ScheduledInfoMailCheckJpaEntity.STATUS.NEW);
+      scheduledInfoMailCheckJpaEntity.setDancerId(dancerId);
+      scheduledInfoMailCheckJpaEntity.setCheckAt(when);
+
+      scheduledInfoMailCheckJpaRepository.save(scheduledInfoMailCheckJpaEntity);
+    } else {
+      log.info("Skip adding a new check, as we have one already");
+    }
+
   }
 }
