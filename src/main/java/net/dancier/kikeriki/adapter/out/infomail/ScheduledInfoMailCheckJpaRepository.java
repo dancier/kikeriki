@@ -14,14 +14,14 @@ public interface ScheduledInfoMailCheckJpaRepository extends JpaRepository<Sched
 
   @Query(
     value = """
-                UPDATE
+                UPDATE scheduled_at 
                       SET status = 'IN_PROGRESS'
                     WHERE id IN (
                       SELECT id
                         FROM scheduled_at
                        WHERE status = 'NEW'
                        LIMIT 1
-                    FOR UPDATE
+                       FOR UPDATE
                     )
                   RETURNING *;
               """,
