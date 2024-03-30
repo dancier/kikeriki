@@ -14,7 +14,7 @@ public interface ScheduledInfoMailCheckJpaRepository extends JpaRepository<Sched
 
   @Query(
     value = """
-                UPDATE scheduled_at 
+                UPDATE scheduled_at
                       SET status = 'IN_PROGRESS'
                     WHERE id IN (
                       SELECT id
@@ -27,6 +27,6 @@ public interface ScheduledInfoMailCheckJpaRepository extends JpaRepository<Sched
               """,
     nativeQuery = true
   )
-  Collection<MailOutboxJpaEntity> lockAndList();
+  Collection<ScheduledInfoMailCheckJpaEntity> lockAndList();
 
 }
