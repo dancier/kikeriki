@@ -20,6 +20,7 @@ public class InfoMailCheckJob {
   public void check() {
     log.info("checking");
     Collection<ScheduledInfoMailCheckJpaEntity> mailOutboxJpaEntities = scheduledInfoMailCheckJpaRepository.lockAndList();
+    log.info("After the check..." + mailOutboxJpaEntities);
     log.info("Got: " + mailOutboxJpaEntities.size());
   }
 }
