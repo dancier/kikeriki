@@ -30,6 +30,7 @@ public class ScheduledInfoMailCheckJpaEntity {
 
   public static enum STATUS {
     NEW,
+    IN_PROGRESS,
     TEMPORARY_FAILED,
     FINALLY_FAILED,
     DONE
