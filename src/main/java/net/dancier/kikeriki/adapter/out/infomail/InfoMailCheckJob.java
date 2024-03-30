@@ -19,7 +19,7 @@ public class InfoMailCheckJob {
   @Scheduled(fixedRate = 5000L)
   public void check() {
     log.info("checking");
-    Collection<MailOutboxJpaEntity> mailOutboxJpaEntities = scheduledInfoMailCheckJpaRepository.lockAndList();
+    Collection<ScheduledInfoMailCheckJpaEntity> mailOutboxJpaEntities = scheduledInfoMailCheckJpaRepository.lockAndList();
     log.info("Got: " + mailOutboxJpaEntities.size());
   }
 }
