@@ -1,7 +1,7 @@
 package net.dancier.kikeriki.adapter.out.infomail;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import net.dancier.kikeriki.adapter.out.mail.MailOutboxJpaEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -19,8 +19,15 @@ public class InfoMailCheckJob {
   @Scheduled(fixedRate = 5000L)
   public void check() {
     log.info("checking");
-    Collection<ScheduledInfoMailCheckJpaEntity> mailOutboxJpaEntities = scheduledInfoMailCheckJpaRepository.lockAndList();
-    log.info("After the check..." + mailOutboxJpaEntities);
-    log.info("Got: " + mailOutboxJpaEntities.size());
+    Collection<ScheduledInfoMailCheckJpaEntity> scheduledEntities = scheduledInfoMailCheckJpaRepository.lockAndList();
+    log.info("After the check..." + scheduledEntities);
+    for(ScheduledInfoMailCheckJpaEntity scheduledInfoMailCheckJpaEntity: scheduledEntities) {
+      checkAndSend(scheduledInfoMailCheckJpaEntity);
+    }
+  }
+  @Transactional
+  private void checkAndSend(ScheduledInfoMailCheckJpaEntity scheduledInfoMailCheckJpaEntity) {
+    log.info("bla");
+
   }
 }
