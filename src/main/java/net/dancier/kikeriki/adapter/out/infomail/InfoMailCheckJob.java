@@ -34,8 +34,8 @@ public class InfoMailCheckJob {
       checkAndSendService.checkAndSend(scheduledInfoMailCheckJpaEntity.getDancerId());
       log.info("Sucess setting status to done");
       scheduledInfoMailCheckJpaEntity.setStatus(ScheduledInfoMailCheckJpaEntity.STATUS.DONE);
-      
     } catch (Exception exception) {
+      log.info("Failure setting status to failed");
       scheduledInfoMailCheckJpaEntity.setStatus(ScheduledInfoMailCheckJpaEntity.STATUS.FINALLY_FAILED);
     } finally {
       scheduledInfoMailCheckJpaRepository.save(scheduledInfoMailCheckJpaEntity);
