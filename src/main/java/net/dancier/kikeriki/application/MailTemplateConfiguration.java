@@ -1,5 +1,7 @@
 package net.dancier.kikeriki.application;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.thymeleaf.TemplateEngine;
@@ -13,7 +15,9 @@ import java.util.Collections;
 @Configuration
 public class MailTemplateConfiguration {
 
-    public static final String EMAIL_TEMPLATE_ENCODING = "UTF-8";
+  private final static Logger log = LoggerFactory.getLogger(MailTemplateConfiguration.class);
+
+  public static final String EMAIL_TEMPLATE_ENCODING = "UTF-8";
 
     @Bean
     public TemplateEngine emailTemplateEngine() {
@@ -23,6 +27,7 @@ public class MailTemplateConfiguration {
     }
 
     private ITemplateResolver textTemplateResolver() {
+        log.info("INIT");
         final ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver();
         templateResolver.setOrder(Integer.valueOf(1));
         templateResolver.setResolvablePatterns(Collections.singleton("text/*"));
