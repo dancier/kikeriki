@@ -2,6 +2,7 @@ package net.dancier.kikeriki.adapter.out.infomail;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import net.dancier.kikeriki.application.CheckAndSendService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -16,6 +17,8 @@ public class InfoMailCheckJob {
 
   private final ScheduledInfoMailCheckJpaRepository scheduledInfoMailCheckJpaRepository;
 
+  private final CheckAndSendService checkAndSendService;
+
   @Scheduled(fixedRate = 5000L)
   public void check() {
     log.info("checking");
@@ -25,9 +28,17 @@ public class InfoMailCheckJob {
       checkAndSend(scheduledInfoMailCheckJpaEntity);
     }
   }
-  @Transactional
-  private void checkAndSend(ScheduledInfoMailCheckJpaEntity scheduledInfoMailCheckJpaEntity) {
-    log.info("bla");
 
+  private void checkAndSend(ScheduledInfoMailCheckJpaEntity scheduledInfoMailCheckJpaEntity) {
+    try {
+      checkAndSendService.checkAndSend(scheduledInfoMailCheckJpaEntity.getDancerId());
+      log.info("Sucess setting status to done");
+      scheduledInfoMailCheckJpaEntity.setStatus(ScheduledInfoMailCheckJpaEntity.STATUS.DONE);
+      
+    } catch (Exception exception) {
+      scheduledInfoMailCheckJpaEntity.setStatus(ScheduledInfoMailCheckJpaEntity.STATUS.FINALLY_FAILED);
+    } finally {
+      scheduledInfoMailCheckJpaRepository.save(scheduledInfoMailCheckJpaEntity);
+    }
   }
 }
