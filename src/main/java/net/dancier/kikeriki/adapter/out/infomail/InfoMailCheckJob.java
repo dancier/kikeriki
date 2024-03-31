@@ -35,7 +35,7 @@ public class InfoMailCheckJob {
       log.info("Sucess setting status to done");
       scheduledInfoMailCheckJpaEntity.setStatus(ScheduledInfoMailCheckJpaEntity.STATUS.DONE);
     } catch (Exception exception) {
-      log.info("Failure setting status to failed");
+      log.info("Failure setting status to failed: " + exception);
       scheduledInfoMailCheckJpaEntity.setStatus(ScheduledInfoMailCheckJpaEntity.STATUS.FINALLY_FAILED);
     } finally {
       scheduledInfoMailCheckJpaRepository.save(scheduledInfoMailCheckJpaEntity);
