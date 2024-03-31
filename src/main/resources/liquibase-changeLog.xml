@@ -25,5 +25,15 @@
       );
     </sql>
   </changeSet>
+  <changeSet id="2024-03-28" author="Marc Gorzala">
+    <sql>
+      CREATE TABLE scheduled_at (
+        id UUID PRIMARY KEY,
+        status VARCHAR(256) NOT NULL,
+        dancer_id VARCHAR(256) NOT NULL,
+        check_at TIMESTAMP WITHOUT TIME ZONE
+      );
+    </sql>
+  </changeSet>
 
 </databaseChangeLog>
