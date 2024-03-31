@@ -23,7 +23,7 @@ public class CheckAndSendService {
 
   private final UserInfoAdapter userInfoAdapter;
 
-  private ApplicationEventPublisher applicationEventPublisher;
+  private final ApplicationEventPublisher applicationEventPublisher;
 
   @Transactional
   public void checkAndSend(String dancerId) {
