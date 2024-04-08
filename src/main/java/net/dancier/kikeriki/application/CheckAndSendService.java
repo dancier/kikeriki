@@ -39,6 +39,8 @@ public class CheckAndSendService {
     if (state.isCandidateForSendingMail(LocalDateTime.now())) {
       sendMail(dancerId, state);
       statePort.save(state.toDto(), dancerId);
+    } else {  
+      log.info("Not an candidate for sending mail");
     }
   }
   public void sendMail(String dancerId, State state) {
