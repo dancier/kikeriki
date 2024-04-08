@@ -1,4 +1,4 @@
-Hey [( ${user_name})],
+Hey [( ${dancer_name})],
 
 du hast: [( ${unread_messages} )] ungelesene Nachrichten.
 
