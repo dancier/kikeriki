@@ -1,5 +1,11 @@
-neue nachrichten
------
-[( ${unread_messages} )]
------
+Hey [( ${user_name})],
+
+du hast: [( ${unread_messages} )] ungelesene Nachrichten.
+
+Mit folgendem Link kannst Du diese lesen:
+
+https://test.dancier.net/chat
+
+Lieber Gruß,
+Deim Team von dancier
 
