@@ -7,6 +7,8 @@ public class UserInfoDto {
 
   private String dancerId;
 
+  private String dancerName;
+
   private String emailAddress;
 
 }

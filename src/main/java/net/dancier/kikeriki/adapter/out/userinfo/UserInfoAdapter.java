@@ -10,6 +10,7 @@ public class UserInfoAdapter implements UserInfoPort {
   public UserInfoDto loadByDancerId(String dancerId) {
     UserInfoDto userInfoDto = new UserInfoDto();
     userInfoDto.setDancerId(dancerId);
+    userInfoDto.setDancerName("recoby");
     userInfoDto.setEmailAddress("dancer@dancier.net");
     return userInfoDto;
   }

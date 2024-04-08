@@ -59,7 +59,8 @@ public class CheckAndSendService {
 
   private String createBody(State state, UserInfoDto userInfoDto) {
     Map<String, Object> map = new HashMap<>();
-    map.put("unread_messages", 10);
+    map.put("unread_messages", state.unreadMessagesCount());
+    map.put("dancer_name", userInfoDto.getDancerName());
     Context context = new Context(Locale.GERMANY, map);
     return templateEngine.process(USER_INFO_MAIL, context);
   }
