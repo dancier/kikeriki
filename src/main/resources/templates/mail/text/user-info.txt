@@ -1,0 +1,11 @@
+Hey [( ${dancer_name})],
+
+du hast: [( ${unread_messages} )] ungelesene Nachricht(en).
+
+Mit folgendem Link kannst Du, Deine Nachrichten lesen:
+
+https://test.dancier.net/chat
+
+Lieber Gruß,
+Dein Team von dancier
+

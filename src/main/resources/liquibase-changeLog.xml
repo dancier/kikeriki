@@ -1,0 +1,39 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext
+   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+   http://www.liquibase.org/xml/ns/dbchangelog
+   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+    <changeSet id="2023-12-28-01-add-mailoutbox" author="Marc">
+        <sql>
+            CREATE TABLE mail_outbox (
+                id VARCHAR(256) PRIMARY KEY,
+                status VARCHAR(256) NOT NULL,
+                mail JSONB NOT NULL,
+                created_at TIMESTAMP WITHOUT TIME ZONE
+            );
+        </sql>
+    </changeSet>
+
+  <changeSet id="2024-01-06-add-state" author="Marc">
+    <sql>
+      CREATE TABLE state (
+        dancer_id VARCHAR(256) PRIMARY KEY,
+        data JSONB NOT NULL
+      );
+    </sql>
+  </changeSet>
+  <changeSet id="2024-03-28" author="Marc Gorzala">
+    <sql>
+      CREATE TABLE scheduled_at (
+        id UUID PRIMARY KEY,
+        status VARCHAR(256) NOT NULL,
+        dancer_id VARCHAR(256) NOT NULL,
+        check_at TIMESTAMP WITHOUT TIME ZONE
+      );
+    </sql>
+  </changeSet>
+
+</databaseChangeLog>
